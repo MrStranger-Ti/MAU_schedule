@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Вход</title>
+</head>
+<body>
+<h1>Вход</h1>
+<form action="." method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Войти</button>
+</form>
+<a href="{% url 'mau_auth:password_reset_form' %}">Восстановить пароль</a>
+</body>
+</html>

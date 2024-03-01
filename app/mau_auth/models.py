@@ -1,22 +1,13 @@
 from django.apps import apps
 from django.contrib import auth
-from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import PermissionsMixin
+from django.core.mail import send_mail
 from django.db import models
+from django.utils import timezone
 
-from app.registration.validators import validate_full_name
-
-
-class MauUser(AbstractUser):
-    full_name = models.CharField(max_length=256, validators=[validate_full_name])
-    email = models.EmailField()
-    institute = models.CharField()
-    course = models.PositiveSmallIntegerField()
-    group = models.CharField()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', 'full_name']
+from mau_auth.validators import validate_full_name
 
 
 class MauUserManager(BaseUserManager):
@@ -83,3 +74,44 @@ class MauUserManager(BaseUserManager):
                 obj=obj,
             )
         return self.none()
+
+
+class MauUser(AbstractBaseUser, PermissionsMixin):
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+
+    full_name = models.CharField(max_length=256, unique=True, validators=[validate_full_name])
+    email = models.EmailField(unique=True)
+    institute = models.CharField()
+    course = models.PositiveSmallIntegerField(default=1)
+    group = models.CharField()
+
+    objects = MauUserManager()
+
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['full_name']
+
+    is_staff = models.BooleanField(
+        "staff status",
+        default=False,
+        help_text="Designates whether the user can log into this admin site.",
+    )
+    is_active = models.BooleanField(
+        "active",
+        default=True,
+        help_text=
+        "Designates whether this user should be treated as active. "
+        "Unselect this instead of deleting accounts."
+        ,
+    )
+    date_joined = models.DateTimeField("date joined", default=timezone.now)
+
+    def clean(self):
+        super().clean()
+        self.email = self.__class__.objects.normalize_email(self.email)
+
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        """Send an email to this user."""
+        send_mail(subject, message, from_email, [self.email], **kwargs)

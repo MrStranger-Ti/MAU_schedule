@@ -6,4 +6,4 @@ WORKDIR usr/src/app
 
 COPY /app .
 
-RUN ["pip", "install", "-r", "requirements/base.txt"]
+RUN ["pip", "install", "-r", "requirements.txt"]

@@ -12,9 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
-
-from app.registration.models import MauUser
 
 load_dotenv()
 
@@ -47,6 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'mau_auth.apps.MauAuthConfig',
+    'schedule.apps.ScheduleConfig',
 ]
 
 MIDDLEWARE = [
@@ -136,6 +138,16 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 # Authentication
 
-USER_AUTH_MODEL = 'registration.MauUser'
+AUTH_USER_MODEL = 'mau_auth.MauUser'
+
+LOGIN_URL = reverse_lazy('mau_auth:login')
+LOGIN_REDIRECT_URL = reverse_lazy('schedule:index')
+LOGOUT_REDIRECT_URL = reverse_lazy('mau_auth:login')
+
+
+# Email
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

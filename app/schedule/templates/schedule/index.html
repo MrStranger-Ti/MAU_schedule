@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Главная</h1>
+  <p>Пользователь: {{ request.user.full_name }}</p>
+  {% if user.is_authenticated %}
+    <form action="{% url 'mau_auth:logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Выход</button>
+    </form>
+  {% else %}
+    <a href="{% url 'mau_auth:login' %}">Войти</a>
+    <a href="{% url 'mau_auth:registration' %}">Зарегистрироваться</a>
+  {% endif %}
+</body>
+</html>
