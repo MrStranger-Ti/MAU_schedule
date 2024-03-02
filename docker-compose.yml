@@ -10,6 +10,7 @@ services:
       - DJANGO_SETTINGS_MODULE=app.settings
       - PYTHONPATH=/usr/src/app
       - PYTHONUTF8=1
+      - DB_HOST=postgres_db
     command: >
       bash -c
       "django-admin makemigrations
