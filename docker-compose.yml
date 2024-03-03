@@ -9,7 +9,13 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=app.settings
       - PYTHONPATH=/usr/src/app
-    command: ['django-admin', 'runserver', '0.0.0.0:8000']
+      - PYTHONUTF8=1
+      - DB_HOST=postgres_db
+    command: >
+      bash -c
+      "django-admin makemigrations
+      && django-admin migrate
+      && django-admin runserver 0.0.0.0:8000"
     ports:
       - '8080:8000'
     depends_on:
@@ -24,7 +30,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - '5000:5432'
 
 volumes:
   db_data:
