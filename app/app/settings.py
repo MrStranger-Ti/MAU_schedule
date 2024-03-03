@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     'mau_auth.apps.MauAuthConfig',
     'schedule.apps.ScheduleConfig',
+    'profiles.apps.ProfilesConfig',
 ]
 
 MIDDLEWARE = [

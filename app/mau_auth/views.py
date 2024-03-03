@@ -48,6 +48,15 @@ class MauPasswordResetView(PasswordResetView):
     email_template_name = 'mau_auth/password_reset_email.html'
     success_url = reverse_lazy('mau_auth:password_reset_done')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        if user.is_authenticated:
+            context['form'] = self.form_class({'email': user.email})
+
+        return context
+
 
 class MauPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'mau_auth/password_reset_done.html'
@@ -56,6 +65,7 @@ class MauPasswordResetDoneView(PasswordResetDoneView):
 class MauPasswordConfirmView(PasswordResetConfirmView):
     template_name = 'mau_auth/password_reset_confirm.html'
     success_url = reverse_lazy('mau_auth:password_reset_complete')
+    post_reset_login = True
 
 
 class MauPasswordCompleteView(PasswordResetCompleteView):

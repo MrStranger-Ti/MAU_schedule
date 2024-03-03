@@ -5,10 +5,14 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Восстановление пароля</title>
+  <title>Изменение профиля</title>
 </head>
 <body>
-  <h1>Пароль успешно изменен.</h1>
-  <a href="{% url 'schedule:index' %}">Главная</a>
+  <h1>Изменение профиля</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Обновить профиль</button>
+  </form>
 </body>
 </html>

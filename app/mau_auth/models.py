@@ -79,7 +79,7 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
 
-    full_name = models.CharField(max_length=256, unique=True, validators=[validate_full_name])
+    full_name = models.CharField(max_length=256, validators=[validate_full_name])
     email = models.EmailField(unique=True)
     institute = models.CharField()
     course = models.PositiveSmallIntegerField(default=1)

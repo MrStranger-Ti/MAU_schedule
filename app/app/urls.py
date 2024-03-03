@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('mau_auth.urls')),
     path('', include('schedule.urls')),
+    path('profile/', include('profiles.urls')),
 ]
