@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,20 +6,57 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>Расписание</title>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
-  <h1>Главная</h1>
-  <p>Пользователь: {{ request.user.full_name }}</p>
-  {% if user.is_authenticated %}
-    <form action="{% url 'mau_auth:logout' %}" method="post">
-      {% csrf_token %}
-      <button type="submit">Выход</button>
-    </form>
-    <a href="{% url 'profiles:profile' %}">Профиль</a>
-  {% else %}
-    <a href="{% url 'mau_auth:login' %}">Войти</a>
-    <a href="{% url 'mau_auth:registration' %}">Зарегистрироваться</a>
-  {% endif %}
+<h1>Главная</h1>
+<p>Пользователь: {{ request.user.full_name }}</p>
+{% if user.is_authenticated %}
+  <form action="{% url 'mau_auth:logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Выход</button>
+  </form>
+  <a href="{% url 'profiles:profile' %}">Профиль</a>
+{% else %}
+  <a href="{% url 'mau_auth:login' %}">Войти</a>
+  <a href="{% url 'mau_auth:registration' %}">Зарегистрироваться</a>
+{% endif %}
+<section class="tables">
+  <div class="container tables__container">
+    <h1>Расписание</h1>
+    {% if schedule %}
+      <div class="tables__list">
+        {% for day_name, day_table in schedule.items %}
+          <table class="schedule_table">
+            <thead>
+            <tr>
+              <th colspan="5" class="table_title">{{ day_name }}</th>
+            </tr>
+            <tr class="table_heads">
+              <th class="schedule_table_th">№</th>
+              <th class="schedule_table_th">Время</th>
+              <th class="schedule_table_th">Название</th>
+              <th class="schedule_table_th">Преподаватель</th>
+              <th class="schedule_table_th">Корпус</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in day_table %}
+              <tr>
+                {% for cell in row %}
+                  <td class="schedule_table_td">{{ cell }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Расписания нет. Проверьте свои данные в профиле.</p>
+    {% endif %}
+  </div>
+</section>
 </body>
 </html>

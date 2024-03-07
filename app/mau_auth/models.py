@@ -1,3 +1,9 @@
+import os
+import re
+
+import requests
+import bs4
+
 from django.apps import apps
 from django.contrib import auth
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
@@ -6,6 +12,8 @@ from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
+from django.core.cache import cache
 
 from mau_auth.validators import validate_full_name
 
@@ -105,6 +113,76 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         ,
     )
     date_joined = models.DateTimeField("date joined", default=timezone.now)
+
+    @classmethod
+    def _get_schedule_data(cls, url: str) -> dict[int, list[str]]:
+        group_page_response = requests.get(url)
+        soup = bs4.BeautifulSoup(group_page_response.content, 'lxml')
+
+        data = {}
+        weekdays = settings.WEEKDAYS
+        for day_num, day in enumerate(soup.find_all('table')):
+            data.setdefault(weekdays[day_num], [])
+            for row_num, row in enumerate(day.find_all('tr')[1:]):
+                data[weekdays[day_num]].append(
+                    [field.text for field in row.find_all(['th', 'td'])]
+                )
+
+        return data
+
+    def _get_query_params(self) -> str:
+        base_schedule_url = settings.SCHEDULE_URL
+        base_schedule_page_response = requests.get(base_schedule_url)
+        soup = bs4.BeautifulSoup(base_schedule_page_response.content, 'lxml')
+
+        date_select = soup.find('option', selected=True)
+        pers = date_select.get('value')
+
+        institute_select = soup.find('option', string=self.institute)
+        facs = institute_select.get('value')
+
+        return pers, facs, self.course
+
+    def _get_group_url(self, pers: str | int, facs: str | int, course: str | int):
+        base_schedule_url = settings.SCHEDULE_URL
+        group = self.get_prepared_group()
+
+        params = {
+            'facs': facs,
+            'courses': course,
+            'mode': 1,
+            'pers': pers,
+        }
+        r = requests.get(base_schedule_url, params=params)
+        soup = bs4.BeautifulSoup(r.content, 'lxml')
+        a_tag = soup.find('a', string=re.compile(fr'\s*?{group}\s*?'))
+        group_schedule_url = os.path.join(base_schedule_url, a_tag.get('href'))
+
+        return group_schedule_url
+
+    def get_schedule(self) -> dict[int, list[str]] | None:
+        if not all([self.course, self.institute, self.group]):
+            return None
+
+        schedule_data = cache.get(f'schedule_of_group_{self.group}')
+        if not schedule_data:
+            perc, facs, course = self._get_query_params()
+            group_url = self._get_group_url(perc, facs, self.course)
+            schedule_data = self._get_schedule_data(group_url)
+            cache.set(f'schedule_of_group_{self.group}', schedule_data, settings.SCHEDULE_CACHE_TIME)
+
+        return schedule_data
+
+    def get_prepared_group(self, spec_symbols: str = None) -> str:
+        if not spec_symbols:
+            spec_symbols = '()'
+
+        group = self.group
+        for sym in spec_symbols:
+            pattern = fr'\{sym}'
+            group = re.sub(pattern, fr'\{sym}', group)
+
+        return group
 
     def clean(self):
         super().clean()

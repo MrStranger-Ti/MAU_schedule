@@ -137,6 +137,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    'app/static',
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -155,3 +159,28 @@ LOGOUT_REDIRECT_URL = reverse_lazy('mau_auth:login')
 # Email
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Mau parsing
+
+SCHEDULE_URL = os.getenv('SCHEDULE_URL')
+
+WEEKDAYS = [
+    'Понедельник',
+    'Вторник',
+    'Среда',
+    'Четверг',
+    'Пятница',
+    'Суббота',
+    'Воскресенье',
+]
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache_table',
+    },
+}
+
+SCHEDULE_CACHE_TIME = 60 * 20

@@ -1,0 +1,251 @@
+<link rel="stylesheet" type="text/css" href="css/tabs.css?2023120302">
+<div class="row">
+  <div class="col-md-12"><h3 style="color:#0057a3">5 Марта 2024, Вторник (четная неделя)</h3>
+    <p>Время обновления: 2024-03-05 17:03:15</p></div>
+</div>
+<div class="rasp">
+  <ul id="tabs-ul" class="nav nav-pills nav-justified" role="tablist">
+    <li id="li1" role="presentation" class="active on"><a class="tab" href="#dd1" aria-controls="home" role="tab"
+                                                          data-toggle="tab">По группам</a></li>
+    <li id="li2" role="presentation"><a class="tab" href="#dd2" aria-controls="profile" role="tab" data-toggle="tab">По
+      преподавателям</a></li>
+    <li id="li3" role="presentation"><a class="tab" href="#dd3" aria-controls="messages" role="tab" data-toggle="tab">По
+      аудиториям</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="dd1" role="tabpanel" class="tab-pane active">
+      <form action="/student/timetable/new/" method="get">
+        <p><input type="hidden" name="mode" value="1"><select name="pers" size="1"
+                                                              onchange="if (this.selectedIndex) this.form.submit();">
+          <option value=0>Выберите период</option>
+          <option value="251">28.08.2023-03.09.2023 (н/н)</option>
+          <option value="252">04.09.2023-10.09.2023 (ч/н)</option>
+          <option value="253">11.09.2023-17.09.2023 (н/н)</option>
+          <option value="254">18.09.2023-24.09.2023 (ч/н)</option>
+          <option value="255">25.09.2023-01.10.2023 (н/н)</option>
+          <option value="256">02.10.2023-08.10.2023 (ч/н)</option>
+          <option value="257">09.10.2023-15.10.2023 (н/н)</option>
+          <option value="258">16.10.2023-22.10.2023 (ч/н)</option>
+          <option value="259">23.10.2023-29.10.2023 (н/н)</option>
+          <option value="260">30.10.2023-05.11.2023 (ч/н)</option>
+          <option value="261">06.11.2023-12.11.2023 (н/н)</option>
+          <option value="262">13.11.2023-19.11.2023 (ч/н)</option>
+          <option value="263">20.11.2023-26.11.2023 (н/н)</option>
+          <option value="264">27.11.2023-03.12.2023 (ч/н)</option>
+          <option value="265">04.12.2023-10.12.2023 (н/н)</option>
+          <option value="266">11.12.2023-17.12.2023 (ч/н)</option>
+          <option value="267">18.12.2023-24.12.2023 (н/н)</option>
+          <option value="268">25.12.2023-31.12.2023 (ч/н)</option>
+          <option value="269">01.01.2024-07.01.2024 (н/н)</option>
+          <option value="270">08.01.2024-14.01.2024 (ч/н)</option>
+          <option value="271">15.01.2024-21.01.2024 (н/н)</option>
+          <option value="272">22.01.2024-28.01.2024 (ч/н)</option>
+          <option value="273">29.01.2024-04.02.2024 (н/н)</option>
+          <option value="274">05.02.2024-11.02.2024 (ч/н)</option>
+          <option value="275">12.02.2024-18.02.2024 (н/н)</option>
+          <option value="276">19.02.2024-25.02.2024 (ч/н)</option>
+          <option value="277">26.02.2024-03.03.2024 (н/н)</option>
+          <option value="278" selected>04.03.2024-10.03.2024 (ч/н)</option>
+          <option value="279">11.03.2024-17.03.2024 (н/н)</option>
+          <option value="280">18.03.2024-24.03.2024 (ч/н)</option>
+          <option value="281">25.03.2024-31.03.2024 (н/н)</option>
+          <option value="282">01.04.2024-07.04.2024 (ч/н)</option>
+          <option value="283">08.04.2024-14.04.2024 (н/н)</option>
+          <option value="284">15.04.2024-21.04.2024 (ч/н)</option>
+          <option value="285">22.04.2024-28.04.2024 (н/н)</option>
+          <option value="286">29.04.2024-05.05.2024 (ч/н)</option>
+          <option value="287">06.05.2024-12.05.2024 (н/н)</option>
+          <option value="288">13.05.2024-19.05.2024 (ч/н)</option>
+          <option value="289">20.05.2024-26.05.2024 (н/н)</option>
+        </select><select name="facs" size="1">
+          <option value="0">Выберите институт</option>
+          <option value="1">ЕТИ</option>
+          <option value="4">ИГ и СН</option>
+          <option value="8">ИИС и ЦТ</option>
+          <option value="9">ИКИ и П</option>
+          <option value="5">ИП и П</option>
+          <option value="3">ИПАТ</option>
+          <option value="2">МА</option>
+          <option value="10" selected>МБИ</option>
+          <option value="6">ФФК и С</option>
+          <option value="7">ЮФ</option>
+        </select> <select name="courses" size="1">
+          <option value=0>Выберите курс</option>
+          <option value="1">1 курс</option>
+          <option value="2">2 курс</option>
+          <option selected value="3">3 курс</option>
+          <option value="4">4 курс</option>
+          <option value="5">5 курс</option>
+          <option value="6">6 курс</option>
+          <option value="7">7 курс</option>
+        </select>
+          <button class="btn btn-default" type="submit">Показать</button>
+        </p>
+      </form>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <tr class="title">
+            <th>Группа</th>
+            <th>Наименование направления подготовки</th>
+          </tr>
+          </thead>
+          <tr>
+            <td width=120><b><a class="btn btn-default"
+                                href="schedule.php?key=381be53a-b239-11eb-82a8-1cc1de6f817c&perstart=2024-03-04&perend=2024-03-10&perkind=ч">Бб21о-1</a></b>
+            </td>
+            <td><a
+              href="schedule.php?key=381be53a-b239-11eb-82a8-1cc1de6f817c&perstart=2024-03-04&perend=2024-03-10&perkind=ч">06.03.01
+              Биология</a></td>
+          </tr>
+          <tr>
+            <td width=120><b><a class="btn btn-default"
+                                href="schedule.php?key=4b1c7e43-54d3-11ee-b017-1cc1de6f817c&perstart=2024-03-04&perend=2024-03-10&perkind=ч">СЛД(д)-21 </a></b>
+            </td>
+            <td><a
+              href="schedule.php?key=4b1c7e43-54d3-11ee-b017-1cc1de6f817c&perstart=2024-03-04&perend=2024-03-10&perkind=ч">31.05.01
+              Лечебное дело</a></td>
+          </tr>
+          <tr>
+            <td width=120><b><a class="btn btn-default"
+                                href="schedule.php?key=5a4b7893-54d3-11ee-b017-1cc1de6f817c&perstart=2024-03-04&perend=2024-03-10&perkind=ч">СЛД-ИН(д)-21 </a></b>
+            </td>
+            <td><a
+              href="schedule.php?key=5a4b7893-54d3-11ee-b017-1cc1de6f817c&perstart=2024-03-04&perend=2024-03-10&perkind=ч">31.05.01
+              Лечебное дело</a></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div id="dd2" role="tabpanel" class="tab-pane">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <div class="input-group">
+            <form action="/student/timetable/new/" method="get"><input type="hidden" name="mode2" value="1"><select
+              name="pers2" size="1" onchange="if (this.selectedIndex) this.form.submit();">
+              <option value=0>Выберите период</option>
+              <option value="251">28.08.2023-03.09.2023 (н/н)</option>
+              <option value="252">04.09.2023-10.09.2023 (ч/н)</option>
+              <option value="253">11.09.2023-17.09.2023 (н/н)</option>
+              <option value="254">18.09.2023-24.09.2023 (ч/н)</option>
+              <option value="255">25.09.2023-01.10.2023 (н/н)</option>
+              <option value="256">02.10.2023-08.10.2023 (ч/н)</option>
+              <option value="257">09.10.2023-15.10.2023 (н/н)</option>
+              <option value="258">16.10.2023-22.10.2023 (ч/н)</option>
+              <option value="259">23.10.2023-29.10.2023 (н/н)</option>
+              <option value="260">30.10.2023-05.11.2023 (ч/н)</option>
+              <option value="261">06.11.2023-12.11.2023 (н/н)</option>
+              <option value="262">13.11.2023-19.11.2023 (ч/н)</option>
+              <option value="263">20.11.2023-26.11.2023 (н/н)</option>
+              <option value="264">27.11.2023-03.12.2023 (ч/н)</option>
+              <option value="265">04.12.2023-10.12.2023 (н/н)</option>
+              <option value="266">11.12.2023-17.12.2023 (ч/н)</option>
+              <option value="267">18.12.2023-24.12.2023 (н/н)</option>
+              <option value="268">25.12.2023-31.12.2023 (ч/н)</option>
+              <option value="269">01.01.2024-07.01.2024 (н/н)</option>
+              <option value="270">08.01.2024-14.01.2024 (ч/н)</option>
+              <option value="271">15.01.2024-21.01.2024 (н/н)</option>
+              <option value="272">22.01.2024-28.01.2024 (ч/н)</option>
+              <option value="273">29.01.2024-04.02.2024 (н/н)</option>
+              <option value="274">05.02.2024-11.02.2024 (ч/н)</option>
+              <option value="275">12.02.2024-18.02.2024 (н/н)</option>
+              <option value="276">19.02.2024-25.02.2024 (ч/н)</option>
+              <option value="277">26.02.2024-03.03.2024 (н/н)</option>
+              <option value="278" selected>04.03.2024-10.03.2024 (ч/н)</option>
+              <option value="279">11.03.2024-17.03.2024 (н/н)</option>
+              <option value="280">18.03.2024-24.03.2024 (ч/н)</option>
+              <option value="281">25.03.2024-31.03.2024 (н/н)</option>
+              <option value="282">01.04.2024-07.04.2024 (ч/н)</option>
+              <option value="283">08.04.2024-14.04.2024 (н/н)</option>
+              <option value="284">15.04.2024-21.04.2024 (ч/н)</option>
+              <option value="285">22.04.2024-28.04.2024 (н/н)</option>
+              <option value="286">29.04.2024-05.05.2024 (ч/н)</option>
+              <option value="287">06.05.2024-12.05.2024 (н/н)</option>
+              <option value="288">13.05.2024-19.05.2024 (ч/н)</option>
+              <option value="289">20.05.2024-26.05.2024 (н/н)</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+          <div class="input-group"><input name="tab" type="hidden" value="2"><input name="sstring" type="text" value=""
+                                                                                    class="form-control"
+                                                                                    placeholder="Введите ФИО преподавтеля полностью или частично"><span
+            class="input-group-btn"><button class="btn btn-default" type="submit">Показать</button></span></div>
+        </div>
+      </div>
+      </form></div>
+    <div id="dd3" role="tabpanel" class="tab-pane">
+      <form action="/student/timetable/new/" method="get"><input name="tab" type="hidden" value="3"><input type="hidden"
+                                                                                                           name="mode3"
+                                                                                                           value="1">
+        <p><select name="pers3" size="1" onchange="if (this.selectedIndex) this.form.submit();">
+          <option value=0>Выберите период</option>
+          <option value="251">28.08.2023-03.09.2023 (н/н)</option>
+          <option value="252">04.09.2023-10.09.2023 (ч/н)</option>
+          <option value="253">11.09.2023-17.09.2023 (н/н)</option>
+          <option value="254">18.09.2023-24.09.2023 (ч/н)</option>
+          <option value="255">25.09.2023-01.10.2023 (н/н)</option>
+          <option value="256">02.10.2023-08.10.2023 (ч/н)</option>
+          <option value="257">09.10.2023-15.10.2023 (н/н)</option>
+          <option value="258">16.10.2023-22.10.2023 (ч/н)</option>
+          <option value="259">23.10.2023-29.10.2023 (н/н)</option>
+          <option value="260">30.10.2023-05.11.2023 (ч/н)</option>
+          <option value="261">06.11.2023-12.11.2023 (н/н)</option>
+          <option value="262">13.11.2023-19.11.2023 (ч/н)</option>
+          <option value="263">20.11.2023-26.11.2023 (н/н)</option>
+          <option value="264">27.11.2023-03.12.2023 (ч/н)</option>
+          <option value="265">04.12.2023-10.12.2023 (н/н)</option>
+          <option value="266">11.12.2023-17.12.2023 (ч/н)</option>
+          <option value="267">18.12.2023-24.12.2023 (н/н)</option>
+          <option value="268">25.12.2023-31.12.2023 (ч/н)</option>
+          <option value="269">01.01.2024-07.01.2024 (н/н)</option>
+          <option value="270">08.01.2024-14.01.2024 (ч/н)</option>
+          <option value="271">15.01.2024-21.01.2024 (н/н)</option>
+          <option value="272">22.01.2024-28.01.2024 (ч/н)</option>
+          <option value="273">29.01.2024-04.02.2024 (н/н)</option>
+          <option value="274">05.02.2024-11.02.2024 (ч/н)</option>
+          <option value="275">12.02.2024-18.02.2024 (н/н)</option>
+          <option value="276">19.02.2024-25.02.2024 (ч/н)</option>
+          <option value="277">26.02.2024-03.03.2024 (н/н)</option>
+          <option value="278" selected>04.03.2024-10.03.2024 (ч/н)</option>
+          <option value="279">11.03.2024-17.03.2024 (н/н)</option>
+          <option value="280">18.03.2024-24.03.2024 (ч/н)</option>
+          <option value="281">25.03.2024-31.03.2024 (н/н)</option>
+          <option value="282">01.04.2024-07.04.2024 (ч/н)</option>
+          <option value="283">08.04.2024-14.04.2024 (н/н)</option>
+          <option value="284">15.04.2024-21.04.2024 (ч/н)</option>
+          <option value="285">22.04.2024-28.04.2024 (н/н)</option>
+          <option value="286">29.04.2024-05.05.2024 (ч/н)</option>
+          <option value="287">06.05.2024-12.05.2024 (н/н)</option>
+          <option value="288">13.05.2024-19.05.2024 (ч/н)</option>
+          <option value="289">20.05.2024-26.05.2024 (н/н)</option>
+        </select><select name="buis" size="1">
+          <option value=1>Выберите корпус</option>
+          <option value=1></option>
+          <option value=2>-</option>
+          <option value=3>Егорова, 15</option>
+          <option value=4>Егорова, 16</option>
+          <option value=5>Коммуны, 9</option>
+          <option value=6>Корпус А</option>
+          <option value=7>Корпус В</option>
+          <option value=8>Корпус Е</option>
+          <option value=9>Корпус КСК</option>
+          <option value=10>Корпус Л</option>
+          <option value=11>Корпус М</option>
+          <option value=12>Корпус Н</option>
+          <option value=13>Корпус П</option>
+          <option value=14>Корпус С</option>
+          <option value=15>Корпус Э</option>
+          <option value=16>Ленина, 57</option>
+        </select>
+          <button class="btn btn-default" type="submit">Показать</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<hr class='hidden-xs hidden-print'>
+<div class="alert alert-info"><strong>Ваши замечания и предложения по содержательной части расписаний просьба отправлять
+  в <a href="https://www.mauniver.ru/services/staff/">Отдел сопровождения образовательной деятельности УМУ</a><br>Ваши
+  замечания и предложения по техническим вопросам отображения расписаний на сайте можно отправлять в <a
+    href="/structure/deps/uit/feedback/">Управление информационных технологий</a></strong></div>
