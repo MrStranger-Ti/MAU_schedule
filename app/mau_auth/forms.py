@@ -10,7 +10,7 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = 'password', 'email', 'full_name', 'institute', 'course', 'group'
 
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -20,7 +20,7 @@ class UserRegistrationForm(forms.ModelForm):
 
 class UserLoginForm(forms.Form):
     email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
 
     error_messages = {
         "invalid_login":
