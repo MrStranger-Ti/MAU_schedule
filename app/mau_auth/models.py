@@ -1,6 +1,8 @@
 import os
 import re
 
+from datetime import date, timedelta
+
 import requests
 import bs4
 
@@ -16,6 +18,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from mau_auth.validators import validate_full_name
+from mau_auth.exceptions import TagNotFound
 
 
 class MauUserManager(BaseUserManager):
@@ -86,12 +89,14 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+        ordering = 'course', 'full_name'
 
-    full_name = models.CharField(max_length=256, validators=[validate_full_name], verbose_name='ФИО')
+    full_name = models.CharField(max_length=50, validators=[validate_full_name], verbose_name='ФИО')
     email = models.EmailField(unique=True, verbose_name='Email')
-    institute = models.CharField(verbose_name='Институт')
+    institute = models.ForeignKey('MauInstitute', null=True, on_delete=models.PROTECT, related_name='mauusers',
+                                  verbose_name='Институт')
     course = models.PositiveSmallIntegerField(default=1, verbose_name='Курс')
-    group = models.CharField(verbose_name='Группа')
+    group = models.CharField(null=True, max_length=20)
 
     objects = MauUserManager()
 
@@ -116,17 +121,29 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
 
     @classmethod
     def _get_schedule_data(cls, url: str) -> dict[int, list[str]]:
-        group_page_response = requests.get(url)
-        soup = bs4.BeautifulSoup(group_page_response.content, 'lxml')
+        current_date = date.today()
+        pars_date_ranges = [
+            (current_date, current_date + timedelta(days=6)),
+            (current_date + timedelta(days=7), current_date + timedelta(days=13)),
+        ]
 
         data = {}
-        weekdays = settings.WEEKDAYS
-        for day_num, day in enumerate(soup.find_all('table')):
-            data.setdefault(weekdays[day_num], [])
-            for row_num, row in enumerate(day.find_all('tr')[1:]):
-                data[weekdays[day_num]].append(
-                    [field.text for field in row.find_all(['th', 'td'])]
-                )
+        for perstart, perend in pars_date_ranges:
+            params = {
+                'perstart': perstart.strftime('%Y-%m-%d'),
+                'perend': perend.strftime('%Y-%m-%d'),
+            }
+            group_page_response = requests.get(url, params=params)
+            soup = bs4.BeautifulSoup(group_page_response.content, 'lxml')
+
+            for day in soup.find_all('table'):
+                title = day.find('th')
+                if title and not title.text.startswith('Воскресенье'):
+                    data.setdefault(title.text, [])
+                    for row in day.find_all('tr')[1:]:
+                        data[title.text].append(
+                            [field.text for field in row.find_all(['th', 'td'])]
+                        )
 
         return data
 
@@ -136,9 +153,12 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         soup = bs4.BeautifulSoup(base_schedule_page_response.content, 'lxml')
 
         date_select = soup.find('option', selected=True)
-        pers = date_select.get('value')
-
         institute_select = soup.find('option', string=self.institute)
+
+        if date_select is None or institute_select is None:
+            raise TagNotFound
+
+        pers = date_select.get('value')
         facs = institute_select.get('value')
 
         return pers, facs, self.course
@@ -156,6 +176,10 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         r = requests.get(base_schedule_url, params=params)
         soup = bs4.BeautifulSoup(r.content, 'lxml')
         a_tag = soup.find('a', string=re.compile(fr'\s*?{group}\s*?'))
+
+        if a_tag is None:
+            raise TagNotFound
+
         group_schedule_url = os.path.join(base_schedule_url, a_tag.get('href'))
 
         return group_schedule_url
@@ -166,8 +190,13 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
 
         schedule_data = cache.get(f'schedule_of_group_{self.group}')
         if not schedule_data:
-            perc, facs, course = self._get_query_params()
-            group_url = self._get_group_url(perc, facs, self.course)
+            try:
+                perc, facs, course = self._get_query_params()
+                group_url = self._get_group_url(perc, facs, self.course)
+
+            except TagNotFound:
+                return None
+
             schedule_data = self._get_schedule_data(group_url)
             cache.set(f'schedule_of_group_{self.group}', schedule_data, settings.SCHEDULE_CACHE_TIME)
 
@@ -191,3 +220,15 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class MauInstitute(models.Model):
+    class Meta:
+        verbose_name = 'институт'
+        verbose_name_plural = 'институты'
+        ordering = 'name',
+
+    name = models.CharField(max_length=20, verbose_name='Название')
+
+    def __str__(self):
+        return self.name

@@ -160,19 +160,11 @@ LOGOUT_REDIRECT_URL = reverse_lazy('mau_auth:login')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
 # Mau parsing
 
 SCHEDULE_URL = os.getenv('SCHEDULE_URL')
 
-WEEKDAYS = [
-    'Понедельник',
-    'Вторник',
-    'Среда',
-    'Четверг',
-    'Пятница',
-    'Суббота',
-    'Воскресенье',
-]
 
 # Cache
 
@@ -184,3 +176,19 @@ CACHES = {
 }
 
 SCHEDULE_CACHE_TIME = 60 * 20
+
+
+# Data Migrations
+
+INSTITUTE_NAMES = [
+    'ЕТИ',
+    'ИГ и СН',
+    'ИИС и ЦТ',
+    'ИКИ и П',
+    'ИП и П',
+    'ИПАТ',
+    'МА',
+    'МБИ',
+    'ФФК и С',
+    'ЮФ',
+]
