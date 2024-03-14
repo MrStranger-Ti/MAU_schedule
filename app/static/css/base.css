@@ -12,13 +12,14 @@ body {
 .container {
     margin: 0 auto;
     max-width: 1920px;
-    padding: 0 150px;
+    padding: 50px 150px 50px;
 }
 
 .tables__list {
     display: flex;
     flex-direction: column;
     gap: 50px;
+    margin-bottom: 50px;
 }
 
 .table_title {
@@ -64,4 +65,10 @@ tbody td:nth-child(4) {
 
 tbody td:nth-child(5) {
     width: 10%;
+}
+
+.tables__pagination {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
 }

@@ -25,9 +25,9 @@
 <section class="tables">
   <div class="container tables__container">
     <h1>Расписание</h1>
-    {% if schedule %}
+    {% if page_obj %}
       <div class="tables__list">
-        {% for day_name, day_table in schedule.items %}
+        {% for day_name, day_table in page_obj %}
           <table class="schedule_table">
             <thead>
             <tr>
@@ -56,6 +56,14 @@
     {% else %}
       <p>Расписания нет. Проверьте свои данные в профиле.</p>
     {% endif %}
+    <div class="tables__pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Предыдущая неделя</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Следующая неделя</a>
+      {% endif %}
+    </div>
   </div>
 </section>
 </body>
