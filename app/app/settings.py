@@ -160,10 +160,18 @@ LOGOUT_REDIRECT_URL = reverse_lazy('mau_auth:login')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+DEFAULT_FROM_EMAIL = 'mauadmin@mauniver.ru'
 
-# Mau parsing
+
+# Mau data
 
 SCHEDULE_URL = os.getenv('SCHEDULE_URL')
+
+MAU_DOMAINS = [
+    'masu.edu.ru',
+    'mstu.edu.ru',
+    'mauniver.ru',
+]
 
 
 # Cache
@@ -192,3 +200,18 @@ INSTITUTE_NAMES = [
     'ФФК и С',
     'ЮФ',
 ]
+
+
+# Redis
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379'
+
+
+# Celery
+
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'visibility_timeout': 3600,
+    'max_retries': 3,
+}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'

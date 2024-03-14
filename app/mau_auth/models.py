@@ -11,13 +11,19 @@ from django.contrib import auth
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.db import models
+from django.http import HttpRequest
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.conf import settings
 from django.core.cache import cache
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
-from mau_auth.validators import validate_full_name
+from mau_auth.validators import validate_full_name, validate_email
 from mau_auth.exceptions import TagNotFound
 
 
@@ -92,11 +98,11 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         ordering = 'course', 'full_name'
 
     full_name = models.CharField(max_length=50, validators=[validate_full_name], verbose_name='ФИО')
-    email = models.EmailField(unique=True, verbose_name='Email')
+    email = models.EmailField(unique=True, validators=[validate_email], verbose_name='Email')
     institute = models.ForeignKey('MauInstitute', null=True, on_delete=models.PROTECT, related_name='mauusers',
                                   verbose_name='Институт')
     course = models.PositiveSmallIntegerField(default=1, verbose_name='Курс')
-    group = models.CharField(null=True, max_length=20)
+    group = models.CharField(null=True, max_length=20, verbose_name='Группа')
 
     objects = MauUserManager()
 
@@ -121,20 +127,22 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
 
     @classmethod
     def _get_schedule_data(cls, url: str) -> dict[int, list[str]]:
-        current_date = date.today()
-        pars_date_ranges = [
-            (current_date, current_date + timedelta(days=6)),
-            (current_date + timedelta(days=7), current_date + timedelta(days=13)),
-        ]
+        current_calendar_date = date.today().isocalendar()
+        monday = date.fromisocalendar(current_calendar_date[0], current_calendar_date[1], 1)
 
         data = {}
-        for perstart, perend in pars_date_ranges:
+        for _ in range(4):
+            sunday = monday + timedelta(days=6)
             params = {
-                'perstart': perstart.strftime('%Y-%m-%d'),
-                'perend': perend.strftime('%Y-%m-%d'),
+                'perstart': monday.isoformat(),
+                'perend': sunday.isoformat(),
             }
+
             group_page_response = requests.get(url, params=params)
             soup = bs4.BeautifulSoup(group_page_response.content, 'lxml')
+
+            if not soup.find('table', class_='table table-bordered table-striped table-3'):
+                break
 
             for day in soup.find_all('table'):
                 title = day.find('th')
@@ -144,6 +152,8 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
                         data[title.text].append(
                             [field.text for field in row.find_all(['th', 'td'])]
                         )
+
+            monday += timedelta(days=7)
 
         return data
 
@@ -175,7 +185,11 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         }
         r = requests.get(base_schedule_url, params=params)
         soup = bs4.BeautifulSoup(r.content, 'lxml')
-        a_tag = soup.find('a', string=re.compile(fr'\s*?{group}\s*?'))
+        a_tag = soup.find(
+            'a',
+            string=re.compile(fr'\s*?{group}\s*?'),
+            href=lambda url: url and url.startswith('schedule.php'),
+        )
 
         if a_tag is None:
             raise TagNotFound
@@ -183,6 +197,15 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         group_schedule_url = os.path.join(base_schedule_url, a_tag.get('href'))
 
         return group_schedule_url
+
+    def _get_confirmation_message(self, request: HttpRequest) -> str:
+        current_site = get_current_site(request)
+        context = {
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(self.pk)),
+            'token': default_token_generator.make_token(self),
+        }
+        return render_to_string('registration_email/email_message.html', context=context)
 
     def get_schedule(self) -> dict[int, list[str]] | None:
         if not all([self.course, self.institute, self.group]):
@@ -220,6 +243,16 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def send_email_confirmation(self, request: HttpRequest) -> None:
+        subject = 'Подтвердите почту в приложении MAU schedule'
+        message = self._get_confirmation_message(request)
+        send_mail(
+            subject=subject,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            message=message,
+            recipient_list=[self.email],
+        )
 
 
 class MauInstitute(models.Model):

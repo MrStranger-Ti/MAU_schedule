@@ -9,12 +9,17 @@ from mau_auth.views import (
     MauPasswordResetDoneView,
     MauPasswordConfirmView,
     MauPasswordCompleteView,
+    RegistrationEmailSentView,
+    RegistrationEmailConfirmView,
 )
 
 app_name = 'mau_auth'
 
 urlpatterns = [
     path('registration/', MauRegistrationView.as_view(), name='registration'),
+    path('registration/emailsent/', RegistrationEmailSentView.as_view(), name='registration_email_sent'),
+    path('registration/emailconfirm/<uidb64>/<token>', RegistrationEmailConfirmView.as_view(), name='registration_email_confirm'),
+
     path('login/', MauLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 

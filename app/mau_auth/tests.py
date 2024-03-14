@@ -24,7 +24,7 @@ class RegistrationViewTest(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.base_url = reverse_lazy('mau_auth:registration')
-        cls.template_name = 'mau_auth/registration.html'
+        cls.template_name = 'mau_auth/registration_email.html'
 
     def test_status_code_200(self) -> None:
         response = self.client.get(self.base_url)

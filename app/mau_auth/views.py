@@ -1,13 +1,19 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
     PasswordResetCompleteView
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
+from django.utils.http import urlsafe_base64_decode
 from django.views import View
+from django.contrib.auth.tokens import default_token_generator
 
 from django.conf import settings
+from django.views.generic import TemplateView
+
 from mau_auth.forms import UserRegistrationForm, UserLoginForm
+
+User = get_user_model()
 
 
 class MauRegistrationView(View):
@@ -29,12 +35,33 @@ class MauRegistrationView(View):
         if form.is_valid():
             user = form.save()
             user.set_password(form.cleaned_data['password'])
+            user.is_active = False
             user.save()
 
-            login(request, user)
-            return redirect(settings.LOGIN_REDIRECT_URL)
+            user.send_email_confirmation(request)
+            return redirect(reverse('mau_auth:registration_email_sent'))
 
         return render(request, self.template_name, context={'form': form})
+
+
+class RegistrationEmailSentView(TemplateView):
+    template_name = 'registration_email/email_sent.html'
+
+
+class RegistrationEmailConfirmView(View):
+    template_name = 'registration_email/email_confirm.html'
+
+    def get(self, request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
+        uid = urlsafe_base64_decode(uidb64).decode()
+
+        user = User.objects.filter(pk=uid).first()
+        if user and default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+
+            return render(request, self.template_name, context={'email_confirmed': True})
+
+        return render(request, self.template_name, context={'email_confirmed': False})
 
 
 class MauLoginView(LoginView):
@@ -46,6 +73,7 @@ class MauLoginView(LoginView):
 class MauPasswordResetView(PasswordResetView):
     template_name = 'mau_auth/password_reset_form.html'
     email_template_name = 'mau_auth/password_reset_email.html'
+    subject_template_name = 'mau_auth/password_reset_subject.txt'
     success_url = reverse_lazy('mau_auth:password_reset_done')
 
     def get_context_data(self, **kwargs):
