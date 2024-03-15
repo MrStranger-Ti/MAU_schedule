@@ -36,6 +36,10 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
 ]
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 
 # Application definition
 
@@ -47,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'debug_toolbar',
+
     'mau_auth.apps.MauAuthConfig',
     'schedule.apps.ScheduleConfig',
     'profiles.apps.ProfilesConfig',
@@ -57,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -178,8 +185,8 @@ MAU_DOMAINS = [
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cache_table',
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://localhost:6379/0',
     },
 }
 
