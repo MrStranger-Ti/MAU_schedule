@@ -36,6 +36,10 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
 ]
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 
 # Application definition
 
@@ -47,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'debug_toolbar',
+
     'mau_auth.apps.MauAuthConfig',
     'schedule.apps.ScheduleConfig',
     'profiles.apps.ProfilesConfig',
@@ -57,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -137,6 +144,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    'app/static',
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -155,3 +166,59 @@ LOGOUT_REDIRECT_URL = reverse_lazy('mau_auth:login')
 # Email
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL = 'mauadmin@mauniver.ru'
+
+
+# Mau data
+
+SCHEDULE_URL = os.getenv('SCHEDULE_URL')
+
+MAU_DOMAINS = [
+    'masu.edu.ru',
+    'mstu.edu.ru',
+    'mauniver.ru',
+]
+
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://localhost:6379/0',
+    },
+}
+
+SCHEDULE_CACHE_TIME = 60 * 20
+
+
+# Data Migrations
+
+INSTITUTE_NAMES = [
+    'ЕТИ',
+    'ИГ и СН',
+    'ИИС и ЦТ',
+    'ИКИ и П',
+    'ИП и П',
+    'ИПАТ',
+    'МА',
+    'МБИ',
+    'ФФК и С',
+    'ЮФ',
+]
+
+
+# Redis
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379'
+
+
+# Celery
+
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'visibility_timeout': 3600,
+    'max_retries': 3,
+}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'

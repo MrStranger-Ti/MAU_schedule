@@ -10,7 +10,8 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = 'password', 'email', 'full_name', 'institute', 'course', 'group'
 
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
+    course = forms.IntegerField(min_value=1, max_value=7, label='Курс', initial=1)
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -20,14 +21,11 @@ class UserRegistrationForm(forms.ModelForm):
 
 class UserLoginForm(forms.Form):
     email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
 
     error_messages = {
-        "invalid_login":
-            "Please enter a correct %(username)s and password. Note that both "
-            "fields may be case-sensitive."
-        ,
-        "inactive": "This account is inactive.",
+        "invalid_login": "Введите правильный логин и пароль.",
+        "inactive": "Этот аккаунт неактивен.",
     }
 
     def __init__(self, request=None, *args, **kwargs):
