@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 def validate_full_name(value: str) -> None:
-    if not re.fullmatch(r'([ЁА-ЯA-Z]\w+\s?){3}', value):
+    if not re.fullmatch(r'[ЁА-ЯA-Z]\w+\s[ЁА-ЯA-Z]\w+\s[ЁА-ЯA-Z]\w+\s?', value):
         raise ValidationError('ФИО должно быть в формате Фамилия Имя Отчество')
 
 

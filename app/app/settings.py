@@ -145,7 +145,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    'app/static',
+    BASE_DIR / 'static',
 ]
 
 # Default primary key field type
@@ -181,12 +181,17 @@ MAU_DOMAINS = [
 ]
 
 
+# Redis
+REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = '6379'
+
+
 # Cache
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://localhost:6379/0',
+        'LOCATION': f'redis://{REDIS_HOST}:6379/0',
     },
 }
 
@@ -207,11 +212,6 @@ INSTITUTE_NAMES = [
     'ФФК и С',
     'ЮФ',
 ]
-
-
-# Redis
-REDIS_HOST = '127.0.0.1'
-REDIS_PORT = '6379'
 
 
 # Celery

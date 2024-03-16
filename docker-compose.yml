@@ -11,13 +11,14 @@ services:
       - PYTHONPATH=/usr/src/app
       - PYTHONUTF8=1
       - DB_HOST=postgres_db
+      - REDIS_HOST=redis
     command: >
       bash -c
       "django-admin makemigrations
       && django-admin migrate
       && django-admin runserver 0.0.0.0:8000"
     ports:
-      - '8080:8000'
+      - '8000:8000'
     depends_on:
       - postgres_db
 
@@ -31,6 +32,11 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - '5000:5432'
+
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
 
 volumes:
   db_data:

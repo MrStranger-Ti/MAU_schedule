@@ -163,7 +163,7 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         soup = bs4.BeautifulSoup(base_schedule_page_response.content, 'lxml')
 
         date_select = soup.find('option', selected=True)
-        institute_select = soup.find('option', string=self.institute)
+        institute_select = soup.find('option', string=self.institute.name)
 
         if date_select is None or institute_select is None:
             raise TagNotFound
