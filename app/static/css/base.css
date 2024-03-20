@@ -36,15 +36,24 @@ body {
     padding-bottom: 20px;
 }
 
-.schedule_table_th {
+.table_heads th {
     padding: 5px 10px;
     border: 2px solid gray;
 }
 
-.schedule_table_td {
+tr td {
     padding: 3px 5px;
     border: 2px solid grey;
     text-align: center;
+}
+
+tbody tr:hover {
+    cursor: pointer;
+    background-color: #e2e2e2;
+}
+
+.existing_note_tr td:nth-child(1) {
+    background-color: red;
 }
 
 tbody td:nth-child(1) {

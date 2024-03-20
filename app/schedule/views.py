@@ -12,7 +12,12 @@ class IndexPageView(LoginRequiredMixin, TemplateView):
         context = self.get_context_data(*args, **kwargs)
 
         schedule = self.request.user.get_schedule()
-        paginator = Paginator(list(schedule.items()), 6)
+        if schedule:
+            obj_list = list(schedule.items())
+        else:
+            obj_list = list()
+
+        paginator = Paginator(obj_list, 6)
 
         page = request.GET.get('page', 1)
         page_obj = paginator.get_page(page)

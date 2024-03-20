@@ -144,12 +144,14 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
             if not soup.find('table', class_='table table-bordered table-striped table-3'):
                 break
 
-            for day in soup.find_all('table'):
+            for weekday_num, day in enumerate(soup.find_all('table')):
                 title = day.find('th')
                 if title and not title.text.startswith('Воскресенье'):
-                    data.setdefault(title.text, [])
+                    curr_date = monday + timedelta(days=weekday_num)
+                    curr_date_format = curr_date.strftime('%Y-%m-%d')
+                    data.setdefault(curr_date_format, [])
                     for row in day.find_all('tr')[1:]:
-                        data[title.text].append(
+                        data[curr_date_format].append(
                             [field.text for field in row.find_all(['th', 'td'])]
                         )
 

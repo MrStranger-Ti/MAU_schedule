@@ -1,4 +1,5 @@
 {% load static %}
+{% load schedule_tags %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,6 +9,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Расписание</title>
   <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
 <h1>Главная</h1>
@@ -27,25 +29,26 @@
     <h1>Расписание</h1>
     {% if page_obj %}
       <div class="tables__list">
-        {% for day_name, day_table in page_obj %}
+        {% for date, day_table in page_obj %}
           <table class="schedule_table">
             <thead>
             <tr>
-              <th colspan="5" class="table_title">{{ day_name }}</th>
+              <th colspan="5" class="table_title">{{ date }}</th>
             </tr>
             <tr class="table_heads">
-              <th class="schedule_table_th">№</th>
-              <th class="schedule_table_th">Время</th>
-              <th class="schedule_table_th">Название</th>
-              <th class="schedule_table_th">Преподаватель</th>
-              <th class="schedule_table_th">Корпус</th>
+              <th>№</th>
+              <th>Время</th>
+              <th>Название</th>
+              <th>Преподаватель</th>
+              <th>Корпус</th>
             </tr>
             </thead>
             <tbody>
             {% for row in day_table %}
-              <tr>
+              {% check_user_note date forloop.counter as is_exists_note %}
+              <tr {% if is_exists_note %} class="existing_note_tr" {% endif %} tr-href="{% url 'notes:note_create' day=date lesson_number=forloop.counter %}">
                 {% for cell in row %}
-                  <td class="schedule_table_td">{{ cell }}</td>
+                  <td>{{ cell }}</td>
                 {% endfor %}
               </tr>
             {% endfor %}
@@ -66,5 +69,12 @@
     </div>
   </div>
 </section>
+<script>
+    jQuery(function ($) {
+        $('tbody tr[tr-href]').addClass('clickable').click(function () {
+            window.location = $(this).attr('tr-href');
+        });
+    });
+</script>
 </body>
 </html>

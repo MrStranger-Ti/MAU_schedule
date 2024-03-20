@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [
 
 INTERNAL_IPS = [
     '127.0.0.1',
+    '0.0.0.0',
 ]
 
 
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'mau_auth.apps.MauAuthConfig',
     'schedule.apps.ScheduleConfig',
     'profiles.apps.ProfilesConfig',
+    'notes.apps.NotesConfig',
 ]
 
 MIDDLEWARE = [
@@ -200,7 +202,7 @@ SCHEDULE_CACHE_TIME = 60 * 20
 
 # Data Migrations
 
-INSTITUTE_NAMES = [
+INSTITUTES = [
     'ЕТИ',
     'ИГ и СН',
     'ИИС и ЦТ',
