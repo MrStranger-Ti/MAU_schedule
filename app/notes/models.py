@@ -1,3 +1,6 @@
+from datetime import datetime
+from typing import Optional
+
 from django.db import models
 from django.conf import settings
 
@@ -20,3 +23,15 @@ class Note(models.Model):
 
     def __str__(self):
         return f'Заметка, ID: {self.pk}'
+
+    @classmethod
+    def get_note(cls, user: settings.AUTH_USER_MODEL, day: str, lesson_number: int) -> Optional['Note']:
+        day = datetime.strptime(day, '%Y-%m-%d')
+        note = Note.objects.filter(
+            user=user,
+            day=day,
+            lesson_number=lesson_number,
+        ).first()
+        if note:
+            return note
+        return None
