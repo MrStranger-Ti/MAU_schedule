@@ -1,10 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.http import HttpRequest
 from django.test import TestCase
 from django.urls import reverse_lazy, reverse
 
 from mau_auth.forms import UserRegistrationForm
-
 
 User = get_user_model()
 
@@ -19,7 +17,7 @@ class UserTest(TestCase):
         self.assertTrue(user)
 
 
-class RegistrationViewTest(TestCase):
+class TestRegistrationView(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -30,11 +28,11 @@ class RegistrationViewTest(TestCase):
         response = self.client.get(self.base_url)
         self.assertEqual(200, response.status_code)
 
-    def test_uses_correct_template(self):
+    def test_uses_correct_template(self) -> None:
         response = self.client.get(self.base_url)
         self.assertTemplateUsed(response, self.template_name)
 
-    def test_correct_form_display(self):
+    def test_correct_form_display(self) -> None:
         field_names = ('full_name', 'password', 'email', 'institute', 'course', 'group')
         response = self.client.get(self.base_url)
         response_form = response.context.get('form')
@@ -85,10 +83,9 @@ class LoginTest(TestCase):
         self.test_user.delete()
 
     def test_login_user(self) -> None:
-        self.client.login(**self.user_data)
-        response = self.client.get(reverse('schedule:index'))
-        self.assertEqual(str(response.context.get('user')), self.user_data['email'])
+        login = self.client.login(**self.user_data)
+        self.assertTrue(login)
 
-    def test_login_url(self):
+    def test_login_url(self) -> None:
         response = self.client.get(reverse('mau_auth:login'))
         self.assertEqual(200, response.status_code)

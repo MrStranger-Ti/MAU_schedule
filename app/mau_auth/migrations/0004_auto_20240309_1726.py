@@ -7,7 +7,7 @@ from mau_auth.models import MauInstitute
 
 
 def set_institutes(apps, schema_editor):
-    for institute_name in settings.INSTITUTE_NAMES:
+    for institute_name in settings.INSTITUTES:
         MauInstitute.objects.get_or_create(name=institute_name)
 
 

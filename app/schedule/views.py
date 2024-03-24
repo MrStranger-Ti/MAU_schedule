@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 
 class IndexPageView(LoginRequiredMixin, TemplateView):
     template_name = 'schedule/index.html'
+    paginate_by = 6
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         context = self.get_context_data(*args, **kwargs)
@@ -17,7 +18,7 @@ class IndexPageView(LoginRequiredMixin, TemplateView):
         else:
             obj_list = list()
 
-        paginator = Paginator(obj_list, 6)
+        paginator = Paginator(obj_list, self.paginate_by)
 
         page = request.GET.get('page', 1)
         page_obj = paginator.get_page(page)
