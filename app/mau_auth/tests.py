@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse_lazy, reverse
 
 from mau_auth.forms import UserRegistrationForm
+from mau_auth.models import MauInstitute
 
 User = get_user_model()
 
@@ -22,13 +23,13 @@ class TestRegistrationView(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.base_url = reverse_lazy('mau_auth:registration')
-        cls.template_name = 'mau_auth/registration_email.html'
+        cls.template_name = 'mau_auth/registration.html'
 
     def test_status_code_200(self) -> None:
         response = self.client.get(self.base_url)
         self.assertEqual(200, response.status_code)
 
-    def test_uses_correct_template(self) -> None:
+    def test_use_correct_template(self) -> None:
         response = self.client.get(self.base_url)
         self.assertTemplateUsed(response, self.template_name)
 
@@ -49,11 +50,12 @@ class UserRegistrationFormTest(TestCase):
         cls.base_url = reverse_lazy('mau_auth:registration')
 
     def test_registration_form_with_valid_data(self) -> None:
+        institute = MauInstitute.objects.get(name='ИИС и ЦТ')
         form = UserRegistrationForm({
             'password': 'testpassword',
-            'email': 'test@example.com',
+            'email': 'test@mauniver.ru',
             'full_name': 'Петров Петр Петрович',
-            'institute': 'ЦТ',
+            'institute': institute,
             'course': 2,
             'group': 'БИВТ-24',
         })
