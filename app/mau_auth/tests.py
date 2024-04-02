@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 class UserTest(TestCase):
-    def test_create_user(self):
+    def test_create_user(self) -> None:
         user = User.objects.create_user(
             full_name='Иванов Иван Иванович',
             password='test',
@@ -20,7 +20,7 @@ class UserTest(TestCase):
 
 class TestRegistrationView(TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         super().setUpClass()
         cls.base_url = reverse_lazy('mau_auth:registration')
         cls.template_name = 'mau_auth/registration.html'
@@ -61,11 +61,20 @@ class UserRegistrationFormTest(TestCase):
         })
         self.assertTrue(form.is_valid())
 
-    def test_set_invalid_email_of_registration_form(self) -> None:
-        test_data = ('Петров Петр', 'dasdass')
-        for data in test_data:
-            form = UserRegistrationForm({'full_name': data})
+    def test_get_full_name_field_error(self) -> None:
+        test_full_names = ('Петров Петр', 'dasdass')
+        for full_name in test_full_names:
+            form = UserRegistrationForm({'full_name': full_name})
             self.assertEqual(form.errors['full_name'], ['ФИО должно быть в формате Фамилия Имя Отчество'])
+
+    def test_get_email_field_error(self) -> None:
+        test_emails = ('testdadadx@yax.rux', 'fkfbvmna@csc.dadwad', 'esafa@example.com')
+        for email in test_emails:
+            form = UserRegistrationForm({'email': email})
+            self.assertEqual(
+                form.errors['email'],
+                ['Почта может быть только со следующими доменами: masu.edu.ru, mstu.edu.ru, mauniver.ru'],
+            )
 
 
 class LoginTest(TestCase):
