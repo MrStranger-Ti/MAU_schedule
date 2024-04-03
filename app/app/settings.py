@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [
 
 INTERNAL_IPS = [
     '127.0.0.1',
+    '0.0.0.0',
 ]
 
 
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'mau_auth.apps.MauAuthConfig',
     'schedule.apps.ScheduleConfig',
     'profiles.apps.ProfilesConfig',
+    'notes.apps.NotesConfig',
 ]
 
 MIDDLEWARE = [
@@ -145,7 +147,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    'app/static',
+    BASE_DIR / 'static',
 ]
 
 # Default primary key field type
@@ -181,12 +183,17 @@ MAU_DOMAINS = [
 ]
 
 
+# Redis
+REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = '6379'
+
+
 # Cache
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://localhost:6379/0',
+        'LOCATION': f'redis://{REDIS_HOST}:6379/0',
     },
 }
 
@@ -195,7 +202,7 @@ SCHEDULE_CACHE_TIME = 60 * 20
 
 # Data Migrations
 
-INSTITUTE_NAMES = [
+INSTITUTES = [
     'ЕТИ',
     'ИГ и СН',
     'ИИС и ЦТ',
@@ -207,11 +214,6 @@ INSTITUTE_NAMES = [
     'ФФК и С',
     'ЮФ',
 ]
-
-
-# Redis
-REDIS_HOST = '127.0.0.1'
-REDIS_PORT = '6379'
 
 
 # Celery

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% if note %}
+    <title>Изменение заметки</title>
+  {% else %}
+    <title>Добавление заметки</title>
+  {% endif %}
+</head>
+<body>
+{% if note %}
+  <h1>Изменение заметки</h1>
+{% else %}
+  <h1>Добавить заметку</h1>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if note %}
+    <button type="submit">Изменить заметку</button>
+    <p><a href="{% url 'notes:note_delete' day=note.day lesson_number=note.lesson_number %}">Удалить заметку</a></p>
+  {% else %}
+    <button type="submit">Создать заметку</button>
+  {% endif %}
+</form>
+</body>
+</html>

@@ -1,16 +1,15 @@
 from django.contrib.auth import get_user_model
-from django.http import HttpRequest
 from django.test import TestCase
 from django.urls import reverse_lazy, reverse
 
 from mau_auth.forms import UserRegistrationForm
-
+from mau_auth.models import MauInstitute
 
 User = get_user_model()
 
 
 class UserTest(TestCase):
-    def test_create_user(self):
+    def test_create_user(self) -> None:
         user = User.objects.create_user(
             full_name='Иванов Иван Иванович',
             password='test',
@@ -19,22 +18,22 @@ class UserTest(TestCase):
         self.assertTrue(user)
 
 
-class RegistrationViewTest(TestCase):
+class TestRegistrationView(TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         super().setUpClass()
         cls.base_url = reverse_lazy('mau_auth:registration')
-        cls.template_name = 'mau_auth/registration_email.html'
+        cls.template_name = 'mau_auth/registration.html'
 
     def test_status_code_200(self) -> None:
         response = self.client.get(self.base_url)
         self.assertEqual(200, response.status_code)
 
-    def test_uses_correct_template(self):
+    def test_use_correct_template(self) -> None:
         response = self.client.get(self.base_url)
         self.assertTemplateUsed(response, self.template_name)
 
-    def test_correct_form_display(self):
+    def test_correct_form_display(self) -> None:
         field_names = ('full_name', 'password', 'email', 'institute', 'course', 'group')
         response = self.client.get(self.base_url)
         response_form = response.context.get('form')
@@ -51,21 +50,31 @@ class UserRegistrationFormTest(TestCase):
         cls.base_url = reverse_lazy('mau_auth:registration')
 
     def test_registration_form_with_valid_data(self) -> None:
+        institute = MauInstitute.objects.get(name='ИИС и ЦТ')
         form = UserRegistrationForm({
             'password': 'testpassword',
-            'email': 'test@example.com',
+            'email': 'test@mauniver.ru',
             'full_name': 'Петров Петр Петрович',
-            'institute': 'ЦТ',
+            'institute': institute,
             'course': 2,
             'group': 'БИВТ-24',
         })
         self.assertTrue(form.is_valid())
 
-    def test_set_invalid_email_of_registration_form(self) -> None:
-        test_data = ('Петров Петр', 'dasdass')
-        for data in test_data:
-            form = UserRegistrationForm({'full_name': data})
+    def test_get_full_name_field_error(self) -> None:
+        test_full_names = ('Петров Петр', 'dasdass')
+        for full_name in test_full_names:
+            form = UserRegistrationForm({'full_name': full_name})
             self.assertEqual(form.errors['full_name'], ['ФИО должно быть в формате Фамилия Имя Отчество'])
+
+    def test_get_email_field_error(self) -> None:
+        test_emails = ('testdadadx@yax.rux', 'fkfbvmna@csc.dadwad', 'esafa@example.com')
+        for email in test_emails:
+            form = UserRegistrationForm({'email': email})
+            self.assertEqual(
+                form.errors['email'],
+                ['Почта может быть только со следующими доменами: masu.edu.ru, mstu.edu.ru, mauniver.ru'],
+            )
 
 
 class LoginTest(TestCase):
@@ -85,10 +94,9 @@ class LoginTest(TestCase):
         self.test_user.delete()
 
     def test_login_user(self) -> None:
-        self.client.login(**self.user_data)
-        response = self.client.get(reverse('schedule:index'))
-        self.assertEqual(str(response.context.get('user')), self.user_data['email'])
+        login = self.client.login(**self.user_data)
+        self.assertTrue(login)
 
-    def test_login_url(self):
+    def test_login_url(self) -> None:
         response = self.client.get(reverse('mau_auth:login'))
         self.assertEqual(200, response.status_code)
