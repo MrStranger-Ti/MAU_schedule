@@ -106,19 +106,22 @@ class TestProfileUpdatePage(TestCase):
             self.assertTrue(form.fields.get(field))
 
     def test_change_user_data_successfully(self) -> None:
-        institute = MauInstitute.objects.get(name='ИГ и СН')
+        values_institutes = {
+            institute_name: value
+            for value, institute_name in enumerate(settings.INSTITUTES, start=1)
+        }
+        institute_name = 'ИКИ и П'
         form_data = {
             'full_name': 'Сидоров Сергей Петрович',
-            'institute': institute,
+            'institute': values_institutes[institute_name],
             'course': 1,
             'group': 'БЛ-ПРВ-23',
         }
-        response = self.client.post(self.base_url, data=form_data)
-        print(response.content.decode())
-        self.assertEqual(response.status_code, 200)
+        response = self.client.post(self.base_url, form_data)
+        self.assertRedirects(response, reverse('profiles:profile'))
 
         self.user.refresh_from_db()
         self.assertEqual(self.user.full_name, form_data['full_name'])
-        self.assertEqual(self.user.institute, form_data['institute'])
+        self.assertEqual(self.user.institute.name, institute_name)
         self.assertEqual(self.user.course, form_data['course'])
         self.assertEqual(self.user.group, form_data['group'])

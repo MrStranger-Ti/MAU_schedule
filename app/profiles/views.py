@@ -31,14 +31,16 @@ class ProfileUpdateView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        user = self.request.user
-        prepared_user_data = {
-            'full_name': user.full_name,
-            'institute': user.institute,
-            'course': user.course,
-            'group': user.group,
-        }
-        form = self.form_class(prepared_user_data)
-        context['form'] = form
+        form = context.get('form')
+        if not form.errors:
+            user = self.request.user
+            prepared_user_data = {
+                'full_name': user.full_name,
+                'institute': user.institute,
+                'course': user.course,
+                'group': user.group,
+            }
+            form = self.form_class(prepared_user_data)
+            context['form'] = form
 
         return context
