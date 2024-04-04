@@ -4,6 +4,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from mau_utils.mau_parser import MauScheduleParser
+
 
 class IndexPageView(LoginRequiredMixin, TemplateView):
     template_name = 'schedule/index.html'
@@ -12,7 +14,8 @@ class IndexPageView(LoginRequiredMixin, TemplateView):
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         context = self.get_context_data(*args, **kwargs)
 
-        schedule = self.request.user.get_schedule()
+        mau_parser = MauScheduleParser(request.user)
+        schedule = mau_parser.get_schedule()
         if schedule:
             obj_list = list(schedule.items())
         else:

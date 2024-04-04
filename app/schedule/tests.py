@@ -38,7 +38,7 @@ class TestSchedulePage(TestCase):
         response = self.client.get(self.base_url)
         self.assertRedirects(response, f'{login_url}?next={self.base_url}')
 
-    def test_status_200(self):
+    def test_get_status_200(self):
         response = self.client.get(self.base_url)
         self.assertEqual(response.status_code, 200)
 

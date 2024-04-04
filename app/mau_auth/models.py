@@ -15,7 +15,6 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from mau_auth.validators import validate_full_name, validate_email
-from schedule.mixins import MauUserParserMixin
 
 
 class MauUserManager(BaseUserManager):
@@ -82,7 +81,7 @@ class MauUserManager(BaseUserManager):
         return self.none()
 
 
-class MauUser(AbstractBaseUser, PermissionsMixin, MauUserParserMixin):
+class MauUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
