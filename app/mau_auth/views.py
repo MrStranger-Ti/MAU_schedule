@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
     PasswordResetCompleteView
 from django.http import HttpRequest, HttpResponse
@@ -16,21 +17,15 @@ from mau_auth.forms import UserRegistrationForm, UserLoginForm
 User = get_user_model()
 
 
-class MauRegistrationView(View):
+class MauRegistrationView(UserPassesTestMixin, View):
     template_name = 'mau_auth/registration.html'
     form_class = UserRegistrationForm
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-
         form = self.form_class()
         return render(request, self.template_name, context={'form': form})
 
     def post(self, request: HttpRequest) -> HttpResponse:
-        if request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-
         form = self.form_class(request.POST)
         if form.is_valid():
             user = form.save()
@@ -42,6 +37,12 @@ class MauRegistrationView(View):
             return redirect(reverse('mau_auth:registration_email_sent'))
 
         return render(request, self.template_name, context={'form': form})
+
+    def test_func(self):
+        return not self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        return redirect(settings.LOGIN_REDIRECT_URL)
 
 
 class RegistrationEmailSentView(TemplateView):
@@ -68,6 +69,16 @@ class MauLoginView(LoginView):
     template_name = 'mau_auth/login.html'
     authentication_form = UserLoginForm
     next_page = reverse_lazy('schedule:index')
+    redirect_authenticated_user = True
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        response = super().post(request)
+
+        user = self.request.user
+        if not user.institute or not user.course or not user.group:
+            return redirect(reverse('profiles:profile_update'))
+
+        return response
 
 
 class MauPasswordResetView(PasswordResetView):

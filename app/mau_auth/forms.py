@@ -2,16 +2,17 @@ from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
 
+from mau_auth.validators import validate_full_name, validate_email
+
 User = get_user_model()
 
 
 class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = 'password', 'email', 'full_name', 'institute', 'course', 'group'
+        fields = 'password', 'full_name', 'email'
 
     password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
-    course = forms.IntegerField(min_value=1, max_value=7, label='Курс', initial=1)
 
     def save(self, commit=True):
         user = super().save(commit=False)
