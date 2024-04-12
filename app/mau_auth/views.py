@@ -68,7 +68,7 @@ class RegistrationEmailConfirmView(View):
 class MauLoginView(LoginView):
     template_name = 'mau_auth/login.html'
     authentication_form = UserLoginForm
-    next_page = reverse_lazy('schedule:index')
+    next_page = reverse_lazy('schedule:group')
     redirect_authenticated_user = True
 
     def post(self, request: HttpRequest) -> HttpResponse:

@@ -12,7 +12,6 @@
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
-<h1>Главная</h1>
 <p>Пользователь: {{ request.user.full_name }}</p>
 {% if user.is_authenticated %}
   <form action="{% url 'mau_auth:logout' %}" method="post">
@@ -27,6 +26,7 @@
 <section class="tables">
   <div class="container tables__container">
     <h1>Расписание</h1>
+    <a href="{% url 'schedule:teacher' %}">Расписание преподавателей</a>
     {% if page_obj %}
       <div class="tables__list">
         {% for date, day_table in page_obj %}

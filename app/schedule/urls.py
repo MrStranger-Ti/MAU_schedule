@@ -1,9 +1,10 @@
 from django.urls import path
 
-from schedule.views import IndexPageView
+from schedule.views import GroupScheduleView, TeacherScheduleView
 
 app_name = 'schedule'
 
 urlpatterns = [
-    path('', IndexPageView.as_view(), name='index'),
+    path('group/', GroupScheduleView.as_view(), name='group'),
+    path('teacher/', TeacherScheduleView.as_view(), name='teacher')
 ]

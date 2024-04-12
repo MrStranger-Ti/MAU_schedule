@@ -1,11 +1,10 @@
 import re
-import urllib
+import urllib.parse
+
 from datetime import date, timedelta
 
 import bs4
 import requests
-
-from django.core.cache import cache
 
 from mau_auth.exceptions import TagNotFound
 from django.conf import settings
@@ -130,3 +129,19 @@ def get_groups(facs: str, course: str) -> set[str]:
         for link in links
     }
     return groups
+
+
+def get_teachers_urls(teacher_name: str) -> dict[str: str] | None:
+    url = 'https://www.mauniver.ru/student/timetable/new/'
+    params = {'mode2': '1', 'sstring': teacher_name.encode('cp1251')}
+    response = requests.get(url, params=params)
+    soup = bs4.BeautifulSoup(response.content, 'lxml')
+    links = soup.select('td b a')
+
+    if not links:
+        None
+
+    return {
+        link.text: urllib.parse.quote(link.get('href'))
+        for link in links
+    }

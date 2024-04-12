@@ -22,7 +22,7 @@ class TestSchedulePage(TestCase):
             'group': 'БИВТ-ВП-23',
         }
         cls.base_url = reverse_lazy('schedule:index')
-        cls.template_name = 'schedule/index.html'
+        cls.template_name = 'schedule/group.html'
 
     def setUp(self) -> None:
         self.user = User.objects.create_user(**self.user_data)
