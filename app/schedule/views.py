@@ -1,12 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.core.cache import cache
 from django.conf import settings
 
 from mau_utils.mau_parser import MauScheduleParser
-from mau_utils.mau_requests import get_teachers_urls
+from mau_utils.mau_requests import get_teachers_urls, get_schedule_data
 
 
 class GroupScheduleView(LoginRequiredMixin, TemplateView):
@@ -53,3 +54,18 @@ class TeacherScheduleView(LoginRequiredMixin, TemplateView):
             context['teachers_links'] = teachers_links
 
         return context
+
+
+def get_teacher_schedule_view(request: HttpRequest) -> HttpResponse:
+    teacher_url = request.GET.get('teacher')
+    page = request.GET.get('page', 1)
+
+    schedule_data = cache.get(f'teacher_schedule_{teacher_url}')
+    if not schedule_data:
+        schedule_data = get_schedule_data(teacher_url)
+        cache.set(f'teacher_schedule_{teacher_url}', schedule_data, settings.SCHEDULE_CACHE_TIME)
+
+    paginator = Paginator(schedule_data.items(), 6)
+    page_obj = paginator.get_page(page)
+
+    return render(request, 'schedule/schedule.html', context={'page_obj': page_obj})

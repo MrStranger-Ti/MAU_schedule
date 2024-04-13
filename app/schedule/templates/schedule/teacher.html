@@ -30,11 +30,28 @@
 {% if teachers_links %}
   <ul>
     {% for teacher_name, teacher_link in teachers_links.items %}
-      <li><a href="?teacher={{ teacher_link }}">{{ teacher_name }}</a></li>
+      <li><button id="teacher_link" value="?teacher={{ teacher_link }}">{{ teacher_name }}</button></li>
     {% endfor %}
   </ul>
 {% elif query %}
   <p>Ни одного преподавателя не найдено.</p>
 {% endif %}
 </body>
+<script>
+  const teachersUrls = document.querySelectorAll('#teacher_link')
+  teachersUrls.forEach(el => {
+      el.addEventListener('click', (event) => {
+          fetch(`http://127.0.0.1:8000/get_schedule/${event.currentTarget.value}`)
+              .then(response => response.text())
+              .then(schedule => {
+                  const list = document.querySelector('ul')
+                  const parser = new DOMParser()
+                  const htmlSchedule = parser.parseFromString(schedule, 'text/html')
+
+                  list.remove()
+                  document.body.append(htmlSchedule)
+              })
+      })
+  })
+</script>
 </html>
