@@ -64,12 +64,50 @@ def get_group_url(group: str, pers: str, facs: str, course: str) -> str:
     return group_schedule_url
 
 
-def get_schedule_data(url: str) -> dict[int, list[str]]:
+def parse_group_schedule(soup: bs4.BeautifulSoup, curr_week_monday: date) -> dict[int, list[str]]:
+    week_schedule = {}
+    for weekday_num, day in enumerate(soup.find_all('table')):
+        title = day.find('th')
+        if title and 'Воскресенье' not in title.text:
+            curr_date = curr_week_monday + timedelta(days=weekday_num)
+            curr_date_format = curr_date.strftime('%Y-%m-%d')
+            week_schedule.setdefault(curr_date_format, [])
+            for row in day.find_all('tr')[1:]:
+                week_schedule[curr_date_format].append(
+                    [field.text for field in row.find_all(['th', 'td'])]
+                )
+
+    return week_schedule
+
+
+def parse_teacher_schedule(soup: bs4.BeautifulSoup, curr_week_monday: date) -> dict[int, list[str]]:
+    week_schedule = {}
+    trs = soup.select('tr')
+
+    weekday_num = 0
+    for tr in trs:
+        tr_class = tr.get('class')
+        if tr_class and tr_class[0] == 'title':
+            curr_date = curr_week_monday + timedelta(days=weekday_num)
+            curr_date_format = curr_date.strftime('%Y-%m-%d')
+            week_schedule.setdefault(curr_date_format, [])
+
+            weekday_num += 1
+
+        else:
+            week_schedule[curr_date_format].append(
+                [field.text for field in tr.find_all('td')]
+            )
+
+    return week_schedule
+
+
+def get_schedule_data(url: str, tables: bool = False) -> dict[dict: list]:
     current_calendar_date = date.today().isocalendar()
     monday = date.fromisocalendar(current_calendar_date[0], current_calendar_date[1], 1)
 
     data = {}
-    for _ in range(4):
+    for _ in range(3):
         sunday = monday + timedelta(days=6)
         params = {
             'perstart': monday.isoformat(),
@@ -79,20 +117,12 @@ def get_schedule_data(url: str) -> dict[int, list[str]]:
         response = requests.get(url, params=params)
         soup = bs4.BeautifulSoup(response.content, 'lxml')
 
-        if not soup.find('table', class_='table table-bordered table-striped table-3'):
-            break
+        if not tables:
+            week_schedule = parse_group_schedule(soup, monday)
+        else:
+            week_schedule = parse_teacher_schedule(soup, monday)
 
-        for weekday_num, day in enumerate(soup.find_all('table')):
-            title = day.find('th')
-            if title and not title.text.startswith('Воскресенье'):
-                curr_date = monday + timedelta(days=weekday_num)
-                curr_date_format = curr_date.strftime('%Y-%m-%d')
-                data.setdefault(curr_date_format, [])
-                for row in day.find_all('tr')[1:]:
-                    data[curr_date_format].append(
-                        [field.text for field in row.find_all(['th', 'td'])]
-                    )
-
+        data.update(week_schedule)
         monday += timedelta(days=7)
 
     return data
@@ -139,9 +169,12 @@ def get_teachers_urls(teacher_name: str) -> dict[str: str] | None:
     links = soup.select('td b a')
 
     if not links:
-        None
+        return None
 
-    return {
-        link.text: urllib.parse.quote(link.get('href'))
-        for link in links
-    }
+    teacher_keys = {}
+    for link in links:
+        query_params = urllib.parse.parse_qs(link.get('href'))
+        key = query_params.get('schedule2.php?key')[0]
+        teacher_keys[link.text] = key
+
+    return teacher_keys

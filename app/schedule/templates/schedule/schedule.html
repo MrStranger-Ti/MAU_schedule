@@ -1,3 +1,4 @@
+{% load schedule_tags %}
 {% if page_obj %}
   <div class="tables__list">
     {% for date, day_table in page_obj %}
@@ -26,6 +27,14 @@
         </tbody>
       </table>
     {% endfor %}
+    <div class="tables__pagination">
+      {% if page_obj.has_previous %}
+        <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}{% if teacher %}&teacher={{ teacher }}{% endif %}">Предыдущая неделя</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a class="pagination-link" href="?page={{ page_obj.next_page_number }}&teacher={{ teacher }}">Следующая неделя</a>
+      {% endif %}
+    </div>
   </div>
 {% else %}
   <p>Расписания нет. Проверьте свои данные в профиле.</p>
