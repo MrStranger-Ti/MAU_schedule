@@ -22,7 +22,7 @@ class TestSchedulePage(TestCase):
             'group': 'БИВТ-ВП-23',
         }
         cls.base_url = reverse_lazy('schedule:index')
-        cls.template_name = 'schedule/index.html'
+        cls.template_name = 'schedule/group.html'
 
     def setUp(self) -> None:
         self.user = User.objects.create_user(**self.user_data)
@@ -38,7 +38,7 @@ class TestSchedulePage(TestCase):
         response = self.client.get(self.base_url)
         self.assertRedirects(response, f'{login_url}?next={self.base_url}')
 
-    def test_status_200(self):
+    def test_get_status_200(self):
         response = self.client.get(self.base_url)
         self.assertEqual(response.status_code, 200)
 

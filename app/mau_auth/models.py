@@ -15,7 +15,6 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from mau_auth.validators import validate_full_name, validate_email
-from schedule.mixins import MauUserParserMixin
 
 
 class MauUserManager(BaseUserManager):
@@ -82,7 +81,7 @@ class MauUserManager(BaseUserManager):
         return self.none()
 
 
-class MauUser(AbstractBaseUser, PermissionsMixin, MauUserParserMixin):
+class MauUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
@@ -90,10 +89,10 @@ class MauUser(AbstractBaseUser, PermissionsMixin, MauUserParserMixin):
 
     full_name = models.CharField(max_length=50, validators=[validate_full_name], verbose_name='ФИО')
     email = models.EmailField(unique=True, validators=[validate_email], verbose_name='Email')
-    institute = models.ForeignKey('MauInstitute', null=True, on_delete=models.PROTECT, related_name='mauusers',
+    institute = models.ForeignKey('MauInstitute', null=True, blank=True, on_delete=models.PROTECT, related_name='mauusers',
                                   verbose_name='Институт')
-    course = models.PositiveSmallIntegerField(default=1, verbose_name='Курс')
-    group = models.CharField(null=True, max_length=20, verbose_name='Группа')
+    course = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Курс')
+    group = models.CharField(null=True, blank=True, max_length=20, verbose_name='Группа')
 
     objects = MauUserManager()
 

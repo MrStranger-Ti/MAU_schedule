@@ -1,0 +1,41 @@
+{% load schedule_tags %}
+{% if page_obj %}
+  <div class="tables__list">
+    {% for date, day_table in page_obj %}
+      <table class="schedule_table">
+        <thead>
+        <tr>
+          <th colspan="5" class="table_title">{{ date }}</th>
+        </tr>
+        <tr class="table_heads">
+          <th>№</th>
+          <th>Время</th>
+          <th>Название</th>
+          <th>Преподаватель</th>
+          <th>Корпус</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in day_table %}
+          {% check_user_note date forloop.counter as is_exists_note %}
+          <tr {% if is_exists_note %} class="existing_note_tr" {% endif %} tr-href="{% url 'notes:note' day=date lesson_number=forloop.counter %}">
+            {% for cell in row %}
+              <td>{{ cell }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+    <div class="tables__pagination">
+      {% if page_obj.has_previous %}
+        <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}{% if teacher %}&teacher={{ teacher }}{% endif %}">Предыдущая неделя</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a class="pagination-link" href="?page={{ page_obj.next_page_number }}&teacher={{ teacher }}">Следующая неделя</a>
+      {% endif %}
+    </div>
+  </div>
+{% else %}
+  <p>Расписания нет. Проверьте свои данные в профиле.</p>
+{% endif %}

@@ -13,6 +13,9 @@
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit">Зарегистрироваться</button>
+  <p>
+    <a href="{% url 'mau_auth:login' %}">Войти</a>
+  </p>
 </form>
 </body>
 </html>
