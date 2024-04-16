@@ -1,0 +1,10 @@
+{% extends 'mau_auth/registration/base_auth.html' %}
+
+{% block register %}
+  {% if email_confirmed %}
+    <p class="register__descr">Почта успешно подтверждена!</p>
+  {% else %}
+    <p class="register__descr">Не удалось подтвердить почту.</p>
+  {% endif %}
+  <div class="register__link"><a href="{% url 'mau_auth:login' %}">Войти</a></div>
+{% endblock %}

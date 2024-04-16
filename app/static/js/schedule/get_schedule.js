@@ -3,7 +3,7 @@ const getSchedule = function (url) {
     fetch(url)
         .then(response => response.text())
         .then(schedule => {
-            const container = document.querySelector('.tables__container')
+            const container = document.querySelector('.schedule__container')
             const parser = new DOMParser()
             const htmlSchedule = parser.parseFromString(schedule, 'text/html')
             const divTables = htmlSchedule.querySelector('.tables__list')

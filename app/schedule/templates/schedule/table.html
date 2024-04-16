@@ -1,6 +1,9 @@
+{% extends 'base.html' %}
 {% load schedule_tags %}
-{% if page_obj %}
-  <div class="tables__list">
+
+{% block body %}
+<div class="tables__list">
+  {% if page_obj %}
     {% for date, day_table in page_obj %}
       <table class="schedule_table">
         <thead>
@@ -35,7 +38,8 @@
         <a class="pagination-link" href="?page={{ page_obj.next_page_number }}&teacher={{ teacher }}">Следующая неделя</a>
       {% endif %}
     </div>
-  </div>
-{% else %}
-  <p>Расписания нет. Проверьте свои данные в профиле.</p>
-{% endif %}
+  {% else %}
+    <p>Расписание не найдено. Проверьте свои данные в профиле.</p>
+  {% endif %}
+</div>
+{% endblock %}

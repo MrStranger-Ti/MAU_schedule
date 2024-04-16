@@ -14,7 +14,7 @@ from mau_utils.mau_requests import get_teachers_urls, get_schedule_data
 
 
 class GroupScheduleView(LoginRequiredMixin, View):
-    template_name = 'schedule/group.html'
+    template_name = 'schedule/group_schedule.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         page = request.GET.get('page', 1)
@@ -31,15 +31,15 @@ def ajax_get_group_schedule_view(request: HttpRequest) -> HttpResponse:
         schedule_data = mau_parser.get_group_schedule()
         cache.set(
             f'schedule_of_group_{user.group}',
-            schedule_data or 'null',
+            schedule_data,
             settings.SCHEDULE_CACHE_TIME,
         )
 
-    obj_list = schedule_data or list()
-    paginator = Paginator(list(obj_list.items()), 6)
+    paginator_data = schedule_data or dict()
+    paginator = Paginator(list(paginator_data.items()), 6)
     page_obj = paginator.get_page(page)
 
-    return render(request, 'schedule/schedule.html', context={'page_obj': page_obj})
+    return render(request, 'schedule/table.html', context={'page_obj': page_obj})
 
 
 class SearchTeacherView(LoginRequiredMixin, TemplateView):
@@ -91,4 +91,4 @@ def ajax_get_teacher_schedule_view(request: HttpRequest) -> HttpResponse:
     paginator = Paginator(list(schedule_data.items()), 6)
     page_obj = paginator.get_page(page)
 
-    return render(request, 'schedule/schedule.html', context={'page_obj': page_obj, 'teacher': teacher_url})
+    return render(request, 'schedule/table.html', context={'page_obj': page_obj, 'teacher': teacher_url})

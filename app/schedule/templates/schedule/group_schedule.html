@@ -1,0 +1,30 @@
+{% extends 'schedule/base_schedule.html' %}
+{% load static %}
+
+{% block head_title %}
+  Расписание группы
+{% endblock %}
+
+{% block main %}
+  <section class="schedule">
+    <div class="container schedule__container flex">
+      <h1>Расписание группы {{ user.group }}</h1>
+      <div class="spinner-border spinner-border-visible" role="status">
+        <span class="visually-hidden"></span>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block html_loaded_scripts %}
+  <script>
+      jQuery(function ($) {
+          $('tbody tr[tr-href]').addClass('clickable').click(function () {
+              window.location = $(this).attr('tr-href');
+          });
+      });
+
+      const url = 'http://127.0.0.1:8000/schedule/get-group-schedule/?page={{ page }}'
+      document.addEventListener('DOMContentLoaded', () => getSchedule(url))
+  </script>
+{% endblock %}

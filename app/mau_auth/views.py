@@ -18,7 +18,7 @@ User = get_user_model()
 
 
 class MauRegistrationView(UserPassesTestMixin, View):
-    template_name = 'mau_auth/registration.html'
+    template_name = 'mau_auth/registration/registration.html'
     form_class = UserRegistrationForm
 
     def get(self, request: HttpRequest) -> HttpResponse:
@@ -46,11 +46,11 @@ class MauRegistrationView(UserPassesTestMixin, View):
 
 
 class RegistrationEmailSentView(TemplateView):
-    template_name = 'registration_email/email_sent.html'
+    template_name = 'mau_auth/registration/email_sent.html'
 
 
 class RegistrationEmailConfirmView(View):
-    template_name = 'registration_email/email_confirm.html'
+    template_name = 'mau_auth/registration/email_confirm.html'
 
     def get(self, request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -68,44 +68,34 @@ class RegistrationEmailConfirmView(View):
 class MauLoginView(LoginView):
     template_name = 'mau_auth/login.html'
     authentication_form = UserLoginForm
-    next_page = reverse_lazy('schedule:group')
+    next_page = reverse_lazy('core:index')
     redirect_authenticated_user = True
 
     def post(self, request: HttpRequest) -> HttpResponse:
         response = super().post(request)
 
         user = self.request.user
-        if not user.institute or not user.course or not user.group:
+        if user.is_authenticated and (not user.institute or not user.course or not user.group):
             return redirect(reverse('profiles:profile_update'))
 
         return response
 
 
 class MauPasswordResetView(PasswordResetView):
-    template_name = 'mau_auth/password_reset_form.html'
-    email_template_name = 'mau_auth/password_reset_email.html'
-    subject_template_name = 'mau_auth/password_reset_subject.txt'
+    template_name = 'mau_auth/password_reset/password_reset_form.html'
+    email_template_name = 'mau_auth/password_reset/password_reset_email.html'
+    subject_template_name = 'mau_auth/password_reset/password_reset_subject.html'
     success_url = reverse_lazy('mau_auth:password_reset_done')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        user = self.request.user
-        if user.is_authenticated:
-            context['form'] = self.form_class({'email': user.email})
-
-        return context
 
 
 class MauPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'mau_auth/password_reset_done.html'
+    template_name = 'mau_auth/password_reset/password_reset_done.html'
 
 
 class MauPasswordConfirmView(PasswordResetConfirmView):
-    template_name = 'mau_auth/password_reset_confirm.html'
+    template_name = 'mau_auth/password_reset/password_reset_confirm.html'
     success_url = reverse_lazy('mau_auth:password_reset_complete')
-    post_reset_login = True
 
 
 class MauPasswordCompleteView(PasswordResetCompleteView):
-    template_name = 'mau_auth/password_reset_complete.html'
+    template_name = 'mau_auth/password_reset/password_reset_complete.html'
