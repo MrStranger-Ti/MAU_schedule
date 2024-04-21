@@ -1,62 +1,102 @@
-from datetime import datetime, date
+import json
+import urllib.parse
 
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views import View
-from django.http import HttpResponseNotFound
+from django.core.exceptions import ValidationError
 
-from notes.forms import NoteForm
 from notes.models import Note
 
 
-class NoteChangeCreateView(View):
-    template_name = 'notes/note.html'
-    form_class = NoteForm
-    success_url = reverse_lazy('schedule:index')
+class AjaxNoteDisplayView(View):
+    template_name = 'note_block/display.html'
 
-    def get(self, request: HttpRequest, day: str, lesson_number: int) -> HttpResponse:
-        note = Note.get_note(request.user, day, lesson_number)
-        if note:
-            form = self.form_class({'text': note.text})
-        else:
-            form = self.form_class()
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            note = request.user.notes.filter(
+                schedule_name=request.GET.get('schedule_name'),
+                day=request.GET.get('day'),
+                lesson_number=request.GET.get('lesson_number'),
+            ).first()
+            return render(request, self.template_name, context={'note_text': note.text})
 
-        return render(request, self.template_name, context={'form': form, 'note': note})
-
-    def post(self, request: HttpRequest, day: str, lesson_number: int) -> HttpResponse:
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            day = datetime.strptime(day, '%Y-%m-%d')
-            Note.objects.update_or_create(
-                user=request.user,
-                day=day,
-                lesson_number=lesson_number,
-                defaults={
-                    'user': request.user,
-                    'text': form.cleaned_data.get('text'),
-                    'day': day,
-                    'lesson_number': lesson_number,
-                },
-            )
-            return redirect(reverse('schedule:index'))
-
-        return render(request, self.template_name, context={'form': self.form_class(form)})
+        return HttpResponseNotFound()
 
 
-class NoteDeleteView(View):
-    template_name = 'notes/note_delete.html'
+class AjaxNoteCreateView(View):
+    template_name = 'note_block/create.html'
 
-    def get(self, request: HttpRequest, day: str, lesson_number: int) -> HttpResponse:
-        note = Note.get_note(request.user, day, lesson_number)
-        if not note:
-            return HttpResponseNotFound()
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return render(request, self.template_name)
 
-        return render(request, self.template_name, context={'note': note})
+        return HttpResponseNotFound()
 
-    def post(self, request: HttpRequest, day: str, lesson_number: int) -> HttpResponse:
-        note = Note.get_note(request.user, day, lesson_number)
-        if note:
-            note.delete()
+    def post(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            data = json.loads(request.body)
+            note = Note(user=request.user, **data)
 
-        return redirect('/')
+            try:
+                note.clean()
+            except ValidationError:
+                return HttpResponseBadRequest()
+
+            note.save()
+            return redirect(reverse('notes:note_display') + '?' + urllib.parse.urlencode(data))
+
+        return HttpResponseNotFound()
+
+
+class AjaxNoteDeleteView(View):
+    def post(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            data = json.loads(request.body)
+            note = request.user.notes.filter(**data).first()
+            if note:
+                note.delete()
+                return redirect(reverse('notes:note_create'))
+
+            return HttpResponseBadRequest()
+
+        return HttpResponseNotFound()
+
+
+class AjaxNoteUpdateView(View):
+    template_name = 'note_block/update.html'
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            note = request.user.notes.filter(
+                schedule_name=request.GET.get('schedule_name'),
+                day=request.GET.get('day'),
+                lesson_number=request.GET.get('lesson_number'),
+            ).first()
+
+            return render(request, self.template_name, context={'note_text': note.text})
+
+        return HttpResponseNotFound()
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            data = json.loads(request.body)
+
+            note = request.user.notes.filter(
+                schedule_name=data.get('schedule_name'),
+                day=data.get('day'),
+                lesson_number=data.get('lesson_number'),
+            ).first()
+            note.text = data.get('text')
+
+            try:
+                note.clean()
+            except ValidationError:
+                return HttpResponseBadRequest()
+
+            note.save()
+
+            return redirect(reverse('notes:note_display') + '?' + urllib.parse.urlencode(data))
+
+        return HttpResponseNotFound()

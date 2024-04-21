@@ -1,8 +1,6 @@
-import urllib.parse
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, reverse
 from django.views import View
 from django.views.generic import TemplateView
@@ -21,25 +19,36 @@ class GroupScheduleView(LoginRequiredMixin, View):
         return render(request, self.template_name, context={'page': page})
 
 
-def ajax_get_group_schedule_view(request: HttpRequest) -> HttpResponse:
-    user = request.user
-    page = request.GET.get('page', 1)
+class AjaxGetGroupScheduleView(View):
+    template_name = 'schedule/table.html'
 
-    schedule_data = cache.get(f'schedule_of_group_{user.group}')
-    if not schedule_data:
-        mau_parser = MauScheduleParser(user)
-        schedule_data = mau_parser.get_group_schedule()
-        cache.set(
-            f'schedule_of_group_{user.group}',
-            schedule_data,
-            settings.SCHEDULE_CACHE_TIME,
-        )
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            user = request.user
+            page = request.GET.get('page', 1)
 
-    paginator_data = schedule_data or dict()
-    paginator = Paginator(list(paginator_data.items()), 6)
-    page_obj = paginator.get_page(page)
+            schedule_data = cache.get(f'schedule_of_group_{user.group}')
+            if not schedule_data:
+                mau_parser = MauScheduleParser(user)
+                schedule_data = mau_parser.get_group_schedule()
+                cache.set(
+                    f'schedule_of_group_{user.group}',
+                    schedule_data,
+                    settings.SCHEDULE_CACHE_TIME,
+                )
 
-    return render(request, 'schedule/table.html', context={'page_obj': page_obj})
+            paginator_data = schedule_data or dict()
+            paginator = Paginator(list(paginator_data.items()), 6)
+            page_obj = paginator.get_page(page)
+
+            context = {
+                'page_obj': page_obj,
+                'table': settings.GROUP_SCHEDULE_NAME,
+            }
+
+            return render(request, self.template_name, context=context)
+
+        return HttpResponseNotFound()
 
 
 class SearchTeacherView(LoginRequiredMixin, TemplateView):
@@ -78,17 +87,29 @@ class TeacherScheduleView(View):
         return render(request, self.template_name, context=context)
 
 
-def ajax_get_teacher_schedule_view(request: HttpRequest) -> HttpResponse:
-    teacher_url = request.GET.get('teacher')
-    page = request.GET.get('page', 1)
+class AjaxGetTeacherScheduleView(View):
+    template_name = 'schedule/table.html'
 
-    schedule_data = cache.get(f'teacher_schedule_{teacher_url}')
-    if not schedule_data:
-        url = settings.SCHEDULE_URL + f'schedule2.php?key={teacher_url}'
-        schedule_data = get_schedule_data(url, tables=True)
-        cache.set(f'teacher_schedule_{teacher_url}', schedule_data, settings.SCHEDULE_CACHE_TIME)
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            teacher_url = request.GET.get('teacher')
+            page = request.GET.get('page', 1)
 
-    paginator = Paginator(list(schedule_data.items()), 6)
-    page_obj = paginator.get_page(page)
+            schedule_data = cache.get(f'teacher_schedule_{teacher_url}')
+            if not schedule_data:
+                url = settings.SCHEDULE_URL + f'schedule2.php?key={teacher_url}'
+                schedule_data = get_schedule_data(url, tables=True)
+                cache.set(f'teacher_schedule_{teacher_url}', schedule_data, settings.SCHEDULE_CACHE_TIME)
 
-    return render(request, 'schedule/table.html', context={'page_obj': page_obj, 'teacher': teacher_url})
+            paginator = Paginator(list(schedule_data.items()), 6)
+            page_obj = paginator.get_page(page)
+
+            context = {
+                'page_obj': page_obj,
+                'teacher': teacher_url,
+                'table': settings.TEACHER_SCHEDULE_NAME,
+            }
+
+            return render(request, self.template_name, context=context)
+
+        return HttpResponseNotFound()

@@ -41,6 +41,10 @@ INTERNAL_IPS = [
     '0.0.0.0',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+]
+
 
 # Application definition
 
@@ -182,6 +186,10 @@ MAU_DOMAINS = [
     'mstu.edu.ru',
     'mauniver.ru',
 ]
+
+GROUP_SCHEDULE_NAME = 'group'
+
+TEACHER_SCHEDULE_NAME = 'teacher'
 
 
 # Redis

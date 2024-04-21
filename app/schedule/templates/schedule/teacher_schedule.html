@@ -8,11 +8,11 @@
   <section class="schedule">
     <div class="container schedule__container flex">
       <h1>Расписание</h1>
-      <a href="{% url 'schedule:group_schedule' %}">Расписание групп</a>
       <form method="get">
         <input type="text" name="query" {% if query %} value="{{ query }}" {% endif %}>
         <button type="submit">Найти</button>
       </form>
+      <div class="tables__list"></div>
       <div class="spinner-border spinner-border-visible" role="status">
         <span class="visually-hidden"></span>
       </div>
@@ -24,13 +24,5 @@
   <script>
       const url = 'http://127.0.0.1:8000/schedule/get-teacher-schedule/?page={{ page }}&teacher={{ teacher }}'
       document.addEventListener('DOMContentLoaded', () => getSchedule(url))
-
-      const formBtn = document.querySelector('button')
-      formBtn.addEventListener('click', (event) => {
-          const input = document.querySelector('input')
-          if (!input.value) {
-              event.preventDefault()
-          }
-      })
   </script>
 {% endblock %}

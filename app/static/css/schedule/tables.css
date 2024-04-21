@@ -70,8 +70,6 @@ tbody td:nth-child(5) {
     justify-content: center;
 }
 
-.flex {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+tbody tr {
+    position: relative;
 }

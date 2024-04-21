@@ -1,0 +1,57 @@
+/* Общие стили блока заметок */
+.note-pop-up {
+    --note-pop-up-width: 70%;
+    position: absolute;
+    width: 100%;
+    max-width: var(--note-pop-up-width);
+    min-height: 200px;
+    left: calc((100% - var(--note-pop-up-width)) / 2);
+    z-index: 1;
+    padding: 0;
+    border: 0;
+    transition: opacity 0.3s linear;
+}
+
+.note-pop-up:hover {
+    cursor: default;
+}
+
+.note-block {
+    position: absolute;
+    justify-content: center;
+    width: 100%;
+    min-height: inherit;
+    padding: 15px 60px;
+    border-radius: 10px;
+    background-color: #949494;
+}
+
+
+/* Форма заметки */
+
+.note-block__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: inherit;
+}
+
+.note-block__input-block  {
+    align-items: center;
+}
+
+.note-block__textarea {
+    width: 100%;
+    min-height: 150px;
+    margin-bottom: 15px;
+    resize: none;
+    border-radius: 10px;
+}
+
+
+/* Отображение заметки */
+
+.note-block__display {
+    flex-direction: column;
+    align-items: center;
+}

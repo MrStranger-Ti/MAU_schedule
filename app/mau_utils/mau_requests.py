@@ -52,7 +52,7 @@ def get_group_url(group: str, pers: str, facs: str, course: str) -> str:
     soup = bs4.BeautifulSoup(response.content, 'lxml')
     a_tag = soup.find(
         'a',
-        string=re.compile(fr'\s*?{group}\s*?'),
+        string=lambda text: re.fullmatch(fr'\s*{group}\s*', text),
         href=lambda url: url and url.startswith('schedule.php'),
     )
 
