@@ -31,10 +31,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-k-nlhgsc-7js6kcoy6bijf8zff
 DEBUG = os.getenv('DEBUG', '0') == '1'
 
 ALLOWED_HOSTS = [
-    'localhost',
     '127.0.0.1',
     '0.0.0.0',
-] + os.getenv('ALLOWED_HOSTS').split(',')
+] + (os.getenv('ALLOWED_HOSTS').split(','))
 
 INTERNAL_IPS = [
     '127.0.0.1',
