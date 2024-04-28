@@ -17,6 +17,7 @@ class AjaxNoteDisplayView(View):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             note = request.user.notes.filter(
                 schedule_name=request.GET.get('schedule_name'),
+                group=request.user.group,
                 day=request.GET.get('day'),
                 lesson_number=request.GET.get('lesson_number'),
             ).first()
@@ -37,7 +38,7 @@ class AjaxNoteCreateView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             data = json.loads(request.body)
-            note = Note(user=request.user, **data)
+            note = Note(user=request.user, group=request.user.group, **data)
 
             try:
                 note.clean()
@@ -54,7 +55,7 @@ class AjaxNoteDeleteView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             data = json.loads(request.body)
-            note = request.user.notes.filter(**data).first()
+            note = request.user.notes.filter(group=request.user.group, **data).first()
             if note:
                 note.delete()
                 return redirect(reverse('notes:note_create'))
@@ -71,6 +72,7 @@ class AjaxNoteUpdateView(View):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             note = request.user.notes.filter(
                 schedule_name=request.GET.get('schedule_name'),
+                group=request.user.group,
                 day=request.GET.get('day'),
                 lesson_number=request.GET.get('lesson_number'),
             ).first()
@@ -85,6 +87,7 @@ class AjaxNoteUpdateView(View):
 
             note = request.user.notes.filter(
                 schedule_name=data.get('schedule_name'),
+                group=request.user.group,
                 day=data.get('day'),
                 lesson_number=data.get('lesson_number'),
             ).first()

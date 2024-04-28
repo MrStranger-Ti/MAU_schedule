@@ -19,6 +19,7 @@ class Note(models.Model):
         verbose_name='пользователь',
     )
     schedule_name = models.CharField(null=True, verbose_name='название таблицы')
+    group = models.CharField(null=True, verbose_name='группа')
     day = models.DateField(verbose_name='дата')
     lesson_number = models.IntegerField(verbose_name='номер пары')
     text = models.CharField(verbose_name='текст')

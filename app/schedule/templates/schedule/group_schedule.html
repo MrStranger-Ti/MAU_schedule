@@ -19,7 +19,7 @@
 
 {% block html_loaded_scripts %}
   <script>
-      const url = getIndex() + '/schedule/get-group-schedule/'
+      const url = getIndex() + '/schedule/get-group-schedule/?page={{ page }}'
       document.addEventListener('DOMContentLoaded', () => getSchedule(url))
   </script>
 {% endblock %}
