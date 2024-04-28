@@ -41,7 +41,7 @@ const getSchedule = function (url) {
 
             tablesList.querySelectorAll('form').forEach(form => {
                 form.addEventListener('submit', (event) => {
-                    if (form.name == 'note-create') {
+                    if (form.name === 'note-create') {
                         createNote(form)
                         event.preventDefault()
                     }
@@ -77,7 +77,7 @@ const createNote = function (form) {
         text: form.note.value,
     }
 
-    fetch('http://147.45.103.191:1337/notes/create/', {
+    fetch(getIndex() + '/notes/create/', {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -117,7 +117,7 @@ const deleteNote = function (noteBlock) {
         lesson_number: noteBlock.getAttribute('data-lesson-number'),
     }
 
-    fetch('http://147.45.103.191:1337/notes/delete/', {
+    fetch(getIndex() + '/notes/delete/', {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -160,7 +160,7 @@ const updateNote = function (form) {
         text: form.note.value,
     }
 
-    fetch('http://147.45.103.191:1337/notes/update/', {
+    fetch(getIndex() + '/notes/update/', {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -200,7 +200,7 @@ const getUpdateNote = function (noteBlock) {
         lesson_number: noteBlock.getAttribute('data-lesson-number'),
     }
 
-    fetch(`http://147.45.103.191:1337/notes/update/?schedule_name=${note.schedule_name}&day=${note.day}&lesson_number=${note.lesson_number}`, {
+    fetch(getIndex() + `/notes/update/?schedule_name=${note.schedule_name}&day=${note.day}&lesson_number=${note.lesson_number}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
         }
@@ -220,7 +220,7 @@ const displayNote = function (noteBlock) {
         lesson_number: noteBlock.getAttribute('data-lesson-number'),
     }
 
-    fetch(`http://147.45.103.191:1337/notes/display/?schedule_name=${note.schedule_name}&day=${note.day}&lesson_number=${note.lesson_number}`, {
+    fetch(getIndex() + `/notes/display/?schedule_name=${note.schedule_name}&day=${note.day}&lesson_number=${note.lesson_number}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
         },
@@ -286,3 +286,6 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+const getIndex = () => window.location.protocol + '//' + window.location.host

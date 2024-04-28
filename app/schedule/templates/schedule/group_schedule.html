@@ -19,7 +19,7 @@
 
 {% block html_loaded_scripts %}
   <script>
-      const url = 'http://147.45.103.191:1337/schedule/get-group-schedule/?page={{ page }}'
+      const url = getIndex() + '/schedule/get-group-schedule/'
       document.addEventListener('DOMContentLoaded', () => getSchedule(url))
   </script>
 {% endblock %}
