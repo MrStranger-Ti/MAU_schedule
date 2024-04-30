@@ -1,6 +1,8 @@
 import json
 import urllib.parse
 
+from datetime import datetime, timedelta
+
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -38,7 +40,8 @@ class AjaxNoteCreateView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             data = json.loads(request.body)
-            note = Note(user=request.user, group=request.user.group, **data)
+            expired_date = datetime.strptime(data['day'], '%Y-%m-%d') + timedelta(weeks=1)
+            note = Note(user=request.user, group=request.user.group, expired_date=expired_date, **data)
 
             try:
                 note.clean()

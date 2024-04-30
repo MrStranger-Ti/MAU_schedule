@@ -23,6 +23,7 @@ class Note(models.Model):
     day = models.DateField(verbose_name='дата')
     lesson_number = models.IntegerField(verbose_name='номер пары')
     text = models.CharField(verbose_name='текст')
+    expired_date = models.DateField(null=True, verbose_name='Дата удаления')
 
     def __str__(self):
         return f'Заметка, ID: {self.pk}'
