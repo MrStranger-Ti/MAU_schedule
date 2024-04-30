@@ -20,7 +20,7 @@ class GroupScheduleView(LoginRequiredMixin, View):
 
 
 class AjaxGetGroupScheduleView(View):
-    template_name = 'schedule/table.html'
+    template_name = 'schedule/ajax/table.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -53,42 +53,38 @@ class AjaxGetGroupScheduleView(View):
 
 class SearchTeacherView(LoginRequiredMixin, TemplateView):
     template_name = 'schedule/search_teacher.html'
-    paginate_by = 6
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        query = self.request.GET.get('query')
-        context['query'] = query
 
-        if query:
+class AjaxTeachersListView(View):
+    template_name = 'schedule/ajax/teachers.html'
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            query = self.request.GET.get('query')
             teachers_links = cache.get(f'query_{query}')
             if not teachers_links:
                 teachers_links = get_teachers_urls(query)
                 cache.set(f'query_{query}', teachers_links, settings.SCHEDULE_CACHE_TIME)
 
-            context['teachers_links'] = teachers_links
+            return render(request, self.template_name, context={'teachers_links': teachers_links})
 
-        return context
+        return HttpResponseNotFound()
 
 
 class TeacherScheduleView(View):
     template_name = 'schedule/teacher_schedule.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        query = request.GET.get('query')
-        if query:
-            url = reverse('schedule:teacher_search') + f'?query={query}'
-            return redirect(url)
-
         context = {
-            'teacher': request.GET.get('teacher'),
+            'teacher_key': request.GET.get('key'),
+            'teacher_name': request.GET.get('name'),
             'page': request.GET.get('page', 1),
         }
         return render(request, self.template_name, context=context)
 
 
 class AjaxGetTeacherScheduleView(View):
-    template_name = 'schedule/table.html'
+    template_name = 'schedule/ajax/table.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':

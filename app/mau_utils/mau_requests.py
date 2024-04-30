@@ -9,8 +9,6 @@ import requests
 from mau_auth.exceptions import TagNotFound
 from django.conf import settings
 
-mau_url = settings.SCHEDULE_URL
-
 
 def get_prepared_group(group: str, spec_symbols: str = None) -> str:
     if not spec_symbols:
@@ -24,7 +22,7 @@ def get_prepared_group(group: str, spec_symbols: str = None) -> str:
 
 
 def get_query_params(institute_name: str) -> tuple[str, str]:
-    response = requests.get(mau_url)
+    response = requests.get(settings.SCHEDULE_URL)
     soup = bs4.BeautifulSoup(response.content, 'lxml')
 
     date_select = soup.find('option', selected=True)
@@ -48,7 +46,7 @@ def get_group_url(group: str, pers: str, facs: str, course: str) -> str:
         'mode': 1,
         'pers': pers,
     }
-    response = requests.get(mau_url, params=params)
+    response = requests.get(settings.SCHEDULE_URL, params=params)
     soup = bs4.BeautifulSoup(response.content, 'lxml')
     a_tag = soup.find(
         'a',
@@ -59,7 +57,7 @@ def get_group_url(group: str, pers: str, facs: str, course: str) -> str:
     if a_tag is None:
         raise TagNotFound
 
-    group_schedule_url = urllib.parse.urljoin(mau_url, a_tag.get('href'))
+    group_schedule_url = urllib.parse.urljoin(settings.SCHEDULE_URL, a_tag.get('href'))
 
     return group_schedule_url
 
@@ -131,7 +129,7 @@ def get_schedule_data(url: str, tables: bool = False) -> dict[dict: list]:
 def get_institutes() -> set[str]:
     """Находит и возвращает все имена институтов."""
 
-    response = requests.get(mau_url)
+    response = requests.get(settings.SCHEDULE_URL)
     soup = bs4.BeautifulSoup(response.content, 'lxml')
     select = soup.find('select', attrs={'name': 'facs'})
     options = select.find_all('option', value=lambda val: val != '0')
@@ -149,7 +147,7 @@ def get_groups(facs: str, course: str) -> set[str]:
         'course': course,
         'mode': 1,
     }
-    response = requests.get(mau_url, params=params)
+    response = requests.get(settings.SCHEDULE_URL, params=params)
     soup = bs4.BeautifulSoup(response.content, 'lxml')
 
     tbody = soup.find('tbody')
@@ -162,9 +160,8 @@ def get_groups(facs: str, course: str) -> set[str]:
 
 
 def get_teachers_urls(teacher_name: str) -> dict[str: str] | None:
-    url = 'https://www.mauniver.ru/student/timetable/new/'
     params = {'mode2': '1', 'sstring': teacher_name.encode('cp1251')}
-    response = requests.get(url, params=params)
+    response = requests.get(settings.SCHEDULE_URL, params=params)
     soup = bs4.BeautifulSoup(response.content, 'lxml')
     links = soup.select('td b a')
 

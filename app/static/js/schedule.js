@@ -6,7 +6,7 @@ const getSchedule = function (url) {
     })
         .then(response => response.text())
         .then(html => {
-            document.querySelector('.tables__list').outerHTML = html
+            document.querySelector('.tables__list').innerHTML = html
 
             const tablesList = document.querySelector('.tables__list')
             const notePopUpNodes = document.querySelectorAll('.note-pop-up')
@@ -272,7 +272,7 @@ const prepareNoteUpdate = function (noteBlock) {
 }
 
 
-function getCookie(name) {
+const getCookie = function (name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');

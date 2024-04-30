@@ -1,4 +1,5 @@
 {% extends 'schedule/base_schedule.html' %}
+{% load static %}
 
 {% block head_title %}
   Поиск преподавателя
@@ -7,22 +8,27 @@
 {% block main %}
   <section class="schedule">
     <div class="container schedule__container flex">
-      <h1>Расписание преподавателя</h1>
-      <form method="get">
-        <input type="text" name="query" {% if query %} value="{{ query }}" {% endif %}>
-        <button type="submit">Найти</button>
+      <h1 class="schedule__title">Расписание преподавателя</h1>
+      <form class="schedule__form flex" name="search-teacher" method="get">
+        <input class="schedule__input" type="text" name="query">
+        <button class="btn" type="submit">
+          <span class="spinner-border spinner-border-sm btn-spinner-hidden" role="status" aria-hidden="true"></span>
+          <span class="schedule__btn-text">Найти</span>
+        </button>
       </form>
-      {% if teachers_links %}
-        <ul class="teacher-links">
-          {% for teacher_name, teacher_link in teachers_links.items %}
-            <li>
-              <a id="teacher_link" href="{% url 'schedule:teacher_schedule' %}?teacher={{ teacher_link }}&page=1">{{ teacher_name }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      {% elif query %}
-        <p>Ни одного преподавателя не найдено.</p>
-      {% endif %}
+      <div class="schedule__list-block"></div>
     </div>
   </section>
+{% endblock %}
+
+{% block html_loaded_scripts %}
+  <script src="{% static 'js/search_teacher.js' %}"></script>
+  <script>
+      document.querySelector('[name=search-teacher]').addEventListener('submit', (event) => {
+          event.preventDefault()
+          if (event.currentTarget.query.value) {
+              getTeachersLinks()
+          }
+      })
+  </script>
 {% endblock %}
