@@ -1,18 +1,18 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Изменение профиля</title>
-</head>
-<body>
-  <h1>Изменение профиля</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Обновить профиль</button>
-  </form>
-</body>
-</html>
+{% extends 'profiles/base_profile.html' %}
+
+{% block head_title %}
+  Редактирование профиля
+{% endblock %}
+
+{% block main %}
+  <section class="profile-update">
+    <div class="container profile-update__container">
+      <h1 class="profile-update__title">Редактирование профиля</h1>
+      <form class="profile-update__form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn profile-update__btn" type="submit">Обновить профиль</button>
+      </form>
+    </div>
+  </section>
+{% endblock %}

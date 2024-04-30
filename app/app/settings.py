@@ -25,21 +25,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k-nlhgsc-7js6kcoy6bijf8zff(t1ebrftyo$7rx_h7yg5%$jc'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-k-nlhgsc-7js6kcoy6bijf8zff(t1ebrftyo$7rx_h7yg5%$jc')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', '0') == '1'
 
 ALLOWED_HOSTS = [
-    'localhost',
     '127.0.0.1',
     '0.0.0.0',
-]
+] + (os.getenv('ALLOWED_HOSTS').split(','))
 
 INTERNAL_IPS = [
     '127.0.0.1',
     '0.0.0.0',
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://147.45.103.191:1337',
+]
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 
 # Application definition
@@ -58,6 +64,7 @@ INSTALLED_APPS = [
     'schedule.apps.ScheduleConfig',
     'profiles.apps.ProfilesConfig',
     'notes.apps.NotesConfig',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +83,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,7 +151,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -181,6 +190,10 @@ MAU_DOMAINS = [
     'mstu.edu.ru',
     'mauniver.ru',
 ]
+
+GROUP_SCHEDULE_NAME = 'group'
+
+TEACHER_SCHEDULE_NAME = 'teacher'
 
 
 # Redis

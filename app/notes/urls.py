@@ -1,12 +1,13 @@
 from django.urls import path
 
-from notes.views import NoteChangeCreateView, NoteDeleteView
-
+from notes.views import AjaxNoteDisplayView, AjaxNoteCreateView, AjaxNoteDeleteView, AjaxNoteUpdateView
 
 app_name = 'notes'
 
 
 urlpatterns = [
-    path('<str:day>/<int:lesson_number>', NoteChangeCreateView.as_view(), name='note'),
-    path('<str:day>/<int:lesson_number>/delete', NoteDeleteView.as_view(), name='note_delete'),
+    path('display/', AjaxNoteDisplayView.as_view(), name='note_display'),
+    path('create/', AjaxNoteCreateView.as_view(), name='note_create'),
+    path('delete/', AjaxNoteDeleteView.as_view(), name='note_delete'),
+    path('update/', AjaxNoteUpdateView.as_view(), name='note_update'),
 ]

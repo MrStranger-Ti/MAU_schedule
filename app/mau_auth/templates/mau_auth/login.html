@@ -1,20 +1,25 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Вход</title>
-</head>
-<body>
-<h1>Вход</h1>
-<form action="." method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Войти</button>
-</form>
-<p><a href="{% url 'mau_auth:registration' %}">Регистрация</a></p>
-<p><a href="{% url 'mau_auth:password_reset_form' %}">Восстановить пароль</a></p>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block head_title %}
+  Вход
+{% endblock %}
+
+{% block body %}
+  <main>
+    <section class="login">
+      <div class="container login__container">
+        <form class="login__form" action="." method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button class="btn login__btn" type="submit">Войти</button>
+        </form>
+        <div class="login__links-block">
+          <ul class="login__list">
+            <li class="login__item"><a class="login__link" href="{% url 'mau_auth:registration' %}">Регистрация</a></li>
+            <li class="login__item"><a class="login__link" href="{% url 'mau_auth:password_reset_form' %}">Восстановить пароль</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

@@ -1,0 +1,10 @@
+<form class="note-block__form" method="post" name="note-update">
+  {% csrf_token %}
+  <p class="note-block__title">Изменение заметки</p>
+  <textarea class="note-block__textarea" type="text" name="note" required>{{ note_text }}</textarea>
+  <div class="note-block__options">
+    <button class="btn note-block__btn" type="submit">Изменить заметку</button>
+    <button class="btn note-block__btn" name="display" type="button">Отмена</button>
+    <button class="btn close-btn note-block__btn" name="close" type="button">Закрыть</button>
+  </div>
+</form>

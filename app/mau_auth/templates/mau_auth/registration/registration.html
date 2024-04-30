@@ -1,0 +1,11 @@
+{% extends 'mau_auth/registration/base_auth.html' %}
+
+{% block register %}
+  <h1 class="register__title">Регистрация</h1>
+  <form class="register__form" action="." method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn register__btn" type="submit">Зарегистрироваться</button>
+  </form>
+  <div class="register__link-block"><a class="register__link" href="{% url 'mau_auth:login' %}">Войти</a></div>
+{% endblock %}

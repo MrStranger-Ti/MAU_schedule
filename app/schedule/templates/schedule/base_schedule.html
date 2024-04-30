@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_links %}
+  <link rel="stylesheet" href="{% static 'css/pages/schedule/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/schedule/extra.css' %}">
+{% endblock %}
+
+{% block head_scripts %}
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="{% static 'js/schedule.js' %}"></script>
+{% endblock %}
