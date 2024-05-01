@@ -21,6 +21,7 @@ services:
       - '8000:8000'
     depends_on:
       - postgres_db
+      - redis
 
   postgres_db:
     image: postgres
@@ -38,5 +39,32 @@ services:
     ports:
       - '6379:6379'
 
+  celery:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres_db
+      - REDIS_HOST=redis
+    command: celery -A app worker -l info
+    volumes:
+      - celery_data:/usr/src/app/
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres_db
+      - REDIS_HOST=redis
+    command: celery -A app beat -l info
+    volumes:
+      - celery_data:/usr/src/app/
+    depends_on:
+      - redis
+
 volumes:
   db_data:
+  celery_data:
