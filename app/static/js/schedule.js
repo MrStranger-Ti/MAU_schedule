@@ -14,7 +14,7 @@ const getSchedule = function (url) {
 
             tablesList.addEventListener('click', (event) => {
                 tableRows.forEach(row => {
-                    if (row.contains(event.target)) {
+                    if (row.contains(event.target) && row.lastElementChild.classList.contains('hidden')) {
                         row.lastElementChild.classList.remove('hidden')
                         row.lastElementChild.style.opacity = '1'
                     }
@@ -25,7 +25,7 @@ const getSchedule = function (url) {
                 notePopUpNodes.forEach(notePopUp => {
                     if (event.target.getAttribute('name') === 'close') {
                         notePopUp.style.opacity = '0'
-                        setTimeout(() => notePopUp.classList.add('hidden'), 300)
+                        setTimeout(() => notePopUp.classList.add('hidden'), 200)
                     }
                 })
             })
@@ -34,7 +34,7 @@ const getSchedule = function (url) {
                 tableRows.forEach(row => {
                     if (!row.contains(event.target) && !row.lastElementChild.classList.contains('hidden')) {
                         row.lastElementChild.style.opacity = '0'
-                        setTimeout(() => row.lastElementChild.classList.add('hidden'), 300)
+                        setTimeout(() => row.lastElementChild.classList.add('hidden'), 200)
                     }
                 })
             })

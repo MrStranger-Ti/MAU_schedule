@@ -10,7 +10,7 @@
     z-index: 1;
     padding: 0;
     border: 0;
-    transition: opacity 0.3s linear;
+    transition: opacity 0.2s linear;
 }
 
 .note-pop-up:hover {
