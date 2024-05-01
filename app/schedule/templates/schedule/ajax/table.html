@@ -44,10 +44,10 @@
   {% endfor %}
   <div class="tables__pagination">
     {% if page_obj.has_previous %}
-      <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}{% if teacher %}&teacher={{ teacher }}{% endif %}">Предыдущая неделя</a>
+      <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">Предыдущая неделя</a>
     {% endif %}
     {% if page_obj.has_next %}
-      <a class="pagination-link" href="?page={{ page_obj.next_page_number }}{% if teacher %}&teacher={{ teacher }}{% endif %}">Следующая неделя</a>
+      <a class="pagination-link" href="?page={{ page_obj.next_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">Следующая неделя</a>
     {% endif %}
   </div>
 {% else %}

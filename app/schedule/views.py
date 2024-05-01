@@ -88,21 +88,23 @@ class AjaxGetTeacherScheduleView(View):
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            teacher_url = request.GET.get('teacher')
+            teacher_name = request.GET.get('name')
+            teacher_key = request.GET.get('key')
             page = request.GET.get('page', 1)
 
-            schedule_data = cache.get(f'teacher_schedule_{teacher_url}')
+            schedule_data = cache.get(f'teacher_schedule_{teacher_key}')
             if not schedule_data:
-                url = settings.SCHEDULE_URL + f'schedule2.php?key={teacher_url}'
+                url = settings.SCHEDULE_URL + f'schedule2.php?key={teacher_key}'
                 schedule_data = get_schedule_data(url, tables=True)
-                cache.set(f'teacher_schedule_{teacher_url}', schedule_data, settings.SCHEDULE_CACHE_TIME)
+                cache.set(f'teacher_schedule_{teacher_key}', schedule_data, settings.SCHEDULE_CACHE_TIME)
 
             paginator = Paginator(list(schedule_data.items()), 6)
             page_obj = paginator.get_page(page)
 
             context = {
                 'page_obj': page_obj,
-                'teacher': teacher_url,
+                'teacher_name': teacher_name,
+                'teacher_key': teacher_key,
                 'table': settings.TEACHER_SCHEDULE_NAME,
             }
 
