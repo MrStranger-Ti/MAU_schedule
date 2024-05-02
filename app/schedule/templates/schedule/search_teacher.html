@@ -16,6 +16,9 @@
           <span class="schedule__btn-text">Найти</span>
         </button>
       </form>
+      <div class="schedule__history-block">
+        {% include 'schedule/ajax/visiting_history.html' %}
+      </div>
       <div class="schedule__list-block"></div>
     </div>
   </section>
@@ -23,12 +26,19 @@
 
 {% block html_loaded_scripts %}
   <script src="{% static 'js/search_teacher.js' %}"></script>
+  <script src="{% static 'js/teacher_history.js' %}"></script>
   <script>
       document.querySelector('[name=search-teacher]').addEventListener('submit', (event) => {
           event.preventDefault()
           if (event.currentTarget.query.value) {
               getTeachersLinks()
           }
+      })
+
+      document.querySelectorAll('.schedule__history-item > [name="delete"]').forEach(btn => {
+          btn.addEventListener('click', () => {
+              deleteTeacherHistory(btn.previousElementSibling)
+          })
       })
   </script>
 {% endblock %}
