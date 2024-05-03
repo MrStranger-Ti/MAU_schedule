@@ -25,8 +25,8 @@
 {% endblock %}
 
 {% block html_loaded_scripts %}
-  <script src="{% static 'js/search_teacher.js' %}"></script>
-  <script src="{% static 'js/teacher_history.js' %}"></script>
+  <script src="{% static 'js/schedule/teacher_searching/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/teacher_history/fetching.js' %}"></script>
   <script>
       document.querySelector('[name=search-teacher]').addEventListener('submit', (event) => {
           event.preventDefault()
