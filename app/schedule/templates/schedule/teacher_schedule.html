@@ -1,4 +1,5 @@
 {% extends 'schedule/base_schedule.html' %}
+{% load static %}
 
 {% block head_title %}
   Расписание преподавателя
@@ -18,8 +19,11 @@
 {% endblock %}
 
 {% block html_loaded_scripts %}
+  <script src="{% static 'js/schedule/table/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/notes/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/notes/preparing.js' %}"></script>
   <script>
-      const url = getIndex() + '/schedule/get-teacher-schedule/?page={{ page }}&teacher={{ teacher_key }}'
+      const url = getIndex() + '/schedule/get-teacher-schedule/?page={{ page }}&key={{ teacher_key }}&name={{ teacher_name }}'
       document.addEventListener('DOMContentLoaded', () => getSchedule(url))
   </script>
 {% endblock %}

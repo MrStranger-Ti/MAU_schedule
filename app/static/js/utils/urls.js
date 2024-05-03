@@ -1,0 +1,1 @@
+const getIndex = () => window.location.protocol + '//' + window.location.host

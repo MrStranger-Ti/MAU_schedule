@@ -100,12 +100,12 @@ def parse_teacher_schedule(soup: bs4.BeautifulSoup, curr_week_monday: date) -> d
     return week_schedule
 
 
-def get_schedule_data(url: str, tables: bool = False) -> dict[dict: list]:
+def get_schedule_data(url: str, tables: bool = False, number_weeks: int = 3) -> dict[dict: list]:
     current_calendar_date = date.today().isocalendar()
     monday = date.fromisocalendar(current_calendar_date[0], current_calendar_date[1], 1)
 
     data = {}
-    for _ in range(3):
+    for _ in range(number_weeks):
         sunday = monday + timedelta(days=6)
         params = {
             'perstart': monday.isoformat(),

@@ -7,6 +7,8 @@ from schedule.views import (
     AjaxGetGroupScheduleView,
     AjaxGetTeacherScheduleView,
     AjaxTeachersListView,
+    AjaxGetVisitingHistoryView,
+    AjaxDeleteVisitingHistoryView,
 )
 
 app_name = 'schedule'
@@ -20,4 +22,7 @@ urlpatterns = [
     path('get-group-schedule/', AjaxGetGroupScheduleView.as_view(), name='get_group_schedule'),
     path('get-teacher-schedule/', AjaxGetTeacherScheduleView.as_view(), name='get_teacher_schedule'),
     path('get-teachers-links/', AjaxTeachersListView.as_view(), name='get_teachers_links'),
+
+    path('get-teacher-history/', AjaxGetVisitingHistoryView.as_view(), name='get_teacher_history'),
+    path('delete-teacher-history/', AjaxDeleteVisitingHistoryView.as_view(), name='delete_teacher_history'),
 ]

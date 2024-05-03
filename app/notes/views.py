@@ -16,93 +16,93 @@ class AjaxNoteDisplayView(View):
     template_name = 'note_block/display.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            note = request.user.notes.filter(
-                schedule_name=request.GET.get('schedule_name'),
-                group=request.user.group,
-                day=request.GET.get('day'),
-                lesson_number=request.GET.get('lesson_number'),
-            ).first()
-            return render(request, self.template_name, context={'note_text': note.text})
+        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+            return HttpResponseNotFound()
 
-        return HttpResponseNotFound()
+        note = request.user.notes.filter(
+            schedule_name=request.GET.get('schedule_name'),
+            group=request.user.group,
+            day=request.GET.get('day'),
+            lesson_number=request.GET.get('lesson_number'),
+        ).first()
+        return render(request, self.template_name, context={'note_text': note.text})
 
 
 class AjaxNoteCreateView(View):
     template_name = 'note_block/create.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return render(request, self.template_name)
+        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+            return HttpResponseNotFound()
 
-        return HttpResponseNotFound()
+        return render(request, self.template_name)
 
     def post(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            data = json.loads(request.body)
-            expired_date = datetime.strptime(data['day'], '%Y-%m-%d') + timedelta(weeks=1)
-            note = Note(user=request.user, group=request.user.group, expired_date=expired_date, **data)
+        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+            return HttpResponseNotFound()
 
-            try:
-                note.clean()
-            except ValidationError:
-                return HttpResponseBadRequest()
+        data = json.loads(request.body)
+        expired_date = datetime.strptime(data['day'], '%Y-%m-%d') + timedelta(weeks=1)
+        note = Note(user=request.user, group=request.user.group, expired_date=expired_date, **data)
 
-            note.save()
-            return redirect(reverse('notes:note_display') + '?' + urllib.parse.urlencode(data))
+        try:
+            note.clean()
+        except ValidationError:
+            return HttpResponseBadRequest()
 
-        return HttpResponseNotFound()
+        note.save()
+        return redirect(reverse('notes:note_display') + '?' + urllib.parse.urlencode(data))
 
 
 class AjaxNoteDeleteView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            data = json.loads(request.body)
-            note = request.user.notes.filter(group=request.user.group, **data).first()
-            if note:
-                note.delete()
-                return redirect(reverse('notes:note_create'))
+        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+            return HttpResponseNotFound()
 
-            return HttpResponseBadRequest()
+        data = json.loads(request.body)
+        note = request.user.notes.filter(group=request.user.group, **data).first()
+        if note:
+            note.delete()
+            return redirect(reverse('notes:note_create'))
 
-        return HttpResponseNotFound()
+        return HttpResponseBadRequest()
 
 
 class AjaxNoteUpdateView(View):
     template_name = 'note_block/update.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            note = request.user.notes.filter(
-                schedule_name=request.GET.get('schedule_name'),
-                group=request.user.group,
-                day=request.GET.get('day'),
-                lesson_number=request.GET.get('lesson_number'),
-            ).first()
+        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+            return HttpResponseNotFound()
 
-            return render(request, self.template_name, context={'note_text': note.text})
+        note = request.user.notes.filter(
+            schedule_name=request.GET.get('schedule_name'),
+            group=request.user.group,
+            day=request.GET.get('day'),
+            lesson_number=request.GET.get('lesson_number'),
+        ).first()
 
-        return HttpResponseNotFound()
+        return render(request, self.template_name, context={'note_text': note.text})
 
     def post(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            data = json.loads(request.body)
+        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+            return HttpResponseNotFound()
 
-            note = request.user.notes.filter(
-                schedule_name=data.get('schedule_name'),
-                group=request.user.group,
-                day=data.get('day'),
-                lesson_number=data.get('lesson_number'),
-            ).first()
-            note.text = data.get('text')
+        data = json.loads(request.body)
 
-            try:
-                note.clean()
-            except ValidationError:
-                return HttpResponseBadRequest()
+        note = request.user.notes.filter(
+            schedule_name=data.get('schedule_name'),
+            group=request.user.group,
+            day=data.get('day'),
+            lesson_number=data.get('lesson_number'),
+        ).first()
+        note.text = data.get('text')
 
-            note.save()
+        try:
+            note.clean()
+        except ValidationError:
+            return HttpResponseBadRequest()
 
-            return redirect(reverse('notes:note_display') + '?' + urllib.parse.urlencode(data))
+        note.save()
 
-        return HttpResponseNotFound()
+        return redirect(reverse('notes:note_display') + '?' + urllib.parse.urlencode(data))
