@@ -40,8 +40,8 @@ body {
 .notification {
     position: fixed;
     right: 2%;
-    bottom: 0;
+    bottom: 2%;
     max-width: 400px;
     min-height: 150px;
-    background-color: #858585;
+    background-color: #ff8f7b;
 }

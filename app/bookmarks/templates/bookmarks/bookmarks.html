@@ -1,8 +1,8 @@
-{% if bookmarks %}
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-      Закладки
-    </button>
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Закладки
+  </button>
+  {% if bookmarks %}
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
       {% for bookmark in bookmarks %}
         <li class="bookmarks-item flex">
@@ -11,5 +11,7 @@
         </li>
       {% endfor %}
     </ul>
-  </div>
-{% endif %}
+  {% else %}
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"><li class="bookmarks-item">Закладок нет</li></ul>
+  {% endif %}
+</div>

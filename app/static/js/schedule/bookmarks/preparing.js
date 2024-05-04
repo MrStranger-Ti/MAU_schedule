@@ -1,5 +1,8 @@
 const prepareBookmarkDisplay = function () {
-    document.querySelector('[name="bookmark-delete"]').addEventListener('click', (event) => {
-        deleteBookmark(event.currentTarget.previousElementSibling)
-    })
+    const btn = document.querySelector('[name="bookmark-delete"]')
+    if (btn) {
+        btn.addEventListener('click', (event) => {
+            deleteBookmark(event.currentTarget.previousElementSibling)
+        })
+    }
 }

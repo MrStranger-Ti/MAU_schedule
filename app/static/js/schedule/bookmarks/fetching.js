@@ -36,10 +36,13 @@ const createBookmark = function () {
             const btn = document.querySelector('[name="bookmark-create"]')
 
             document.querySelector('.schedule__bookmarks-block').innerHTML = html
+
             btn.setAttribute('disabled', 'true')
             btn.textContent = 'Расписание в закладках'
-            showMauNotification('Закладка успешно создана')
 
+            prepareBookmarkDisplay()
+
+            showMauNotification('Закладка успешно создана')
         })
         .catch(error => {
             // const btn = document.querySelector('[name="bookmark-create"]')
@@ -70,7 +73,11 @@ const deleteBookmark = function (link) {
             if (!response.ok) {
                 throw Error('Не удалось удалить закладку')
             }
+
             link.parentElement.remove()
+            document.querySelector('[name="bookmark-create"]').removeAttribute('disabled')
+
+            showMauNotification('Закладка успешно удалена')
         })
         .catch(error => {
             showMauNotification(error.message)

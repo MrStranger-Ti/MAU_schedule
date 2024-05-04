@@ -48,7 +48,6 @@ class AjaxBookmarkDeleteView(View):
             teacher_key=data.get('key'),
         ).first()
 
-        print(data)
         if bookmark:
             bookmark.delete()
             return HttpResponse()
