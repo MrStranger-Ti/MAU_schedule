@@ -26,4 +26,5 @@ urlpatterns = [
     path('schedule/', include('schedule.urls')),
     path('profile/', include('profiles.urls')),
     path('notes/', include('notes.urls')),
+    path('bookmarks/', include('bookmarks.urls')),
 ]

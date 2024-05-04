@@ -1,0 +1,36 @@
+{% extends 'schedule/teacher/base_teacher_schedule.html' %}
+{% load static %}
+
+{% block head_title %}
+  Поиск преподавателя
+{% endblock %}
+
+{% block container %}
+  <h1 class="schedule__title">Расписание преподавателя</h1>
+  <div class="schedule__bookmarks-block">
+    {% include 'bookmarks/bookmarks.html' %}
+  </div>
+  <form class="schedule__form flex" name="search-teacher" method="get">
+    <input class="schedule__input" type="text" name="query">
+    <button class="btn" type="submit">
+      <span class="spinner-border spinner-border-sm btn-spinner-hidden" role="status" aria-hidden="true"></span>
+      <span class="schedule__btn-text">Найти</span>
+    </button>
+  </form>
+  <div class="schedule__list-block"></div>
+{% endblock %}
+
+{% block html_loaded_scripts %}
+  <script src="{% static 'js/schedule/teacher_searching/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks/preparing.js' %}"></script>
+  <script>
+      document.querySelector('[name=search-teacher]').addEventListener('submit', (event) => {
+          event.preventDefault()
+          if (event.currentTarget.query.value) {
+              getTeachersLinks()
+          }
+      })
+
+      prepareBookmarkDisplay()
+  </script>
+{% endblock %}

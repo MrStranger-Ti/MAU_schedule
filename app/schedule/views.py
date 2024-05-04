@@ -11,7 +11,6 @@ from django.conf import settings
 
 from mau_utils.mau_parser import MauScheduleParser
 from mau_utils.mau_requests import get_teachers_urls, get_schedule_data
-from schedule.models import TeacherScheduleVisitingHistory
 
 
 class GroupScheduleView(LoginRequiredMixin, View):
@@ -55,11 +54,11 @@ class AjaxGetGroupScheduleView(View):
 
 
 class SearchTeacherView(LoginRequiredMixin, TemplateView):
-    template_name = 'schedule/search_teacher.html'
+    template_name = 'schedule/teacher/search_teacher.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['history'] = self.request.user.teachers_history.all()[:5]
+        context['bookmarks'] = self.request.user.bookmarks.all()
         return context
 
 
@@ -80,13 +79,14 @@ class AjaxTeachersListView(View):
 
 
 class TeacherScheduleView(View):
-    template_name = 'schedule/teacher_schedule.html'
+    template_name = 'schedule/teacher/teacher_schedule.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         context = {
             'teacher_key': request.GET.get('key'),
             'teacher_name': request.GET.get('name'),
             'page': request.GET.get('page', 1),
+            'bookmarks': request.user.bookmarks.all(),
         }
         return render(request, self.template_name, context=context)
 
@@ -118,42 +118,34 @@ class AjaxGetTeacherScheduleView(View):
             'table': settings.TEACHER_SCHEDULE_NAME,
         }
 
-        # если расписание было получено, то создаем запись в истории посещения
-        if schedule_data:
-            TeacherScheduleVisitingHistory.objects.get_or_create(
-                user=request.user,
-                teacher_name=teacher_name,
-                teacher_key=teacher_key,
-            )
-
         return render(request, self.template_name, context=context)
 
 
-class AjaxGetVisitingHistoryView(View):
-    template_name = 'schedule/ajax/visiting_history.html'
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-            return HttpResponseNotFound()
-
-        return render(request, self.template_name, context={
-            'history': self.request.user.teachers_history.all()[:5],
-        })
-
-
-class AjaxDeleteVisitingHistoryView(View):
-    def post(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-            return HttpResponseNotFound()
-
-        data = json.loads(request.body)
-        history = request.user.teachers_history.filter(
-            teacher_name=data.get('name'),
-            teacher_key=data.get('key'),
-        ).first()
-
-        if history:
-            history.delete()
-            return redirect(reverse('schedule:get_teacher_history'))
-
-        return HttpResponseBadRequest()
+# class AjaxGetVisitingHistoryView(View):
+#     template_name = 'schedule/ajax/visiting_history.html'
+#
+#     def get(self, request: HttpRequest) -> HttpResponse:
+#         if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+#             return HttpResponseNotFound()
+#
+#         return render(request, self.template_name, context={
+#             'history': self.request.user.teachers_history.all()[:5],
+#         })
+#
+#
+# class AjaxDeleteVisitingHistoryView(View):
+#     def post(self, request: HttpRequest) -> HttpResponse:
+#         if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+#             return HttpResponseNotFound()
+#
+#         data = json.loads(request.body)
+#         history = request.user.teachers_history.filter(
+#             teacher_name=data.get('name'),
+#             teacher_key=data.get('key'),
+#         ).first()
+#
+#         if history:
+#             history.delete()
+#             return redirect(reverse('schedule:get_teacher_history'))
+#
+#         return HttpResponseBadRequest()

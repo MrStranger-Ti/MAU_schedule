@@ -1,0 +1,45 @@
+{% extends 'schedule/teacher/base_teacher_schedule.html' %}
+{% load static %}
+{% load schedule_tags %}
+
+{% block head_title %}
+  Расписание преподавателя
+{% endblock %}
+
+{% block container %}
+  <div class="schedule__title-block flex">
+    <h1>Расписание преподавателя "{{ teacher_name }}"</h1>
+    {% has_bookmark as has_bookamrk %}
+    {% if has_bookamrk %}
+      <button class="btn schedule__title-block-btn" name="bookmark-create" type="button" disabled>Расписание в закладках</button>
+    {% else %}
+      <button class="btn schedule__title-block-btn" name="bookmark-create" type="button">Добавить в закладки</button>
+    {% endif %}
+  </div>
+  <a href="{% url 'schedule:teacher_search' %}" class="schedule__link">Назад</a>
+  <div class="schedule__bookmarks-block">
+    {% include 'bookmarks/bookmarks.html' %}
+  </div>
+  <div class="tables__list"></div>
+  <div class="spinner-border spinner-border-visible" role="status">
+    <span class="visually-hidden"></span>
+  </div>
+{% endblock %}
+
+{% block html_loaded_scripts %}
+  <script src="{% static 'js/schedule/table/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/notes/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/notes/preparing.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks/preparing.js' %}"></script>
+  <script>
+      const url = getIndex() + '/schedule/get-teacher-schedule/?page={{ page }}&key={{ teacher_key }}&name={{ teacher_name }}'
+      document.addEventListener('DOMContentLoaded', () => getSchedule(url))
+
+      document.querySelector('[name="bookmark-create"]').addEventListener('click', () => {
+          createBookmark()
+      })
+
+      prepareBookmarkDisplay()
+  </script>
+{% endblock %}

@@ -147,3 +147,10 @@ tbody td:nth-child(5) {
 tbody tr {
     position: relative;
 }
+
+
+/* Закладки */
+
+.bookmarks-item {
+    gap: 10px;
+}

@@ -1,0 +1,15 @@
+{% if bookmarks %}
+  <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+      Закладки
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+      {% for bookmark in bookmarks %}
+        <li class="bookmarks-item flex">
+          <a class="dropdown-item" href="{% url 'schedule:teacher_schedule' %}?key={{ bookmark.teacher_key }}&name={{ bookmark.teacher_name|urlencode }}&page=1">{{ bookmark.teacher_name }}</a>
+          <button class="btn schedule__bookmarks-btn" type="button" name="bookmark-delete">Удалить</button>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
