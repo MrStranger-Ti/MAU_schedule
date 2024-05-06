@@ -1,3 +1,8 @@
+.schedule__title-block {
+    align-items: center;
+    gap: 10px;
+}
+
 .schedule__form {
     gap: 10px;
 }

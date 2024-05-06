@@ -151,6 +151,29 @@ tbody tr {
 
 /* Закладки */
 
+.schedule__bookmarks {
+
+}
+
 .bookmarks-item {
     gap: 10px;
+}
+
+.schedule__bookmark-btn {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}
+
+.schedule__bookmark-btn svg {
+    width: 30px;
+    stroke: black;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2px;
+}
+
+.schedule__bookmarks-empty {
+    margin: 0;
+    text-align: center;
 }

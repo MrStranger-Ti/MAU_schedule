@@ -50,6 +50,6 @@ class AjaxBookmarkDeleteView(View):
 
         if bookmark:
             bookmark.delete()
-            return HttpResponse()
+            return redirect(reverse('bookmarks:get_bookmarks_list'))
 
         return HttpResponseBadRequest()

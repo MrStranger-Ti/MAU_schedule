@@ -1,16 +1,3 @@
-const getBookmarks = function () {
-    fetch(getIndex() + '/bookmarks/display/', {
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-        },
-    })
-        .then(response => response.text())
-        .then(html => {
-
-        })
-}
-
-
 const createBookmark = function () {
     const urlParams = new URLSearchParams(window.location.search)
 
@@ -28,28 +15,23 @@ const createBookmark = function () {
     })
         .then(response => {
             if (!response.ok) {
-                throw Error('Не удалось создать закладку')
+                throw Error()
             }
             return response.text()
         })
         .then(html => {
             const btn = document.querySelector('[name="bookmark-create"]')
 
-            document.querySelector('.schedule__bookmarks-block').innerHTML = html
+            document.querySelector('.schedule__bookmarks').outerHTML = html
+            prepareBookmarkDisplay()
 
             btn.setAttribute('disabled', 'true')
             btn.textContent = 'Расписание в закладках'
 
-            prepareBookmarkDisplay()
-
-            showMauNotification('Закладка успешно создана')
+            showMauNotification('Закладка успешно создана', 'ok')
         })
         .catch(error => {
-            // const btn = document.querySelector('[name="bookmark-create"]')
-            // if (!btn.parentElement.querySelector('.error')) {
-            //     btn.insertAdjacentHTML('afterend', `<p class="error">${error.message}</p>`)
-            // }
-            showMauNotification(error.message)
+            showMauNotification('Не удалось создать закладку', 'error')
         })
 }
 
@@ -71,15 +53,25 @@ const deleteBookmark = function (link) {
     })
         .then(response => {
             if (!response.ok) {
-                throw Error('Не удалось удалить закладку')
+                throw Error()
             }
 
+            return response.text()
+        })
+        .then(html => {
             link.parentElement.remove()
-            document.querySelector('[name="bookmark-create"]').removeAttribute('disabled')
+            if (link.href == window.location.href) {
+                const btn = document.querySelector('[name="bookmark-create"]')
+                btn.removeAttribute('disabled')
+                btn.textContent = 'Добавить в закладки'
+            }
 
-            showMauNotification('Закладка успешно удалена')
+            document.querySelector('.schedule__bookmarks').outerHTML = html
+            prepareBookmarkDisplay()
+
+            showMauNotification('Закладка успешно удалена', 'ok')
         })
         .catch(error => {
-            showMauNotification(error.message)
+            showMauNotification('Не удалось удалить закладку', 'error')
         })
 }

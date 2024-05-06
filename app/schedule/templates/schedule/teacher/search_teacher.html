@@ -6,9 +6,11 @@
 {% endblock %}
 
 {% block container %}
-  <h1 class="schedule__title">Расписание преподавателя</h1>
-  <div class="schedule__bookmarks-block">
-    {% include 'bookmarks/bookmarks.html' %}
+  <div class="schedule__title-block flex">
+    <h1 class="schedule__title">Расписание преподавателя</h1>
+    <div class="schedule__bookmarks-block">
+      {% include 'bookmarks/bookmarks.html' %}
+    </div>
   </div>
   <form class="schedule__form flex" name="search-teacher" method="get">
     <input class="schedule__input" type="text" name="query">
@@ -22,6 +24,7 @@
 
 {% block html_loaded_scripts %}
   <script src="{% static 'js/schedule/teacher_searching/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks/fetching.js' %}"></script>
   <script src="{% static 'js/schedule/bookmarks/preparing.js' %}"></script>
   <script>
       document.querySelector('[name=search-teacher]').addEventListener('submit', (event) => {

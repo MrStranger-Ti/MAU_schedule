@@ -14,7 +14,7 @@ from mau_utils.mau_requests import get_teachers_urls, get_schedule_data
 
 
 class GroupScheduleView(LoginRequiredMixin, View):
-    template_name = 'schedule/group_schedule.html'
+    template_name = 'schedule/group/group_schedule.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         page = request.GET.get('page', 1)
