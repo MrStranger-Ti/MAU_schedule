@@ -44,16 +44,21 @@ body {
 
 .notification {
     position: fixed;
-    align-items: center;
+    flex-direction: column;
     right: 2%;
     bottom: 2%;
+    z-index: 99;
     max-width: 400px;
     min-height: 70px;
+    gap: 30px;
+}
+
+.notification__block {
+    align-items: center;
     padding: 18px 25px;
     gap: 10px;
-    z-index: 99;
     background-color: #fff;
-    box-shadow: 5px 5px 20px black;
+    box-shadow: 0 0 10px black;
     border-radius: 10px;
     opacity: 0;
     transition: opacity 0.3s linear;

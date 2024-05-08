@@ -3,16 +3,18 @@ const showMauNotification = function (text, type) {
         || document.body.lastElementChild.textContent !== text) {
 
         const iconClass = type == 'error' ? 'notification__icon-error' : 'notification__icon-ok'
-        document.body.insertAdjacentHTML('beforeend',
-            '<div class="notification flex">' +
+        const notificationBlock = document.querySelector('.notification')
+
+        document.querySelector('.notification').insertAdjacentHTML('beforeend',
+            '<div class="notification__block flex">' +
             `  <div class="${iconClass}"></div>` +
-            `  <p class="notification__text">${text}</p>` +
+            `  <p class="notification__descr">${text}</p>` +
             '</div>'
         )
 
-        const notificationBlock = document.body.lastElementChild
-        setTimeout(() => notificationBlock.style.opacity = '1', 5)
-        setTimeout(() => notificationBlock.style.opacity = '', 3000)
-        setTimeout(() => notificationBlock.remove(), 3300)
+        const newNotification = notificationBlock.lastElementChild
+        setTimeout(() => newNotification.style.opacity = '1', 5)
+        setTimeout(() => newNotification.style.opacity = '', 3000)
+        setTimeout(() => newNotification.remove(), 3300)
     }
 }
