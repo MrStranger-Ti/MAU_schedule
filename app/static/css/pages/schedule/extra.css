@@ -152,7 +152,7 @@ tbody tr {
 /* Закладки */
 
 .schedule__bookmarks {
-
+    font-size: 0;
 }
 
 .bookmarks-item {

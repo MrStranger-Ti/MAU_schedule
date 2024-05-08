@@ -1,13 +1,17 @@
 import re
 import urllib.parse
 
-from datetime import date, timedelta
-
 import bs4
 import requests
 
+from datetime import date, timedelta
+
+from fake_useragent import UserAgent
+
 from mau_auth.exceptions import TagNotFound
 from django.conf import settings
+
+ua = UserAgent()
 
 
 def get_prepared_group(group: str, spec_symbols: str = None) -> str:
@@ -22,7 +26,7 @@ def get_prepared_group(group: str, spec_symbols: str = None) -> str:
 
 
 def get_query_params(institute_name: str) -> tuple[str, str]:
-    response = requests.get(settings.SCHEDULE_URL)
+    response = requests.get(settings.SCHEDULE_URL, headers={'User-Agent': ua.random})
     soup = bs4.BeautifulSoup(response.content, 'lxml')
 
     date_select = soup.find('option', selected=True)
@@ -46,7 +50,7 @@ def get_group_url(group: str, pers: str, facs: str, course: str) -> str:
         'mode': 1,
         'pers': pers,
     }
-    response = requests.get(settings.SCHEDULE_URL, params=params)
+    response = requests.get(settings.SCHEDULE_URL, params=params, headers={'User-Agent': ua.random})
     soup = bs4.BeautifulSoup(response.content, 'lxml')
     a_tag = soup.find(
         'a',
@@ -112,7 +116,7 @@ def get_schedule_data(url: str, tables: bool = False, number_weeks: int = 3) -> 
             'perend': sunday.isoformat(),
         }
 
-        response = requests.get(url, params=params)
+        response = requests.get(url, params=params, headers={'User-Agent': ua.random})
         soup = bs4.BeautifulSoup(response.content, 'lxml')
 
         if not tables:
@@ -129,7 +133,7 @@ def get_schedule_data(url: str, tables: bool = False, number_weeks: int = 3) -> 
 def get_institutes() -> set[str]:
     """Находит и возвращает все имена институтов."""
 
-    response = requests.get(settings.SCHEDULE_URL)
+    response = requests.get(settings.SCHEDULE_URL, headers={'User-Agent': ua.random})
     soup = bs4.BeautifulSoup(response.content, 'lxml')
     select = soup.find('select', attrs={'name': 'facs'})
     options = select.find_all('option', value=lambda val: val != '0')
@@ -147,7 +151,7 @@ def get_groups(facs: str, course: str) -> set[str]:
         'course': course,
         'mode': 1,
     }
-    response = requests.get(settings.SCHEDULE_URL, params=params)
+    response = requests.get(settings.SCHEDULE_URL, params=params, headers={'User-Agent': ua.random})
     soup = bs4.BeautifulSoup(response.content, 'lxml')
 
     tbody = soup.find('tbody')
@@ -161,7 +165,7 @@ def get_groups(facs: str, course: str) -> set[str]:
 
 def get_teachers_urls(teacher_name: str) -> dict[str: str] | None:
     params = {'mode2': '1', 'sstring': teacher_name.encode('cp1251')}
-    response = requests.get(settings.SCHEDULE_URL, params=params)
+    response = requests.get(settings.SCHEDULE_URL, params=params, headers={'User-Agent': ua.random})
     soup = bs4.BeautifulSoup(response.content, 'lxml')
     links = soup.select('td b a')
 

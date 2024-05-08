@@ -16,11 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
 
 urlpatterns = [
-    path('__debug__/', include('debug_toolbar.urls')),
     path('admin/', admin.site.urls),
-
     path('', include('core.urls')),
     path('accounts/', include('mau_auth.urls')),
     path('schedule/', include('schedule.urls')),
@@ -28,3 +27,8 @@ urlpatterns = [
     path('notes/', include('notes.urls')),
     path('bookmarks/', include('bookmarks.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns.extend([
+        path('__debug__/', include('debug_toolbar.urls')),
+    ])
