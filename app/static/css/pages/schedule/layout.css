@@ -1,3 +1,12 @@
+.schedule__title-block {
+    align-items: center;
+    gap: 10px;
+}
+
 .schedule__form {
     gap: 10px;
+}
+
+.schedule__bookmark-add-btn {
+    min-width: 205px;
 }

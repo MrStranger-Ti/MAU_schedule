@@ -19,7 +19,7 @@ const createNote = function (form) {
     })
         .then(response => {
             if (!response.ok) {
-                throw Error('Не получилось создать заметку')
+                throw Error()
             }
             return response.text()
         })
@@ -29,15 +29,12 @@ const createNote = function (form) {
                 if (el === noteBlock) {
                     prepareNoteDisplay(noteBlock)
                     noteBlock.parentElement.parentElement.classList.add('existing_note_tr')
+
+                    showMauNotification('Заметка успешно создана', 'ok')
                 }
             }
         })
-        .catch(error => {
-            const noteBlockOptions = noteBlock.querySelector('.note-block__options')
-            if (!noteBlock.querySelector('.error')) {
-                noteBlockOptions.insertAdjacentHTML('beforebegin', `<p class="error">${error.message}</p>`)
-            }
-        })
+        .catch(error => showMauNotification('Не удалось создать заметку', 'error'))
 }
 
 
@@ -59,7 +56,7 @@ const deleteNote = function (noteBlock) {
     })
         .then(response => {
             if (!response.ok) {
-                throw Error('Не удалось удалить заметку')
+                throw Error()
             }
             return response.text()
         })
@@ -69,15 +66,12 @@ const deleteNote = function (noteBlock) {
                 if (el === noteBlock) {
                     prepareNoteCreate(noteBlock)
                     noteBlock.parentElement.parentElement.classList.remove('existing_note_tr')
+
+                    showMauNotification('Заметка успешно удалена', 'ok')
                 }
             }
         })
-        .catch((error) => {
-            const noteBlockOptions = noteBlock.querySelector('.note-block__options')
-            if (!noteBlock.querySelector('.error')) {
-                noteBlockOptions.insertAdjacentHTML('beforebegin', `<p class="error">${error.message}</p>`)
-            }
-        })
+        .catch((error) => showMauNotification('Не удалось удалить заметку', 'error'))
 }
 
 
@@ -102,7 +96,7 @@ const updateNote = function (form) {
     })
         .then(response => {
             if (!response.ok) {
-                throw Error('Не получилось изменить заметку')
+                throw Error()
             }
             return response.text()
         })
@@ -115,12 +109,7 @@ const updateNote = function (form) {
                 }
             }
         })
-        .catch(error => {
-            const noteBlockOptions = noteBlock.querySelector('.note-block__options')
-            if (!noteBlock.querySelector('.error')) {
-                noteBlockOptions.insertAdjacentHTML('beforebegin', `<p class="error">${error.message}</p>`)
-            }
-        })
+        .catch(error => showMauNotification('Не удалось обновить заметку', 'error'))
 }
 
 

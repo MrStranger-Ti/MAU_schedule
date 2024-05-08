@@ -15,7 +15,6 @@ const getTeachersLinks = function () {
     })
         .then(response => response.text())
         .then(html => {
-            document.querySelector('.schedule__history-block').innerHTML = ''
             document.querySelector('.schedule__list-block').innerHTML = html
 
             btn.children[0].classList.add('btn-spinner-hidden')

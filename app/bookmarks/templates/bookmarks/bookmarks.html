@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="dropdown schedule__bookmarks">
+  <button class="btn btn-secondary dropdown-toggle schedule__bookmarks-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Закладки
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    {% if bookmarks %}
+      {% for bookmark in bookmarks %}
+        <li class="bookmarks-item flex">
+          <a class="dropdown-item" name="bookmark-delete" href="{% url 'schedule:teacher_schedule' %}?key={{ bookmark.teacher_key }}&name={{ bookmark.teacher_name|urlencode }}&page=1">{{ bookmark.teacher_name }}</a>
+          <button class="btn schedule__bookmark-btn" type="button" name="bookmark-delete">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <g id="cross">
+                <line class="cls-1" x1="7" x2="25" y1="7" y2="25"/>
+                <line class="cls-1" x1="7" x2="25" y1="25" y2="7"/>
+              </g>
+            </svg>
+          </button>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li class="bookmarks-item"><p class="schedule__bookmarks-empty">Закладок нет</p></li>
+    {% endif %}
+  </ul>
+</div>

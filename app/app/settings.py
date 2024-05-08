@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'notes.apps.NotesConfig',
     'core.apps.CoreConfig',
+    'bookmarks.apps.BookmarksConfig',
 ]
 
 MIDDLEWARE = [

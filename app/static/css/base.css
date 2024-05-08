@@ -1,5 +1,8 @@
 * {
     box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p{
     margin: 0;
 }
 
@@ -19,7 +22,9 @@ body {
 }
 
 .btn {
+    min-height: 30px;
     border: 2px solid #858585;
+    color: black;
     background-color: #e2e2e2;
 }
 
@@ -32,4 +37,41 @@ body {
 .schedule__container {
     flex-direction: column;
     align-items: center;
+}
+
+
+/* Уведомление */
+
+.notification {
+    position: fixed;
+    flex-direction: column;
+    right: 2%;
+    bottom: 2%;
+    z-index: 99;
+    max-width: 400px;
+    min-height: 70px;
+    gap: 30px;
+}
+
+.notification__block {
+    align-items: center;
+    padding: 18px 25px;
+    gap: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px black;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s linear;
+}
+
+.notification__icon-ok {
+    width: 32px;
+    height: 32px;
+    background-image: url("/static/images/notification/ok.svg");
+}
+
+.notification__icon-error {
+    width: 32px;
+    height: 32px;
+    background-image: url("/static/images/notification/error.svg");
 }
