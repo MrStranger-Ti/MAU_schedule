@@ -72,41 +72,41 @@
 
 /* Таблица */
 
-.tables__container {
-    flex-direction: column;
-    align-items: center;
-}
-
-.tables__list {
+.schedule__list {
     display: flex;
     flex-direction: column;
+    width: 100%;
     gap: 50px;
     margin-bottom: 50px;
 }
 
-.table_title {
-    text-align: center;
-}
-
-.schedule_table {
+.schedule__table {
     width: 100%;
     border-collapse: collapse
 }
 
-.table_title {
+.schedule__table:not(:last-child) {
+    margin-bottom: 30px;
+}
+
+.schedule__table-title {
+    text-align: center;
     font-size: 30px;
     padding-bottom: 20px;
 }
 
-.table_heads th {
-    padding: 5px 10px;
-    border: 2px solid gray;
+thead tr {
+    border-bottom: 1px solid grey;
 }
 
 tr td {
-    padding: 3px 5px;
-    border: 2px solid grey;
+    padding: 10px;
+    border-bottom: 1px solid grey;
     text-align: center;
+}
+
+tr td:not(:last-child) {
+    font-size: 20px;
 }
 
 tbody tr:hover {
@@ -114,28 +114,12 @@ tbody tr:hover {
     background-color: #e2e2e2;
 }
 
-.existing_note_tr td:nth-child(1) {
+.schedule__existing-note-tr td:nth-child(1) {
     background-color: red;
 }
 
-tbody td:nth-child(1) {
-    width: 2%;
-}
-
-tbody td:nth-child(2) {
-    width: 16%;
-}
-
 tbody td:nth-child(3) {
-    width: 57%;
-}
-
-tbody td:nth-child(4) {
-    width: 15%;
-}
-
-tbody td:nth-child(5) {
-    width: 10%;
+    max-width: 600px;
 }
 
 .tables__pagination {

@@ -45,8 +45,8 @@ body {
 
 .container {
     margin: 0 auto;
-    max-width: 1920px;
-    padding: 50px 150px 50px;
+    max-width: 1400px;
+    padding: 50px 0 50px;
 }
 
 .schedule__container {
@@ -93,27 +93,3 @@ body {
 
 
 /* header */
-
-.header__container {
-    align-items: center;
-    gap: 20px;
-    background-color: #0063bd;
-}
-
-.header__nav-link {
-    font-size: 21px;
-    color: #fff;
-}
-
-.header__logo {
-    align-content: center;
-    max-width: 400px;
-}
-
-.header__auth {
-    align-content: center;
-}
-
-.header__form {
-    float: right;
-}

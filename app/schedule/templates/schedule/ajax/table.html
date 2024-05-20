@@ -2,29 +2,16 @@
 
 {% if page_obj %}
   {% for date, day_table in page_obj %}
-    <table class="schedule_table">
+    <table class="schedule__table">
       <thead>
-      <tr>
-        <th colspan="5" class="table_title">{{ date }}</th>
-      </tr>
-      <tr class="table_heads">
-        <th>№</th>
-        <th>Время</th>
-        <th>Название</th>
-        <th>
-          {% if table == 'group' %}
-            Преподаватель
-          {% else %}
-            Группа
-          {% endif %}
-        </th>
-        <th>Корпус</th>
-      </tr>
+        <tr>
+          <th colspan="5" class="schedule__table-title">{{ date }}</th>
+        </tr>
       </thead>
       <tbody>
       {% for row in day_table %}
         {% get_user_note table date forloop.counter as note %}
-        <tr {% if note %} class="existing_note_tr" {% endif %}>
+        <tr {% if note %} class="schedule__existing-note-tr" {% endif %}>
           {% for cell in row %}
             <td>{{ cell }}</td>
           {% endfor %}

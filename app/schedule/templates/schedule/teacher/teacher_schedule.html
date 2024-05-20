@@ -8,7 +8,7 @@
 
 {% block container %}
   <div class="schedule__title-block flex">
-    <h1>Расписание преподавателя "{{ teacher_name }}"</h1>
+    <h1 class="schedule__title">Расписание преподавателя "{{ teacher_name }}"</h1>
     {% include 'bookmarks/bookmarks.html' %}
     {% has_bookmark as has_bookamrk %}
     <button class="btn schedule__bookmark-add-btn" name="bookmark-create" type="button" {% if has_bookamrk %}disabled{% endif %}>{% if has_bookamrk %}Расписание в закладках{% else %}Добавить в закладки{% endif %}</button>

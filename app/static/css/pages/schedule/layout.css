@@ -3,6 +3,10 @@
     gap: 10px;
 }
 
+.schedule__title {
+    margin-bottom: 50px;
+}
+
 .schedule__form {
     gap: 10px;
 }
