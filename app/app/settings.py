@@ -171,8 +171,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'mau_auth.MauUser'
 
 LOGIN_URL = reverse_lazy('mau_auth:login')
-LOGIN_REDIRECT_URL = reverse_lazy('schedule:index')
-LOGOUT_REDIRECT_URL = reverse_lazy('mau_auth:login')
+LOGIN_REDIRECT_URL = reverse_lazy('schedule:group_schedule')
+LOGOUT_REDIRECT_URL = reverse_lazy('core:index')
 
 
 # Email

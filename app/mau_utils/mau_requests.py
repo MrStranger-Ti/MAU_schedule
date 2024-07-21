@@ -111,9 +111,13 @@ def get_schedule_data(url: str, tables: bool = False, number_weeks: int = 3) -> 
     data = {}
     for _ in range(number_weeks):
         sunday = monday + timedelta(days=6)
+        # params = {
+        #     'perstart': monday.isoformat(),
+        #     'perend': sunday.isoformat(),
+        # }
         params = {
-            'perstart': monday.isoformat(),
-            'perend': sunday.isoformat(),
+            'perstart': '2024-04-08',
+            'perend': '2024-04-14',
         }
 
         response = requests.get(url, params=params, headers={'User-Agent': ua.random})
