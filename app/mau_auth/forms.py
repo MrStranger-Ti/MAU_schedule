@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
 
+from mau_auth.models import MauInstitute
 from mau_auth.validators import validate_full_name, validate_email
 
 User = get_user_model()
@@ -11,8 +12,21 @@ class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = 'full_name', 'email', 'password', 'course', 'institute', 'group'
+        widgets = {
+            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
+            'course': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
+            'group': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
+        }
+        labels = {'password': 'Пароль'}
 
-    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
+    institute = forms.ModelChoiceField(
+        widget=forms.Select(attrs={'class': 'form-select', 'placeholder': 'Ввод'}),
+        queryset=MauInstitute.objects.all(),
+        empty_label='Открыть меню',
+        to_field_name='name',
+    )
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -21,8 +35,16 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'example@example.com'}),
+        label='Email',
+        label_suffix='',
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password'}),
+        label='Пароль',
+        label_suffix='',
+    )
 
     error_messages = {
         "invalid_login": "Введите правильный логин и пароль.",

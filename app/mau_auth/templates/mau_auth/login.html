@@ -1,25 +1,23 @@
-{% extends 'base.html' %}
+{% extends 'mau_auth/base_auth.html' %}
 
 {% block head_title %}
   Вход
 {% endblock %}
 
-{% block body %}
-  <main>
-    <section class="login">
-      <div class="container login__container">
-        <form class="login__form" action="." method="post">
-          {% csrf_token %}
-          {{ form.as_p }}
-          <button class="btn login__btn" type="submit">Войти</button>
-        </form>
-        <div class="login__links-block">
-          <ul class="login__list">
-            <li class="login__item"><a class="login__link" href="{% url 'mau_auth:registration' %}">Регистрация</a></li>
-            <li class="login__item"><a class="login__link" href="{% url 'mau_auth:password_reset_form' %}">Восстановить пароль</a></li>
-          </ul>
-        </div>
+{% block auth %}
+  <h1 class="auth__title">Вход</h1>
+  <form class="auth__form flex" action="." method="post">
+    {% csrf_token %}
+    <div class="auth__inputs-block flex">
+      {% for field in form %}
+      <div class="form-floating">
+        {{ field }}
+        {{ field.label_tag }}
       </div>
-    </section>
-  </main>
+    {% endfor %}
+    </div>
+    <button class="btn auth__btn" type="submit">Войти</button>
+  </form>
+  <a class="auth__link" href="{% url 'mau_auth:registration' %}">Регистрация</a>
+  <a class="auth__link" href="{% url 'mau_auth:password_reset_form' %}">Восстановить пароль</a>
 {% endblock %}

@@ -5,14 +5,6 @@
   Главная
 {% endblock %}
 
-{#{% block main %}#}
-{#  <section class="hero">#}
-{#    <div class="container hero__container">#}
-{#      <h1 class="hero__title">Функциональность данного приложения</h1>#}
-{#      <p class="hero__descr">{% lorem %}</p>#}
-{#    </div>#}
-{#  </section>#}
-{#{% endblock %}#}
 {% block head_links %}
   <link rel="stylesheet" href="{% static 'css/pages/index/layout.css' %}">
 {% endblock %}
@@ -40,7 +32,7 @@
       </svg>
       <h1 class="hero__title">Расписание доступно только для учащихся МАУ</h1>
       <a href="{% url 'mau_auth:login' %}" class="btn hero__btn">Войти</a>
-      <a href="{% url 'mau_auth:registration' %}" class="link hero__link">Регистрация</a>
+      <a href="{% url 'mau_auth:registration' %}" class="hero__link">Регистрация</a>
     </div>
   </section>
 {% endblock %}

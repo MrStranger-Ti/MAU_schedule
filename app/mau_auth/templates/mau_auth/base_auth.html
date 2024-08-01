@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_title %}
+  Вход
+{% endblock %}
+
+{% block head_links %}
+  <link rel="stylesheet" href="{% static 'css/pages/auth/layout.css' %}">
+{% endblock %}
+
+{% block body %}
+  <main>
+    <section class="auth">
+      <div class="container auth__container flex">
+        {% block auth %}
+
+        {% endblock %}
+      </div>
+    </section>
+  </main>
+{% endblock %}

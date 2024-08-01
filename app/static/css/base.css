@@ -1,27 +1,13 @@
+:root {
+    --light: #ffffff;
+    --light-blue: #AFCAE3;
+    --blue: #4D648D;
+    --dark-blue: #1A4568;
+    --dark: #1E1E26;
+}
+
 * {
     box-sizing: border-box;
-}
-
-h1, h2, h3, h4, h5, h6, p, ul {
-    margin: 0;
-    padding: 0;
-}
-
-ul {
-    list-style: none;
-}
-
-a {
-    text-decoration: none;
-}
-
-.flex {
-    display: flex;
-}
-
-.hidden {
-    visibility: hidden;
-    opacity: 0;
 }
 
 body {
@@ -33,42 +19,79 @@ body {
     font-style: normal;
     font-size: 24px;
     line-height: 32px;
-    background-color: #AFCAE3;
+    background-color: var(--light-blue);
 }
 
-.link {
+h1, h2, h3, h4, h5, h6, p, ul {
+    margin: 0;
+    padding: 0;
+    color: var(--dark-blue);
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
     position: relative;
     font-size: 20px;
     font-weight: 600;
-    color: #1A4568;
+    color: var(--dark-blue);
     outline: none;
 }
 
-.link::after {
+a::after {
     content: "";
     position: absolute;
     border-bottom: 2px solid #4D648D;
     width: 100%;
     height: 100%;
     left: 0;
+    bottom: -2px;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
 }
 
-.link:focus::after {
+a:focus::after {
     opacity: 1;
 }
 
-.link:hover {
-    color: #4D648D;
+a:hover {
+    color: var(--blue);
 }
 
-.link:hover::after {
+a:hover::after {
     opacity: 0;
 }
 
-.link:active {
-    color: #4D648D;
+a:active {
+    color: var(--blue);
+}
+
+.form-floating > input, .form-floating > select {
+    min-width: 400px;
+    font-size: 18px;
+    min-height: 64px;
+    border-radius: 8px;
+}
+
+.form-floating > input:focus, .form-floating > select:focus {
+    box-shadow: 0 0 0 3px rgba(77, 100, 141, 45%);
+}
+
+.form-floating > label {
+    font-size: 18px;
+    color: var(--dark-blue);
+}
+
+.flex {
+    display: flex;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
 }
 
 .btn {
@@ -77,8 +100,8 @@ body {
     border-radius: 8px;
     font-size: 20px;
     font-weight: 500;
-    color: #ffffff;
-    background-color: #1A4568;
+    color: var(--light);
+    background-color: var(--dark-blue);
 }
 
 .btn:focus {
@@ -86,14 +109,14 @@ body {
 }
 
 .btn:hover {
-    background-color: #4D648D;
-    color: #1E1E26;
+    background-color: var(--blue);
+    color: var(--light);
     box-shadow: none;
 }
 
 .btn:active {
-    background-color: #4D648D;
-    color: #D1E1FA;
+    background-color: var(--blue);
+    color: var(--light-blue);
 }
 
 .container {
