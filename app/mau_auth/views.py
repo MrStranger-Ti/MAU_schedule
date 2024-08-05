@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
     PasswordResetCompleteView
+from django.forms import ModelForm, Form
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
@@ -12,7 +13,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 from django.views.generic import TemplateView
 
-from mau_auth.forms import UserRegistrationForm, UserLoginForm
+from mau_auth.forms import UserRegistrationForm, UserLoginForm, CustomPasswordResetForm, CustomSetPasswordForm
+from utils.helpers import add_error_class
 
 User = get_user_model()
 
@@ -36,6 +38,7 @@ class MauRegistrationView(UserPassesTestMixin, View):
             user.send_email_confirmation(request)
             return redirect(reverse('mau_auth:registration_email_sent'))
 
+        add_error_class(form, all_fields=False)
         return render(request, self.template_name, context={'form': form})
 
     def test_func(self):
@@ -80,12 +83,17 @@ class MauLoginView(LoginView):
 
         return response
 
+    def form_invalid(self, form):
+        add_error_class(form, all_fields=True)
+        return super().form_invalid(form)
+
 
 class MauPasswordResetView(PasswordResetView):
     template_name = 'mau_auth/password_reset/password_reset_form.html'
     email_template_name = 'mau_auth/password_reset/password_reset_email.html'
     subject_template_name = 'mau_auth/password_reset/password_reset_subject.html'
     success_url = reverse_lazy('mau_auth:password_reset_done')
+    form_class = CustomPasswordResetForm
 
 
 class MauPasswordResetDoneView(PasswordResetDoneView):
@@ -95,6 +103,11 @@ class MauPasswordResetDoneView(PasswordResetDoneView):
 class MauPasswordConfirmView(PasswordResetConfirmView):
     template_name = 'mau_auth/password_reset/password_reset_confirm.html'
     success_url = reverse_lazy('mau_auth:password_reset_complete')
+    form_class = CustomSetPasswordForm
+    
+    def form_invalid(self, form):
+        add_error_class(form, all_fields=True)
+        return super().form_invalid(form)
 
 
 class MauPasswordCompleteView(PasswordResetCompleteView):

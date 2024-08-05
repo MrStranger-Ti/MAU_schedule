@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.core.exceptions import ValidationError
 
 from mau_auth.models import MauInstitute
-from mau_auth.validators import validate_full_name, validate_email
 
 User = get_user_model()
 
@@ -57,14 +57,17 @@ class UserLoginForm(forms.Form):
         super().__init__(*args, **kwargs)
 
     def clean(self):
-        username = self.cleaned_data.get("email")
+        email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
 
-        if username is not None and password:
+        if email is not None and email:
             self.user_cache = authenticate(
-                self.request, username=username, password=password
+                self.request, username=email, password=password
             )
             if self.user_cache is None:
+                for field in self.fields.values():
+                    field.widget.attrs['class'] += ' error-input'
+
                 raise self.get_invalid_login_error()
             else:
                 self.confirm_login_allowed(self.user_cache)
@@ -95,5 +98,31 @@ class UserLoginForm(forms.Form):
         return ValidationError(
             self.error_messages["invalid_login"],
             code="invalid_login",
-            params={"username": 'email'},
         )
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
+        label='Email',
+        label_suffix='',
+    )
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label='Новый пароль',
+        label_suffix='',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password1', 'autocomplete': 'new-password'}),
+        strip=False,
+    )
+    new_password2 = forms.CharField(
+        label='Подтверждение нового пароля',
+        label_suffix='',
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password2', 'autocomplete': 'new-password'}),
+    )
+
+    error_messages = {
+        'password_mismatch': 'Пароль не совпадает',
+    }

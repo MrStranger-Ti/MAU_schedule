@@ -1,3 +1,8 @@
+.schedule__container {
+    flex-direction: column;
+    align-items: center;
+}
+
 .schedule__title-block {
     align-items: center;
     gap: 10px;

@@ -5,17 +5,23 @@
 {% block auth %}
   <h1 class="auth__title">Регистрация</h1>
   <form class="auth__form flex" action="." method="post">
-    <h2 class="auth__step-title">Шаг&nbsp;<span class="auth__step-number" id="step-number">1</span>/2</h2>
+    <h2 class="auth__step-title">Шаг&nbsp;<span id="step-number">1</span>/2</h2>
     {% csrf_token %}
     <div class="auth__step-1 flex">
       <div class="auth__inputs-block flex">
         {% for field in form %}
           {% clear_label_suffix field as clean_field %}
           {% if forloop.counter0 <= 2 %}
-            {{ field.errors }}
-            <div class="form-floating">
-              {{ clean_field }}
-              {{ clean_field.label_tag }}
+            <div class="auth__field-block">
+              <ul class="errors-list auth__errors">
+                {% for error in field.errors %}
+                  <li class="auth__error">{{ error }}</li>
+                {% endfor %}
+              </ul>
+              <div class="form-floating">
+                {{ clean_field }}
+                {{ clean_field.label_tag }}
+              </div>
             </div>
           {% endif %}
         {% endfor %}
@@ -27,10 +33,16 @@
         {% for field in form %}
           {% clear_label_suffix field as clean_field %}
           {% if forloop.counter0 >= 3 %}
-            {{ field.errors }}
-            <div class="form-floating">
-              {{ clean_field }}
-              {{ clean_field.label_tag }}
+            <div class="auth__field-block">
+              <ul class="errors-list auth__errors">
+                {% for error in field.errors %}
+                  <li class="auth__error">{{ error }}</li>
+                {% endfor %}
+              </ul>
+              <div class="form-floating">
+                {{ clean_field }}
+                {{ clean_field.label_tag }}
+              </div>
             </div>
           {% endif %}
         {% endfor %}
@@ -45,8 +57,8 @@
 {% endblock %}
 
 {% block html_loaded_scripts %}
-  <script src="{% static 'js/auth/registration_form/switching_forms.js' %}"></script>
   <script>
     prepareSwitchForm()
+    prepareRemoveErrorStyle()
   </script>
 {% endblock %}

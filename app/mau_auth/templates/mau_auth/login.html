@@ -9,15 +9,37 @@
   <form class="auth__form flex" action="." method="post">
     {% csrf_token %}
     <div class="auth__inputs-block flex">
+      {% if form.non_field_errors %}
+        <ul class="errors-list">
+          {% for error in form.non_field_errors %}
+            <li class="auth__error">{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
       {% for field in form %}
-      <div class="form-floating">
-        {{ field }}
-        {{ field.label_tag }}
-      </div>
-    {% endfor %}
+        <div class="auth__field-block">
+          {% if field.errors %}
+            <ul class="errors-list">
+              {% for error in field.errors %}
+                <li class="auth__error">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          <div class="form-floating {% if field.errors %}error{% endif %}">
+            {{ field }}
+            {{ field.label_tag }}
+          </div>
+        </div>
+      {% endfor %}
     </div>
     <button class="btn auth__btn" type="submit">Войти</button>
   </form>
   <a class="auth__link" href="{% url 'mau_auth:registration' %}">Регистрация</a>
   <a class="auth__link" href="{% url 'mau_auth:password_reset_form' %}">Восстановить пароль</a>
+{% endblock %}
+
+{% block html_loaded_scripts %}
+  <script>
+    prepareRemoveErrorStyle()
+  </script>
 {% endblock %}
