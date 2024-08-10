@@ -1,5 +1,3 @@
-import json
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
@@ -119,33 +117,3 @@ class AjaxGetTeacherScheduleView(View):
         }
 
         return render(request, self.template_name, context=context)
-
-
-# class AjaxGetVisitingHistoryView(View):
-#     template_name = 'schedule/ajax/visiting_history.html'
-#
-#     def get(self, request: HttpRequest) -> HttpResponse:
-#         if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-#             return HttpResponseNotFound()
-#
-#         return render(request, self.template_name, context={
-#             'history': self.request.user.teachers_history.all()[:5],
-#         })
-#
-#
-# class AjaxDeleteVisitingHistoryView(View):
-#     def post(self, request: HttpRequest) -> HttpResponse:
-#         if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-#             return HttpResponseNotFound()
-#
-#         data = json.loads(request.body)
-#         history = request.user.teachers_history.filter(
-#             teacher_name=data.get('name'),
-#             teacher_key=data.get('key'),
-#         ).first()
-#
-#         if history:
-#             history.delete()
-#             return redirect(reverse('schedule:get_teacher_history'))
-#
-#         return HttpResponseBadRequest()

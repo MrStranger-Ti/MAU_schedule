@@ -34,61 +34,13 @@
 </head>
 <body>
 {% block body %}
-  <header class="header">
-    <div class="container header__container">
-      <div>
-        <nav class="header__nav col">
-          <ul class="header__nav-list">
-            <li class="header__nav-item"><a class="header__nav-link" href="{% url 'profiles:profile' %}">Профиль</a></li>
-            <li class="header__nav-item"><a class="header__nav-link" href="{% url 'schedule:group_schedule' %}">Группа {% if user.group %}{{ user.group }}{% endif %}</a></li>
-            <li class="header__nav-item"><a class="header__nav-link" href="{% url 'schedule:teacher_search' %}">Преподаватели</a></li>
-          </ul>
-        </nav>
-        <div>
-        </div>
-        <div>
-          <form class="header__form" action="{% url 'mau_auth:logout' %}" method="post">
-            {% csrf_token %}
-            <button class="btn header__btn" type="submit">Выйти</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </header>
-  <main>
-    {% block main %}
 
-    {% endblock %}
-  </main>
-  <footer class="footer">
-    <div class="container footer__container">
-      <div class="footer__center-block">
-        <div class="footer__nav-block">
-          <p class="footer__title">Навигация</p>
-          <nav class="footer__nav">
-            <ul class="footer__nav-list">
-              <li class="footer__nav-item"><a class="footer__nav-link" href="{% url 'profiles:profile' %}">Профиль</a></li>
-              <li class="footer__nav-item"><a class="footer__nav-link" href="{% url 'schedule:group_schedule' %}">Группа {% if user.group %}{{ user.group }}{% endif %}</a></li>
-              <li class="footer__nav-item"><a class="footer__nav-link" href="{% url 'schedule:teacher_search' %}">Преподаватели</a></li>
-            </ul>
-          </nav>
-        </div>
-        <div class="footer__contacts-list-block">
-          <p class="footer__title">Контакты</p>
-          <ul class="footer__contacts-list">
-            <li class="footer__contacts-item">{% lorem 2 w random %}</li>
-            <li class="footer__contacts-item">{% lorem 2 w random %}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </footer>
 {% endblock %}
 
+<div class="notification flex">
+</div>
 {% block html_loaded_scripts %}
 
 {% endblock %}
-<div class="notification flex">
-</div>
 </body>
 </html>

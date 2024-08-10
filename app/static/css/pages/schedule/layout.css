@@ -9,7 +9,11 @@
 }
 
 .schedule__title {
-    margin-bottom: 50px;
+    margin-bottom: 20px;
+    font-weight: 900;
+    font-size: 28px;
+    line-height: 150%;
+    color: var(--dark-blue)
 }
 
 .schedule__form {

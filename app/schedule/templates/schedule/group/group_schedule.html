@@ -5,16 +5,12 @@
   Расписание группы
 {% endblock %}
 
-{% block main %}
-  <section class="schedule">
-    <div class="container schedule__container flex">
-      <h1 class="schedule__title">Расписание группы {{ user.group }}</h1>
-      <div class="schedule__list"></div>
-      <div class="spinner-border spinner-border-visible" role="status">
-        <span class="visually-hidden"></span>
-      </div>
-    </div>
-  </section>
+{% block schedule %}
+  <h1 class="schedule__title">Расписание группы {{ user.group }}</h1>
+  <div class="schedule__list"></div>
+  <div class="spinner-border spinner-border-visible" role="status">
+    <span class="visually-hidden"></span>
+  </div>
 {% endblock %}
 
 {% block html_loaded_scripts %}

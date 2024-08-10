@@ -7,5 +7,5 @@ app_name = 'profiles'
 
 urlpatterns = [
     path('', ProfileView.as_view(), name='profile'),
-    path('update', ProfileUpdateView.as_view(), name='profile_update'),
+    path('update/', ProfileUpdateView.as_view(), name='profile_update'),
 ]

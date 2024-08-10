@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_header_and_footer.html' %}
 {% load static %}
 
 {% block head_links %}
@@ -7,7 +7,24 @@
 {% endblock %}
 
 {% block head_scripts %}
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="{% static 'js/utils/urls.js' %}"></script>
   <script src="{% static 'js/utils/csrf.js' %}"></script>
+  <script src="{% static 'js/schedule/teacher_searching/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks/preparing.js' %}"></script>
+  <script src="{% static 'js/schedule/table/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/notes/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/notes/preparing.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks/fetching.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks/preparing.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+  <section class="schedule">
+    <div class="container schedule__container flex">
+      {% block schedule %}
+
+      {% endblock %}
+    </div>
+  </section>
 {% endblock %}

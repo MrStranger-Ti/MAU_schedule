@@ -193,8 +193,18 @@ MAU_DOMAINS = [
 ]
 
 GROUP_SCHEDULE_NAME = 'group'
-
 TEACHER_SCHEDULE_NAME = 'teacher'
+
+WEEKDAYS_NAMES = {
+    0: 'Понедельник',
+    1: 'Вторник',
+    2: 'Среда',
+    3: 'Четверг',
+    4: 'Пятница',
+    5: 'Суббота',
+    6: 'Воскресенье',
+}
+
 
 
 # Redis

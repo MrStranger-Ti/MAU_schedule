@@ -1,7 +1,7 @@
 /* Общие */
 
 :root {
-    --light: #ffffff;
+    --light: #DBECF4;
     --light-blue: #AFCAE3;
     --blue: #4D648D;
     --dark-blue: #1A4568;
@@ -22,6 +22,7 @@ body {
     font-style: normal;
     font-size: 24px;
     line-height: 32px;
+    color: var(--dark-blue);
     background-color: var(--light-blue);
 }
 
@@ -47,22 +48,23 @@ ul {
 .container {
     margin: 0 auto;
     max-width: 1400px;
-    padding: 50px 0 50px;
+    padding: 20px 0;
 }
 
 
 /* Ссылки */
 
-a {
+.link {
     text-decoration: none;
     position: relative;
     font-size: 20px;
     font-weight: 600;
+    line-height: 150%;
     color: var(--dark-blue);
     outline: none;
 }
 
-a::after {
+.link::after {
     content: "";
     position: absolute;
     border-bottom: 2px solid #4D648D;
@@ -74,19 +76,19 @@ a::after {
     transition: opacity 0.3s ease-in-out;
 }
 
-a:focus::after {
+.link:focus::after {
     opacity: 1;
 }
 
-a:hover {
+.link:hover {
     color: var(--blue);
 }
 
-a:hover::after {
+.link:hover::after {
     opacity: 0;
 }
 
-a:active {
+.link:active {
     color: var(--blue);
 }
 
@@ -207,3 +209,32 @@ input {
 
 
 /* header */
+
+.header {
+    border-bottom: 1px solid var(--dark-blue);
+}
+
+.header__container > .row {
+    width: inherit;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__logo {
+    width: auto;
+    height: 60px;
+}
+
+.header__nav-list {
+    justify-content: space-between;
+    gap: 60px;
+}
+
+.header__form {
+    text-align: right;
+}
+
+.header__form-link {
+    border: none;
+    background-color: transparent;
+}

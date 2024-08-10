@@ -73,40 +73,57 @@
 /* Таблица */
 
 .schedule__list {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     gap: 50px;
     margin-bottom: 50px;
 }
 
+.schedule__table-block:not(:last-child) {
+    margin-bottom: 24px;
+}
+
+.schedule__table-block {
+    padding: 24px;
+    background-color: var(--light);
+    border-radius: 8px;
+}
+
 .schedule__table {
     width: 100%;
-    border-collapse: collapse
+    border-collapse: collapse;
 }
 
-.schedule__table:not(:last-child) {
-    margin-bottom: 30px;
+.schedule__table-title-block {
+    justify-content: space-between;
+    margin-bottom: 15px;
 }
 
-.schedule__table-title {
-    text-align: center;
-    font-size: 30px;
-    padding-bottom: 20px;
-}
-
-thead tr {
-    border-bottom: 1px solid grey;
+.schedule__table-descr {
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 150%;
 }
 
 tr td {
-    padding: 10px;
-    border-bottom: 1px solid grey;
+    padding: 10px 10px 10px 0;
+    border-top: 1px solid var(--dark-blue);
     text-align: center;
 }
 
 tr td:not(:last-child) {
     font-size: 20px;
+}
+
+tr td:first-child {
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 150%;
+}
+
+tr td:not(:first-child) {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 150%;
 }
 
 tbody tr:hover {

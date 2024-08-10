@@ -1,4 +1,4 @@
-{% extends 'schedule/teacher/base_teacher_schedule.html' %}
+{% extends 'schedule/base_schedule.html' %}
 {% load static %}
 {% load schedule_tags %}
 
@@ -6,7 +6,7 @@
   Расписание преподавателя
 {% endblock %}
 
-{% block container %}
+{% block schedule %}
   <div class="schedule__title-block flex">
     <h1 class="schedule__title">Расписание преподавателя "{{ teacher_name }}"</h1>
     {% include 'bookmarks/bookmarks.html' %}
@@ -21,11 +21,6 @@
 {% endblock %}
 
 {% block html_loaded_scripts %}
-  <script src="{% static 'js/schedule/table/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/notes/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/notes/preparing.js' %}"></script>
-  <script src="{% static 'js/schedule/bookmarks/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/bookmarks/preparing.js' %}"></script>
   <script>
       const url = getIndex() + '/schedule/get-teacher-schedule/?page={{ page }}&key={{ teacher_key }}&name={{ teacher_name }}'
       document.addEventListener('DOMContentLoaded', () => getSchedule(url))

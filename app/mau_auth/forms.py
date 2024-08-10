@@ -26,6 +26,7 @@ class UserRegistrationForm(forms.ModelForm):
         queryset=MauInstitute.objects.all(),
         empty_label='Открыть меню',
         to_field_name='name',
+        label='Институт',
     )
 
     def save(self, commit=True):

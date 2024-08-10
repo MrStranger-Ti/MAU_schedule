@@ -34,8 +34,8 @@
     </div>
     <button class="btn auth__btn" type="submit">Войти</button>
   </form>
-  <a class="auth__link" href="{% url 'mau_auth:registration' %}">Регистрация</a>
-  <a class="auth__link" href="{% url 'mau_auth:password_reset_form' %}">Восстановить пароль</a>
+  <a class="auth__link link" href="{% url 'mau_auth:registration' %}">Регистрация</a>
+  <a class="auth__link link" href="{% url 'mau_auth:password_reset_form' %}">Восстановить пароль</a>
 {% endblock %}
 
 {% block html_loaded_scripts %}
