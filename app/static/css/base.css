@@ -220,6 +220,14 @@ input {
     align-items: center;
 }
 
+.row {
+    margin: 0;
+}
+
+.row > * {
+    padding: 0;
+}
+
 .header__logo {
     width: auto;
     height: 60px;
@@ -231,10 +239,12 @@ input {
 }
 
 .header__form {
+    padding-right: 0;
     text-align: right;
 }
 
 .header__form-link {
+    padding: 0;
     border: none;
     background-color: transparent;
 }

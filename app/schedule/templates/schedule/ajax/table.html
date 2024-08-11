@@ -18,7 +18,7 @@
               <td>{{ cell }}</td>
             {% endfor %}
             <td class="note-pop-up hidden">
-              <div class="note-block flex" data-schedule-name="{{ table }}" data-day="{{ date }}" data-lesson-number="{{ forloop.counter }}">
+              <div class="note-block flex" data-schedule-name="{{ table }}" data-day="{{ date|date:'Y-m-d' }}" data-lesson-number="{{ forloop.counter }}">
                 {% if note %}
                   {% include 'note_block/display.html' %}
                 {% else %}
@@ -32,12 +32,29 @@
       </table>
     </div>
   {% endfor %}
-  <div class="tables__pagination">
+  <div class="schedule__pagination">
     {% if page_obj.has_previous %}
-      <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">Предыдущая неделя</a>
+      <a class="schedule__pagintaion-arrow schedule__left-pagination-arrow" href="?page={{ page_obj.previous_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">
+        <svg version="1.0" width="50.000000pt" height="50.000000pt" viewBox="0 0 50.000000 50.000000" preserveAspectRatio="xMidYMid meet">
+          <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)">
+            <path d="M134 459 c-4 -6 36 -53 92 -110 l99 -99 -100 -100 c-79 -79 -97 -102
+              -87 -112 10 -10 35 11 125 100 l112 112 -110 110 c-60 60 -113 110 -117 110
+              -4 0 -10 -5 -14 -11z"/>
+          </g>
+        </svg>
+      </a>
     {% endif %}
+    <span class="schedule__pagination-page-number">{{ page_obj.number }}</span>
     {% if page_obj.has_next %}
-      <a class="pagination-link" href="?page={{ page_obj.next_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">Следующая неделя</a>
+      <a class="schedule__pagintaion-arrow" href="?page={{ page_obj.next_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">
+        <svg version="1.0" width="50.000000pt" height="50.000000pt" viewBox="0 0 50.000000 50.000000" preserveAspectRatio="xMidYMid meet">
+          <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)">
+            <path d="M134 459 c-4 -6 36 -53 92 -110 l99 -99 -100 -100 c-79 -79 -97 -102
+              -87 -112 10 -10 35 11 125 100 l112 112 -110 110 c-60 60 -113 110 -117 110
+              -4 0 -10 -5 -14 -11z"/>
+          </g>
+        </svg>
+      </a>
     {% endif %}
   </div>
 {% else %}

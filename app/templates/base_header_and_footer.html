@@ -32,9 +32,9 @@
           <p class="footer__title">Навигация</p>
           <nav class="footer__nav">
             <ul class="footer__nav-list">
-              <li class="footer__nav-item"><a class="footer__nav-link" href="{% url 'profiles:profile' %}">Профиль</a></li>
-              <li class="footer__nav-item"><a class="footer__nav-link" href="{% url 'schedule:group_schedule' %}">Группа {% if user.group %}{{ user.group }}{% endif %}</a></li>
-              <li class="footer__nav-item"><a class="footer__nav-link" href="{% url 'schedule:teacher_search' %}">Преподаватели</a></li>
+              <li class="footer__nav-item"><a class="link" href="{% url 'profiles:profile' %}">Профиль</a></li>
+              <li class="footer__nav-item"><a class="link" href="{% url 'schedule:group_schedule' %}">Группа {% if user.group %}{{ user.group }}{% endif %}</a></li>
+              <li class="footer__nav-item"><a class="link" href="{% url 'schedule:teacher_search' %}">Преподаватели</a></li>
             </ul>
           </nav>
         </div>
