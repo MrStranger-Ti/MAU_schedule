@@ -6,9 +6,9 @@ const getSchedule = function (url) {
     })
         .then(response => response.text())
         .then(html => {
-            document.querySelector('.schedule__list').innerHTML = html
+            document.querySelector('.schedule__content').innerHTML = html
 
-            const tablesList = document.querySelector('.schedule__list')
+            const tablesList = document.querySelector('.schedule__content')
             const notePopUpNodes = document.querySelectorAll('.note-pop-up')
             const tableRows = document.querySelectorAll('tbody > tr')
 

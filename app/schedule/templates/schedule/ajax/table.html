@@ -1,62 +1,48 @@
 {% load schedule_fileters %}
 {% load schedule_tags %}
 
-{% if page_obj %}
-  {% for date, day_table in page_obj %}
-    <div class="schedule__table-block">
-      <div class="schedule__table-title-block flex">
-        <span class="schedule__table-descr">{{ date|get_weekday }}</span>
-        <span class="schedule__table-descr">{{ date|date:'d.m.Y' }}</span>
+<div class="schedule__title-block flex">
+  <h1 class="schedule__title">Расписание группы {{ user.group }}</h1>
+  {% if page_obj %}
+    {% include 'schedule/pagination.html' %}
+  {% endif %}
+</div>
+<div class="schedule__list">
+  {% if page_obj %}
+    {% for date, day_table in page_obj %}
+      <div class="schedule__table-block">
+        <div class="schedule__table-title-block flex">
+          <span class="schedule__table-descr">{{ date|get_weekday }}</span>
+          <span class="schedule__table-descr">{{ date|date:'d.m.Y' }}</span>
+        </div>
+        <table class="schedule__table">
+          <thead></thead>
+          <tbody>
+          {% for row in day_table %}
+            {% get_user_note table date forloop.counter as note %}
+            <tr {% if note %} class="schedule__existing-note-tr" {% endif %}>
+              {% for cell in row %}
+                <td>{{ cell }}</td>
+              {% endfor %}
+              <td class="note-pop-up hidden">
+                <div class="note-block flex" data-schedule-name="{{ table }}" data-day="{{ date|date:'Y-m-d' }}" data-lesson-number="{{ forloop.counter }}">
+                  {% if note %}
+                    {% include 'note_block/display.html' %}
+                  {% else %}
+                    {% include 'note_block/create.html' %}
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
       </div>
-      <table class="schedule__table">
-        <thead></thead>
-        <tbody>
-        {% for row in day_table %}
-          {% get_user_note table date forloop.counter as note %}
-          <tr {% if note %} class="schedule__existing-note-tr" {% endif %}>
-            {% for cell in row %}
-              <td>{{ cell }}</td>
-            {% endfor %}
-            <td class="note-pop-up hidden">
-              <div class="note-block flex" data-schedule-name="{{ table }}" data-day="{{ date|date:'Y-m-d' }}" data-lesson-number="{{ forloop.counter }}">
-                {% if note %}
-                  {% include 'note_block/display.html' %}
-                {% else %}
-                  {% include 'note_block/create.html' %}
-                {% endif %}
-              </div>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  {% endfor %}
-  <div class="schedule__pagination">
-    {% if page_obj.has_previous %}
-      <a class="schedule__pagintaion-arrow schedule__left-pagination-arrow" href="?page={{ page_obj.previous_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">
-        <svg version="1.0" width="50.000000pt" height="50.000000pt" viewBox="0 0 50.000000 50.000000" preserveAspectRatio="xMidYMid meet">
-          <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)">
-            <path d="M134 459 c-4 -6 36 -53 92 -110 l99 -99 -100 -100 c-79 -79 -97 -102
-              -87 -112 10 -10 35 11 125 100 l112 112 -110 110 c-60 60 -113 110 -117 110
-              -4 0 -10 -5 -14 -11z"/>
-          </g>
-        </svg>
-      </a>
-    {% endif %}
-    <span class="schedule__pagination-page-number">{{ page_obj.number }}</span>
-    {% if page_obj.has_next %}
-      <a class="schedule__pagintaion-arrow" href="?page={{ page_obj.next_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">
-        <svg version="1.0" width="50.000000pt" height="50.000000pt" viewBox="0 0 50.000000 50.000000" preserveAspectRatio="xMidYMid meet">
-          <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)">
-            <path d="M134 459 c-4 -6 36 -53 92 -110 l99 -99 -100 -100 c-79 -79 -97 -102
-              -87 -112 10 -10 35 11 125 100 l112 112 -110 110 c-60 60 -113 110 -117 110
-              -4 0 -10 -5 -14 -11z"/>
-          </g>
-        </svg>
-      </a>
-    {% endif %}
-  </div>
-{% else %}
-  <p>Расписание не найдено. Проверьте свои данные в профиле.</p>
+    {% endfor %}
+  {% else %}
+    <p>Расписание не найдено. Проверьте свои данные в профиле.</p>
+  {% endif %}
+</div>
+{% if page_obj %}
+  {% include 'schedule/pagination.html' %}
 {% endif %}

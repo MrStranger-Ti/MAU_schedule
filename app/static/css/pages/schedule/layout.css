@@ -1,15 +1,23 @@
 .schedule__container {
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height) - 1px);
+}
+
+.schedule__content {
+    width: 100%;
 }
 
 .schedule__title-block {
+    justify-content: space-between;
     align-items: center;
+    padding: 0 24px;
+    margin-bottom: 20px;
     gap: 10px;
 }
 
 .schedule__title {
-    margin-bottom: 20px;
     font-weight: 900;
     font-size: 28px;
     line-height: 150%;
