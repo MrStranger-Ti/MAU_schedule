@@ -48,6 +48,7 @@ class AjaxGetGroupScheduleView(View):
         context = {
             'page_obj': page_obj,
             'table': settings.GROUP_SCHEDULE_NAME,
+            'original_schedule_url': settings.SCHEDULE_URL
         }
 
         return render(request, self.template_name, context=context)

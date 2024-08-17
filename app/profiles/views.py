@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
 
 from profiles.forms import ProfileUpdateForm
+from utils.helpers import add_error_class
 
 User = get_user_model()
 
@@ -27,6 +28,10 @@ class ProfileUpdateView(LoginRequiredMixin, FormView):
         user.save()
 
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        add_error_class(form)
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

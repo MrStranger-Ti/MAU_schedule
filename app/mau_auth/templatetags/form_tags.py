@@ -4,7 +4,6 @@ from django import template
 from django.forms import BoundField, ModelChoiceField
 
 register = template.Library()
-ModelChoiceField
 
 
 @register.simple_tag
