@@ -92,6 +92,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'schedule.context_processors.group_schedule_name',
+                'schedule.context_processors.teacher_schedule_name',
             ],
         },
     },

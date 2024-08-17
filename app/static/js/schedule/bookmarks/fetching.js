@@ -26,7 +26,6 @@ const createBookmark = function () {
             prepareBookmarkDisplay()
 
             btn.setAttribute('disabled', 'true')
-            btn.textContent = 'Расписание в закладках'
 
             showMauNotification('Закладка успешно создана', 'ok')
         })
@@ -63,7 +62,6 @@ const deleteBookmark = function (link) {
             if (link.href == window.location.href) {
                 const btn = document.querySelector('[name="bookmark-create"]')
                 btn.removeAttribute('disabled')
-                btn.textContent = 'Добавить в закладки'
             }
 
             document.querySelector('.schedule__bookmarks').outerHTML = html

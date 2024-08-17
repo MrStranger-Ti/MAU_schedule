@@ -34,7 +34,7 @@
     width: inherit;
 }
 
-.note-block__input-block  {
+.note-block__input-block {
     align-items: center;
 }
 
@@ -54,11 +54,20 @@
 
 /* Спиннеры */
 
-.spinner-border-visible {
+.schedule__spinner-block {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: block;
+}
+
+.spinner-border-visible {
     width: 200px;
     height: 200px;
     margin: auto 0;
+    border: 10px solid var(--dark-blue);
+    border-right-color: transparent;
 }
 
 .spinner-border-hidden {
@@ -82,7 +91,7 @@
 }
 
 .schedule__table-block {
-    padding: 24px;
+    padding: var(--content-padding);
     background-color: var(--light);
     border-radius: 8px;
 }
@@ -107,6 +116,10 @@ tr td {
     padding: 10px 10px 10px 0;
     border-top: 1px solid var(--dark-blue);
     text-align: center;
+}
+
+tr td:first-child {
+    text-align: left;
 }
 
 tr td:not(:last-child) {
@@ -181,34 +194,4 @@ tbody td:nth-child(3) {
 
 tbody tr {
     position: relative;
-}
-
-
-/* Закладки */
-
-.schedule__bookmarks {
-    font-size: 0;
-}
-
-.bookmarks-item {
-    gap: 10px;
-}
-
-.schedule__bookmark-btn {
-    padding: 0;
-    border: none;
-    background-color: transparent;
-}
-
-.schedule__bookmark-btn svg {
-    width: 30px;
-    stroke: black;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 2px;
-}
-
-.schedule__bookmarks-empty {
-    margin: 0;
-    text-align: center;
 }

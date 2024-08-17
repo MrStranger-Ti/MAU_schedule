@@ -10,8 +10,6 @@
   <script src="{% static 'js/utils/urls.js' %}"></script>
   <script src="{% static 'js/utils/csrf.js' %}"></script>
   <script src="{% static 'js/schedule/teacher_searching/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/bookmarks/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/bookmarks/preparing.js' %}"></script>
   <script src="{% static 'js/schedule/table/fetching.js' %}"></script>
   <script src="{% static 'js/schedule/notes/fetching.js' %}"></script>
   <script src="{% static 'js/schedule/notes/preparing.js' %}"></script>
@@ -21,7 +19,7 @@
 
 {% block main %}
   <section class="schedule">
-    <div class="container schedule__container flex">
+    <div class="container schedule__container">
       {% block schedule %}
 
       {% endblock %}

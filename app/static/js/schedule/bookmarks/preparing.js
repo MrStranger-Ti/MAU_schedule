@@ -8,3 +8,13 @@ const prepareBookmarkDisplay = function () {
         })
     }
 }
+
+
+const prepareBookmarkAdd = function () {
+    const btn = document.querySelector('[name="bookmark-create"]')
+    if (btn) {
+        btn.addEventListener('click', () => {
+            createBookmark()
+        })
+    }
+}

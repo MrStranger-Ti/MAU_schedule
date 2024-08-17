@@ -13,16 +13,16 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = 'full_name', 'email', 'password', 'course', 'institute', 'group'
         widgets = {
-            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
-            'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
-            'course': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
-            'group': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
+            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'full_name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password'}),
+            'course': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'course'}),
+            'group': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'group'}),
         }
         labels = {'password': 'Пароль'}
 
     institute = forms.ModelChoiceField(
-        widget=forms.Select(attrs={'class': 'form-select', 'placeholder': 'Ввод'}),
+        widget=forms.Select(attrs={'class': 'form-select', 'placeholder': 'institute'}),
         queryset=MauInstitute.objects.all(),
         empty_label='Открыть меню',
         to_field_name='name',

@@ -1,18 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'profiles/base_profile.html' %}
 
 {% block head_title %}
   Редактирование профиля
 {% endblock %}
 
-{% block body %}
-  <section class="profile-update">
-    <div class="container profile-update__container">
-      <h1 class="profile-update__title">Редактирование профиля</h1>
-      <form class="profile-update__form" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn profile-update__btn" type="submit">Обновить профиль</button>
-      </form>
-    </div>
-  </section>
+{% block profile_title %}
+  Редактирование профиля
+{% endblock %}
+
+{% block profile_content %}
+  <form class="profile__form" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn profile__btn" type="submit">Обновить профиль</button>
+  </form>
 {% endblock %}

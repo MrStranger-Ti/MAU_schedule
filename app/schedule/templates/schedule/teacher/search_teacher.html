@@ -7,19 +7,25 @@
 
 {% block schedule %}
   <div class="schedule__title-block flex">
-    <h1 class="schedule__title">Расписание преподавателя</h1>
-    <div class="schedule__bookmarks-block">
-      {% include 'bookmarks/bookmarks.html' %}
+    <div class="schedule__title-left-block flex">
+      <h1 class="schedule__title title">Расписание преподавателей</h1>
+      <div class="schedule__options">
+        {% include 'bookmarks/bookmarks.html' %}
+      </div>
     </div>
+    <form class="schedule__form flex" name="search-teacher" method="get">
+      <input class="form-control" type="text" name="query" id="floatingInput" placeholder="Введите преподавателя">
+      <button class="btn schedule__search-btn" type="submit">
+        <span class="spinner-border spinner-border-sm btn-spinner-hidden" role="status" aria-hidden="true"></span>
+        <span class="schedule__btn-text">Найти</span>
+      </button>
+    </form>
   </div>
-  <form class="schedule__form flex" name="search-teacher" method="get">
-    <input class="schedule__input" type="text" name="query">
-    <button class="btn" type="submit">
-      <span class="spinner-border spinner-border-sm btn-spinner-hidden" role="status" aria-hidden="true"></span>
-      <span class="schedule__btn-text">Найти</span>
-    </button>
-  </form>
-  <div class="schedule__list-block"></div>
+  <div class="schedule__info-block">
+    <p class="schedule__info">Найти преподавателя можно по Фамилии, Имени или Отчеству.</p>
+    <p class="schedule__info">Вы также можете посмотреть расписание на <a class="link" href="{{ original_shedule_url }}">сайте</a> университета.</p>
+  </div>
+  <div class="schedule__teachers-list"></div>
 {% endblock %}
 
 {% block html_loaded_scripts %}

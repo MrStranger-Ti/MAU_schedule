@@ -28,7 +28,7 @@ const createNote = function (form) {
             for (const el of document.querySelectorAll('.note-block')) {
                 if (el === noteBlock) {
                     prepareNoteDisplay(noteBlock)
-                    noteBlock.parentElement.parentElement.classList.add('existing_note_tr')
+                    noteBlock.parentElement.parentElement.classList.add('schedule__existing-note-tr')
 
                     showMauNotification('Заметка успешно создана', 'ok')
                 }
@@ -65,7 +65,7 @@ const deleteNote = function (noteBlock) {
             for (const el of document.querySelectorAll('.note-block')) {
                 if (el === noteBlock) {
                     prepareNoteCreate(noteBlock)
-                    noteBlock.parentElement.parentElement.classList.remove('existing_note_tr')
+                    noteBlock.parentElement.parentElement.classList.remove('schedule__existing-note-tr')
 
                     showMauNotification('Заметка успешно удалена', 'ok')
                 }
@@ -105,7 +105,6 @@ const updateNote = function (form) {
             for (const el of document.querySelectorAll('.note-block')) {
                 if (el === noteBlock) {
                     prepareNoteDisplay(noteBlock)
-                    noteBlock.parentElement.parentElement.classList.add('existing_note_tr')
                 }
             }
         })

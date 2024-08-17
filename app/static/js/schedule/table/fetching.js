@@ -60,6 +60,9 @@ const getSchedule = function (url) {
                 })
             })
 
+            prepareBookmarkDisplay()
+            prepareBookmarkAdd()
+
             const spinner = document.querySelector('.spinner-border')
             spinner.classList.remove('spinner-border-visible')
             spinner.classList.add('spinner-border-hidden')

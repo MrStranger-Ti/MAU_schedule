@@ -15,8 +15,10 @@ class GroupScheduleView(LoginRequiredMixin, View):
     template_name = 'schedule/group/group_schedule.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        page = request.GET.get('page', 1)
-        return render(request, self.template_name, context={'page': page})
+        context = {
+            'page': request.GET.get('page', 1),
+        }
+        return render(request, self.template_name, context=context)
 
 
 class AjaxGetGroupScheduleView(View):
@@ -57,6 +59,7 @@ class SearchTeacherView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['bookmarks'] = self.request.user.bookmarks.all()
+        context['original_schedule_url'] = settings.SCHEDULE_URL
         return context
 
 
@@ -84,6 +87,7 @@ class TeacherScheduleView(View):
             'teacher_key': request.GET.get('key'),
             'teacher_name': request.GET.get('name'),
             'page': request.GET.get('page', 1),
+            'table_type': 'teacher',
             'bookmarks': request.user.bookmarks.all(),
         }
         return render(request, self.template_name, context=context)
@@ -114,6 +118,7 @@ class AjaxGetTeacherScheduleView(View):
             'teacher_name': teacher_name,
             'teacher_key': teacher_key,
             'table': settings.TEACHER_SCHEDULE_NAME,
+            'bookmarks':  self.request.user.bookmarks.all(),
         }
 
         return render(request, self.template_name, context=context)

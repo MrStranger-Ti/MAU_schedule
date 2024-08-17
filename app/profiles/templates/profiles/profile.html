@@ -1,21 +1,30 @@
-{% extends 'base.html' %}
+{% extends 'profiles/base_profile.html' %}
 
 {% block head_title %}
   Профиль
 {% endblock %}
 
-{% block body %}
-  <section class="profile">
-    <div class="container profile__container">
-      <h1 class="profile__title">Данные пользователя</h1>
+{% block profile_title %}
+  Профиль
+{% endblock %}
+
+{% block profile_content %}
+  <div class="profile__lists-block flex">
+    <div class="profile__list-block">
+      <h2 class="profile__list-title">Личная информация</h2>
       <ul class="profile__list">
-        <li class="profile__item">ФИО: {{ user.full_name }}</li>
-        <li class="profile__item">Email: {{ user.email }}</li>
-        <li class="profile__item">Институт: {{ user.institute }}</li>
-        <li class="profile__item">Курс: {{ user.course }}</li>
-        <li class="profile__item">Группа: {{ user.group }}</li>
+        <li class="profile__item"><span class="profile__item-name">ФИО: </span>{{ user.full_name }}</li>
+        <li class="profile__item"><span class="profile__item-name">Email: </span>{{ user.email }}</li>
       </ul>
-      <div class="profile__link-block"><a class="profile__link" href="{% url 'profiles:profile_update' %}">Изменить данные</a></div>
     </div>
-  </section>
+    <div class="profile__list-block">
+      <h2 class="profile__list-title">Студенческая информация</h2>
+      <ul class="profile__list">
+        <li class="profile__item"><span class="profile__item-name">Институт: </span>{{ user.institute }}</li>
+        <li class="profile__item"><span class="profile__item-name">Курс: </span>{{ user.course }}</li>
+        <li class="profile__item"><span class="profile__item-name">Группа: </span>{{ user.group }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="profile__link-block"><a class="btn" href="{% url 'profiles:profile_update' %}">Изменить данные</a></div>
 {% endblock %}

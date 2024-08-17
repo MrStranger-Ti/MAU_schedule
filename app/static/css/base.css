@@ -6,10 +6,15 @@
     --blue: #4D648D;
     --dark-blue: #1A4568;
     --dark: #273655;
-    --erorr-color: #e81e1e;
+    --error-color: #e81e1e;
 
     --header-height: 101px;
     --footer-height: 250px;
+
+    --title-margin-bottom: 20px;
+
+    --container-padding: 20px 0;
+    --content-padding: 24px;
 }
 
 * {
@@ -51,7 +56,14 @@ ul {
 .container {
     margin: 0 auto;
     max-width: 1400px;
-    padding: 20px 0;
+    padding: var(--container-padding);
+}
+
+.title {
+    font-weight: 900;
+    font-size: 32px;
+    line-height: 150%;
+    color: var(--dark-blue);
 }
 
 
@@ -85,7 +97,7 @@ ul {
 }
 
 .link:hover {
-    color: var(--blue);
+    color: var(--light);
 }
 
 .link:hover::after {
@@ -100,8 +112,6 @@ ul {
 /* Кнопки */
 
 .btn {
-    min-width: 300px;
-    max-width: 400px;
     padding: 6px 30px;
     border-radius: 8px;
     font-size: 20px;
@@ -158,7 +168,7 @@ input {
     font-size: 16px;
     font-weight: 600;
     line-height: 22px;
-    color: var(--erorr-color);
+    color: var(--error-color);
 }
 
 .error-input {
@@ -202,13 +212,13 @@ input {
 .notification__icon-ok {
     width: 32px;
     height: 32px;
-    background-image: url("/static/images/notification/ok.svg");
+    background-image: url("/static/images/icons/ok.svg");
 }
 
 .notification__icon-error {
     width: 32px;
     height: 32px;
-    background-image: url("/static/images/notification/error.svg");
+    background-image: url("/static/images/icons/error.svg");
 }
 
 
@@ -254,7 +264,7 @@ input {
 
 .footer__container {
     justify-content: space-between;
-    min-height: var(--footer-height);
+    height: var(--footer-height);
     padding-bottom: 0;
 }
 

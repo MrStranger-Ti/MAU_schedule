@@ -101,13 +101,12 @@ def parse_teacher_schedule(soup: bs4.BeautifulSoup, curr_week_monday: date) -> d
         tr_class = tr.get('class')
         if tr_class and tr_class[0] == 'title':
             curr_date = curr_week_monday + timedelta(days=weekday_num)
-            curr_date_format = curr_date.strftime('%Y-%m-%d')
-            week_schedule.setdefault(curr_date_format, [])
+            week_schedule.setdefault(curr_date, [])
 
             weekday_num += 1
 
         else:
-            week_schedule[curr_date_format].append(
+            week_schedule[curr_date].append(
                 [field.text for field in tr.find_all('td')]
             )
 
@@ -179,8 +178,8 @@ def get_schedule_data(url: str, tables: bool = False, number_weeks: int = 3) -> 
 #     return groups
 
 
-def get_teachers_urls(teacher_name: str) -> dict[str: str] | None:
-    params = {'mode2': '1', 'sstring': teacher_name.encode('cp1251')}
+def get_teachers_urls(query: str) -> dict[str: str] | None:
+    params = {'mode2': '1', 'pers2': '0', 'sstring': query.encode('cp1251')}
     response = requests.get(settings.SCHEDULE_URL, params=params, headers={'User-Agent': ua.random})
     soup = bs4.BeautifulSoup(response.content, 'lxml')
     links = soup.select('td b a')
