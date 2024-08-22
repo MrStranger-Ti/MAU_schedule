@@ -40,6 +40,7 @@ class UserLoginForm(forms.Form):
         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'example@example.com'}),
         label='Email',
         label_suffix='',
+
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password'}),

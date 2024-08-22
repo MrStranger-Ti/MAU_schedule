@@ -1,4 +1,4 @@
-/* Общие */
+/* General */
 
 :root {
     --light: #DBECF4;
@@ -11,10 +11,13 @@
     --header-height: 101px;
     --footer-height: 250px;
 
+    --title-height: 45px;
     --title-margin-bottom: 20px;
 
-    --container-padding: 20px 0;
+    --container-padding-top-left: 20px;
     --content-padding: 24px;
+
+    --header-border: 1px;
 }
 
 * {
@@ -56,18 +59,19 @@ ul {
 .container {
     margin: 0 auto;
     max-width: 1400px;
-    padding: var(--container-padding);
+    padding: var(--container-padding-top-left) 0;
 }
 
 .title {
+    max-height: var(--title-height);
     font-weight: 900;
-    font-size: 32px;
+    font-size: 30px;
     line-height: 150%;
     color: var(--dark-blue);
 }
 
 
-/* Ссылки */
+/* Links */
 
 .link {
     text-decoration: none;
@@ -109,7 +113,7 @@ ul {
 }
 
 
-/* Кнопки */
+/* Buttons */
 
 .btn {
     padding: 6px 30px;
@@ -136,7 +140,7 @@ ul {
 }
 
 
-/* Поля формы */
+/* Inputs */
 
 input {
     /*max-width: 400px;*/
@@ -163,7 +167,7 @@ input {
 }
 
 
-/* Ошибки формы */
+/* Errors */
 
 .errors-list {
     list-style: initial;
@@ -179,7 +183,7 @@ input {
 }
 
 
-/* Лого */
+/* Logo */
 
 .main-logo {
     width: 250px;
@@ -188,7 +192,7 @@ input {
 }
 
 
-/* Уведомление */
+/* Notification */
 
 .notification {
     position: fixed;
@@ -225,10 +229,10 @@ input {
 }
 
 
-/* header */
+/* Header */
 
 .header {
-    border-bottom: 1px solid var(--dark-blue);
+    border-bottom: var(--header-border) solid var(--dark-blue);
 }
 
 .header__container {
@@ -259,7 +263,7 @@ input {
 }
 
 
-/* footer */
+/* Footer */
 
 .footer {
     background-color: var(--dark);

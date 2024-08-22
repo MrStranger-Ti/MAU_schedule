@@ -2,19 +2,16 @@
 {% load static %}
 
 {% block head_links %}
-  <link rel="stylesheet" href="{% static 'css/pages/schedule/layout.css' %}">
-  <link rel="stylesheet" href="{% static 'css/pages/schedule/extra.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages/schedule.css' %}">
 {% endblock %}
 
 {% block head_scripts %}
   <script src="{% static 'js/utils/urls.js' %}"></script>
   <script src="{% static 'js/utils/csrf.js' %}"></script>
-  <script src="{% static 'js/schedule/teacher_searching/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/table/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/notes/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/notes/preparing.js' %}"></script>
-  <script src="{% static 'js/schedule/bookmarks/fetching.js' %}"></script>
-  <script src="{% static 'js/schedule/bookmarks/preparing.js' %}"></script>
+  <script src="{% static 'js/schedule/teacher_searching.js' %}"></script>
+  <script src="{% static 'js/schedule/table.js' %}"></script>
+  <script src="{% static 'js/schedule/notes.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks.js' %}"></script>
 {% endblock %}
 
 {% block main %}

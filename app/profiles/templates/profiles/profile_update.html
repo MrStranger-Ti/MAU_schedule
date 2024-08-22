@@ -10,16 +10,18 @@
 {% endblock %}
 
 {% block profile_content %}
-  <form class="profile__form" method="post">
+  <form class="profile__form" method="post" id="profile-update">
     {% csrf_token %}
-    <ul class="errors-list profile__errors">
-      {% for field in form %}
-        {% for error in field.errors %}
-          <li class="auth__error">{{ error }}</li>
+    {% if form.errors %}
+      <ul class="errors-list profile__errors">
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li class="auth__error">{{ error }}</li>
+          {% endfor %}
         {% endfor %}
-      {% endfor %}
-    </ul>
-    <div class="row row-cols-2 g-2 justify-content-between profile__inputs-block">
+      </ul>
+    {% endif %}
+    <div class="row row-cols-2 g-3 justify-content-between profile__inputs-block">
       {% for field in form %}
         {% clear_label_suffix field as clean_field %}
         <div class="col profile__field-block">
@@ -30,8 +32,14 @@
         </div>
       {% endfor %}
     </div>
-    <div class="row justify-content-center">
-      <button class="col-4 btn profile__btn" type="submit">Обновить профиль</button>
-    </div>
   </form>
+  <div class="profile__btn-block">
+    <button class="btn profile__btn" type="submit" form="profile-update">Обновить профиль</button>
+  </div>
+{% endblock %}
+
+{% block html_loaded_scripts %}
+  <script>
+    prepareRemoveErrorStyle()
+  </script>
 {% endblock %}

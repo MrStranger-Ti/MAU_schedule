@@ -13,7 +13,7 @@ from notes.models import Note
 
 
 class AjaxNoteDisplayView(View):
-    template_name = 'note_block/display.html'
+    template_name = 'notes/display.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
@@ -29,7 +29,7 @@ class AjaxNoteDisplayView(View):
 
 
 class AjaxNoteCreateView(View):
-    template_name = 'note_block/create.html'
+    template_name = 'notes/create.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
@@ -69,7 +69,7 @@ class AjaxNoteDeleteView(View):
 
 
 class AjaxNoteUpdateView(View):
-    template_name = 'note_block/update.html'
+    template_name = 'notes/update.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('X-Requested-With') != 'XMLHttpRequest':

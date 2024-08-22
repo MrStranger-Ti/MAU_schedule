@@ -1,37 +1,156 @@
-/* Заметки */
+/* Base */
 
-.note-pop-up {
-    --note-pop-up-width: 70%;
-    position: absolute;
+.schedule__container {
+    position: relative;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--header-border));
+}
+
+.schedule__content {
     width: 100%;
-    max-width: var(--note-pop-up-width);
-    min-height: 200px;
-    left: calc((100% - var(--note-pop-up-width)) / 2);
-    z-index: 1;
-    padding: 0;
-    border: 0;
-    transition: opacity 0.2s linear;
 }
 
-.note-pop-up:hover {
-    cursor: default;
+.schedule__title-block {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 24px;
+    margin-bottom: var(--title-margin-bottom);
+    gap: 10px;
 }
+
+.schedule__title-left-block {
+    gap: 20px;
+}
+
+.schedule__form {
+    justify-content: center;
+    gap: 10px;
+}
+
+.teacher-links {
+    padding-left: var(--content-padding);
+}
+
+.schedule__form > input {
+    min-width: 300px;
+}
+
+.schedule__bookmarks {
+    height: 100%;
+    font-size: 0;
+}
+
+.schedule__bookmark-link {
+    font-size: 16px;
+    color: var(--dark-blue);
+}
+
+.schedule__bookmark-link:hover {
+    background-color: transparent;
+    color: var(--light-blue);
+}
+
+.schedule__bookmarks-btn {
+    height: 100%;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+.schedule__bookmarks-btn:focus {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.schedule__bookmarks-btn:active:focus {
+    box-shadow: none;
+}
+
+.schedule__bookmarks-btn:hover {
+    background-color: transparent;
+}
+
+.schedule__bookmarks-btn svg {
+    width: 40px;
+    height: 40px;
+    fill: var(--dark-blue);
+    transition: fill ease-in-out 0.3s;
+}
+
+.schedule__bookmarks-btn:hover > svg {
+    fill: var(--light);
+}
+
+.schedule__bookmark-btn {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}
+
+.schedule__bookmark-btn:hover {
+    background-color: transparent;
+}
+
+.schedule__bookmark-btn svg {
+    width: 30px;
+    stroke: var(--dark-blue);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2px;
+    transition: stroke ease-in-out 0.3s;
+}
+
+.schedule__bookmark-btn:hover > svg {
+    stroke: var(--light-blue);
+}
+
+.schedule__bookmarks-empty {
+    margin: 0;
+    text-align: center;
+    line-height: normal;
+}
+
+.schedule__info-block {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+}
+
+.schedule__info {
+    font-size: 24px;
+}
+
+.schedule__info > a {
+    font-size: 24px;
+}
+
+.schedule__info > a:focus::after {
+    opacity: 0;
+}
+
+
+/* Notes */
 
 .note-block {
-    position: absolute;
-    justify-content: center;
     width: 100%;
-    min-height: inherit;
-    padding: 15px 60px;
-    border-radius: 10px;
-    background-color: #949494;
+    height: 100%;
+    padding: 0;
+    left: 0;
+}
+
+.collapse-card {
+    background-color: transparent;
+    border: none;
 }
 
 .note-block__form {
-    display: flex;
     flex-direction: column;
     align-items: center;
-    width: inherit;
+    width: 100%;
 }
 
 .note-block__input-block {
@@ -51,8 +170,12 @@
     align-items: center;
 }
 
+.note-block__descr {
+    text-align: left;
+}
 
-/* Спиннеры */
+
+/* Spinners */
 
 .schedule__spinner-block {
     position: absolute;
@@ -79,7 +202,7 @@
 }
 
 
-/* Таблица */
+/* Table */
 
 .schedule__list {
     width: 100%;
@@ -116,6 +239,10 @@ tr td {
     padding: 10px;
     border-top: 1px solid var(--dark-blue);
     text-align: center;
+}
+
+tr:nth-child(2n) td {
+    border: none;
 }
 
 tr td:first-child {
@@ -190,8 +317,4 @@ tbody td:nth-child(3) {
 .schedule__pagination-page-number {
     font-size: 28px;
     font-weight: 600;
-}
-
-tbody tr {
-    position: relative;
 }
