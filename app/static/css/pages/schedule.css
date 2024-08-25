@@ -139,10 +139,11 @@
     width: 100%;
     height: 100%;
     padding: 0;
-    left: 0;
+    border-top: 1px solid var(--dark-blue);
 }
 
 .collapse-card {
+    max-width: 1000px;
     background-color: transparent;
     border: none;
 }
@@ -172,8 +173,15 @@
 
 .note-block__descr {
     text-align: left;
+    line-height: 100%;
+    overflow: hidden;
 }
 
+.note-block__text {
+    max-width: 100%;
+    max-height: 300px;
+    overflow: auto;
+}
 
 /* Spinners */
 
@@ -238,22 +246,25 @@
 tr td {
     padding: 10px;
     border-top: 1px solid var(--dark-blue);
-    text-align: center;
+}
+
+tr:nth-child(2n + 1) td:first-child {
+    width: 2%;
 }
 
 tr:nth-child(2n) td {
     border: none;
 }
 
-tr td:first-child {
-    width: 2%;
+tr:nth-child(2n + 1) td {
+    text-align: center;
 }
 
 tr td:not(:last-child) {
     font-size: 20px;
 }
 
-tr td:first-child {
+tr td:nth-child(2n + 1) {
     font-weight: 900;
     font-size: 18px;
     line-height: 150%;
@@ -265,13 +276,26 @@ tr td:not(:first-child) {
     line-height: 150%;
 }
 
-tbody tr:hover {
+tbody tr:nth-child(2n + 1):hover {
     cursor: pointer;
-    background-color: #e2e2e2;
 }
 
-.schedule__existing-note-tr td:nth-child(1) {
-    background-color: red;
+.schedule__existing-note-tr > td:first-child {
+    position: relative;
+}
+
+.schedule__existing-note-tr > td:first-child::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    margin-left: -18px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("/static/images/icons/note.svg");
 }
 
 tbody td:nth-child(3) {

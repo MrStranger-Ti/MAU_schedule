@@ -1,0 +1,14 @@
+<form class="note-block__form flex" method="post" name="{% block form_name %}{% endblock %}">
+  {% csrf_token %}
+  <p class="note-block__title">
+    {% block title %}
+
+    {% endblock %}
+  </p>
+  <textarea class="note-block__textarea"></textarea>
+  <div class="note-block__buttons">
+    {% block buttons %}
+
+    {% endblock %}
+  </div>
+</form>

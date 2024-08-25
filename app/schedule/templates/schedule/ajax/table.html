@@ -60,20 +60,21 @@ c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
           <thead></thead>
           <tbody>
           {% for row in day_table %}
-            {% get_user_note table date forloop.counter as note %}
+            {% prepare_location table user.group date forloop.counter as note_location %}
+            {% get_user_note note_location as note %}
             <tr {% if note %} class="schedule__existing-note-tr" {% endif %} data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample" role="button">
               {% for cell in row %}
                 <td>{{ cell }}</td>
               {% endfor %}
             </tr>
             <tr>
-              <td class="note-block" colspan="5" data-schedule-name="{{ table }}" data-day="{{ date|date:'Y-m-d' }}" data-lesson-number="{{ forloop.counter }}">
+              <td class="note-block" colspan="5" data-note-location="{{ note_location }}">
                 <div class="collapse" id="collapse-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
                   <div class="card card-body collapse-card">
                     {% if note %}
                       {% include 'notes/display.html' %}
                     {% else %}
-                      {% include 'notes/create.html' %}
+                      {% include 'notes/create.html' with form=form %}
                     {% endif %}
                   </div>
                 </div>

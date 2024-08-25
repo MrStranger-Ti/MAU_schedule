@@ -1,13 +1,13 @@
-<div class="note-block__display flex">
-  <p class="note-block__title">Заметка</p>
-  {% if note_text %}
-    <pre class="note-block__descr">{{ note_text }}</pre>
-  {% else %}
-    <pre class="note-block__descr">{{ note.text }}</pre>
-  {% endif %}
-  <div class="note-block__options">
-    <button class="btn note-block__btn" name="update" type="button">Изменить</button>
-    <button class="btn note-block__btn" name="delete" type="button">Удалить</button>
-    <button class="btn close-btn note-block__btn" name="close" type="button">Закрыть</button>
-  </div>
-</div>
+{% extends 'notes/base_note.html' %}
+
+{% block form_name %}note-display{% endblock %}
+
+{% block title %}
+  Заметка
+{% endblock %}
+
+{% block buttons %}
+  <button class="btn note-block__btn" name="update" type="button">Изменить</button>
+  <button class="btn note-block__btn" name="delete" type="button">Удалить</button>
+  <button class="btn close-btn note-block__btn" name="close" type="button">Закрыть</button>
+{% endblock %}

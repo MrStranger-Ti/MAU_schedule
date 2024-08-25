@@ -1,15 +1,6 @@
 // Fetching
 
-const createNote = function (form) {
-    const noteBlock = form.closest('.note-block')
-
-    const note = {
-        schedule_name: noteBlock.getAttribute('data-schedule-name'),
-        day: noteBlock.getAttribute('data-day'),
-        lesson_number: noteBlock.getAttribute('data-lesson-number'),
-        text: form.note.value,
-    }
-
+const createNote = function (noteBlock, editor) {
     fetch(getIndex() + '/notes/create/', {
         method: 'POST',
         headers: {
@@ -17,7 +8,10 @@ const createNote = function (form) {
             'Content-Type': 'application/json;charset=utf-8',
             'X-CSRFToken': getCookie('csrftoken')
         },
-        body: JSON.stringify(note),
+        body: JSON.stringify({
+            location: noteBlock.getAttribute('data-note-location'),
+            text: editor.getContents(),
+        }),
     })
         .then(response => {
             if (!response.ok) {
@@ -25,28 +19,19 @@ const createNote = function (form) {
             }
             return response.text()
         })
-        .then(html => {
-            noteBlock.querySelector('.card').innerHTML = html
-            for (const el of document.querySelectorAll('.note-block')) {
-                if (el === noteBlock) {
-                    prepareNoteDisplay(noteBlock)
-                    noteBlock.closest('tr').previousElementSibling.classList.add('schedule__existing-note-tr')
+        .then(json => {
+            const jsonData = JSON.parse(json)
+            noteBlock.querySelector('.card').innerHTML = jsonData.form
+            noteBlock.closest('tr').previousElementSibling.classList.add('schedule__existing-note-tr')
+            prepareNoteDisplay(noteBlock, jsonData.value)
 
-                    showMauNotification('Заметка успешно создана', 'ok')
-                }
-            }
+            showMauNotification('Заметка успешно создана', 'ok')
         })
         .catch(error => showMauNotification('Не удалось создать заметку', 'error'))
 }
 
 
 const deleteNote = function (noteBlock) {
-    const note = {
-        schedule_name: noteBlock.getAttribute('data-schedule-name'),
-        day: noteBlock.getAttribute('data-day'),
-        lesson_number: noteBlock.getAttribute('data-lesson-number'),
-    }
-
     fetch(getIndex() + '/notes/delete/', {
         method: 'POST',
         headers: {
@@ -54,7 +39,9 @@ const deleteNote = function (noteBlock) {
             'Content-Type': 'application/json;charset=utf-8',
             'X-CSRFToken': getCookie('csrftoken'),
         },
-        body: JSON.stringify(note),
+        body: JSON.stringify({
+            location: noteBlock.getAttribute('data-note-location'),
+        }),
     })
         .then(response => {
             if (!response.ok) {
@@ -64,29 +51,16 @@ const deleteNote = function (noteBlock) {
         })
         .then(html => {
             noteBlock.querySelector('.card').innerHTML = html
-            for (const el of document.querySelectorAll('.note-block')) {
-                if (el === noteBlock) {
-                    prepareNoteCreate(noteBlock)
-                    noteBlock.closest('tr').previousElementSibling.classList.remove('schedule__existing-note-tr')
+            prepareNoteCreate(noteBlock)
+            noteBlock.closest('tr').previousElementSibling.classList.remove('schedule__existing-note-tr')
 
-                    showMauNotification('Заметка успешно удалена', 'ok')
-                }
-            }
+            showMauNotification('Заметка успешно удалена', 'ok')
         })
         .catch((error) => showMauNotification('Не удалось удалить заметку', 'error'))
 }
 
 
-const updateNote = function (form) {
-    const noteBlock = form.closest('.note-block')
-
-    const note = {
-        schedule_name: noteBlock.getAttribute('data-schedule-name'),
-        day: noteBlock.getAttribute('data-day'),
-        lesson_number: noteBlock.getAttribute('data-lesson-number'),
-        text: form.note.value,
-    }
-
+const updateNote = function (noteBlock, editor) {
     fetch(getIndex() + '/notes/update/', {
         method: 'POST',
         headers: {
@@ -94,7 +68,10 @@ const updateNote = function (form) {
             'Content-Type': 'application/json;charset=utf-8',
             'X-CSRFToken': getCookie('csrftoken')
         },
-        body: JSON.stringify(note),
+        body: JSON.stringify({
+            location: noteBlock.getAttribute('data-note-location'),
+            text: editor.getContents()
+        }),
     })
         .then(response => {
             if (!response.ok) {
@@ -102,111 +79,119 @@ const updateNote = function (form) {
             }
             return response.text()
         })
-        .then(html => {
-            noteBlock.querySelector('.card').innerHTML = html
-            for (const el of document.querySelectorAll('.note-block')) {
-                if (el === noteBlock) {
-                    prepareNoteDisplay(noteBlock)
-                }
-            }
+        .then(json => {
+            const jsonData = JSON.parse(json)
+            noteBlock.querySelector('.card').innerHTML = jsonData.form
+            prepareNoteDisplay(noteBlock, jsonData.value)
         })
         .catch(error => showMauNotification('Не удалось обновить заметку', 'error'))
 }
 
 
 const getUpdateNote = function (noteBlock) {
-    const note = {
-        schedule_name: noteBlock.getAttribute('data-schedule-name'),
-        day: noteBlock.getAttribute('data-day'),
-        lesson_number: noteBlock.getAttribute('data-lesson-number'),
-    }
+    const location = noteBlock.getAttribute('data-note-location')
 
-    fetch(getIndex() + `/notes/update/?schedule_name=${note.schedule_name}&day=${note.day}&lesson_number=${note.lesson_number}`, {
+    fetch(getIndex() + `/notes/update/?location=${location}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
         }
     })
         .then(response => response.text())
-        .then(html => {
-            noteBlock.querySelector('.card').innerHTML = html
-            prepareNoteUpdate(noteBlock)
+        .then(json => {
+            const jsonData = JSON.parse(json)
+            noteBlock.querySelector('.card').innerHTML = jsonData.form
+            prepareNoteUpdate(noteBlock, jsonData.value)
         })
 }
 
 
-const displayNote = function (noteBlock) {
-    const note = {
-        schedule_name: noteBlock.getAttribute('data-schedule-name'),
-        day: noteBlock.getAttribute('data-day'),
-        lesson_number: noteBlock.getAttribute('data-lesson-number'),
-    }
+const getDisplayNote = function (noteBlock) {
+    const location = noteBlock.getAttribute('data-note-location')
 
-    fetch(getIndex() + `/notes/display/?schedule_name=${note.schedule_name}&day=${note.day}&lesson_number=${note.lesson_number}`, {
+    fetch(getIndex() + `/notes/display/?location=${location}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
         },
     })
         .then(response => response.text())
-        .then(html => {
-            noteBlock.querySelector('.card').innerHTML = html
-            for (const el of document.querySelectorAll('.note-block')) {
-                if (el === noteBlock) {
-                    prepareNoteDisplay(noteBlock)
-                }
-            }
+        .then(json => {
+            const jsonData = JSON.parse(json)
+            noteBlock.querySelector('.card').innerHTML = jsonData.form
+            prepareNoteDisplay(noteBlock, jsonData.value)
         })
 }
 
 
 // Preparing
 
-const prepareNoteDisplay = function (noteBlock) {
-    const btnDelete = noteBlock.querySelector('[name="delete"]')
-    const btnUpdate = noteBlock.querySelector('[name="update"]')
-    const btnClose = noteBlock.querySelector('[name="close"]')
-    if (btnDelete && btnUpdate && btnClose) {
-        btnDelete.addEventListener('click', () => {
+const getEditor = function (textarea) {
+    return SUNEDITOR.create(textarea, {
+        lang: SUNEDITOR_LANG['ru'],
+        resizingBar: false,
+        height: '100%',
+        minHeight: '200px',
+        buttonList: [
+            ['undo', 'redo'],
+            ['bold', 'underline', 'italic', 'strike'],
+            ['textStyle'],
+            ['align', 'horizontalRule', 'list', 'lineHeight'],
+            ['fullScreen'],
+        ],
+    })
+}
+
+
+const prepareNoteDisplay = function (noteBlock, text) {
+    const form = noteBlock.querySelector('form[name="note-display"]')
+    if (form) {
+        const editor = getEditor(form.querySelector('textarea'))
+        editor.setContents(text)
+        editor.toolbar.hide()
+        editor.disable()
+
+        noteBlock.querySelector('[name="delete"]').addEventListener('click', () => {
             deleteNote(noteBlock)
         })
 
-        btnUpdate.addEventListener('click', () => {
+         noteBlock.querySelector('[name="update"]').addEventListener('click', () => {
             getUpdateNote(noteBlock)
         })
 
-        prepareBtnCollapse(btnClose)
+        prepareBtnCollapse(noteBlock.querySelector('[name="close"]'))
     }
 }
 
 
 const prepareNoteCreate = function (noteBlock) {
     const form = noteBlock.querySelector('form[name="note-create"]')
-    const btnClose = noteBlock.querySelector('[name="close"]')
-    if (form && btnClose) {
+    if (form) {
+        const editor = getEditor(form.querySelector('textarea'))
         form.addEventListener('submit', event => {
-            createNote(event.currentTarget)
+            createNote(noteBlock, editor)
             event.preventDefault()
         })
 
-        prepareBtnCollapse(btnClose)
+        prepareBtnCollapse(noteBlock.querySelector('[name="close"]'))
     }
 }
 
 
-const prepareNoteUpdate = function (noteBlock) {
+const prepareNoteUpdate = function (noteBlock, text) {
     const form = noteBlock.querySelector('form[name="note-update"]')
-    const btnBack = noteBlock.querySelector('[name="display"]')
-    const btnClose = noteBlock.querySelector('[name="close"]')
-    if (form && btnBack && btnClose) {
+    if (form) {
+        const editor = getEditor(form.querySelector('textarea'))
+        editor.setContents(text)
+
         form.addEventListener('submit', event => {
-            updateNote(event.currentTarget)
+            updateNote(noteBlock, editor)
             event.preventDefault()
         })
 
-        btnBack.addEventListener('click', () => {
-            displayNote(noteBlock)
+        noteBlock.querySelector('[name="display"]').addEventListener('click', () => {
+            getDisplayNote(noteBlock)
         })
 
-        prepareBtnCollapse(btnClose)
+        prepareBtnCollapse(noteBlock.querySelector('[name="close"]'))
     }
 }
 
@@ -227,7 +212,6 @@ const prepareCollapseAll = function (currentCollapsible) {
         document.querySelectorAll('.note-block > .collapse').forEach(collapsible => {
             const displayed = collapsible.classList.contains('show') || collapsible.classList.contains('collapsing')
             if (currentCollapsible !== collapsible && displayed) {
-                console.log(currentCollapsible)
                 const collapseId = collapsible.getAttribute('id')
                 const bsCollapse = new bootstrap.Collapse(`#${collapseId}`, {
                     toggle: false,

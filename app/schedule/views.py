@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect, reverse
+from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import TemplateView
 from django.core.cache import cache
@@ -48,10 +49,19 @@ class AjaxGetGroupScheduleView(View):
         context = {
             'page_obj': page_obj,
             'table': settings.GROUP_SCHEDULE_NAME,
-            'original_schedule_url': settings.SCHEDULE_URL
+            'original_schedule_url': settings.SCHEDULE_URL,
         }
 
-        return render(request, self.template_name, context=context)
+        return JsonResponse({
+            'html': render_to_string(self.template_name, context=context, request=request),
+            'notes': [
+                {
+                    'location': note.location,
+                    'text': note.text,
+                }
+                for note in request.user.notes.defer('location')
+            ],
+        })
 
 
 class SearchTeacherView(LoginRequiredMixin, TemplateView):
