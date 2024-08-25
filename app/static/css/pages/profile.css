@@ -6,7 +6,7 @@
 .profile__content {
     flex-direction: column;
     justify-content: space-evenly;
-    height: calc(100vh - var(--header-height) - var(--footer-height) - var(--header-border) - var(--title-height) - var(--title-margin-bottom) - var(--container-padding-top-left) * 2);
+    height: calc(100vh - var(--header-height) - var(--footer-height) - var(--title-height) - var(--title-margin-bottom) - var(--container-padding-top-left) * 2);
     gap: 30px;
     padding: var(--content-padding) 170px;
     border-radius: 8px;

@@ -2,7 +2,7 @@
 
 .schedule__container {
     position: relative;
-    min-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--header-border));
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
 }
 
 .schedule__content {
@@ -19,6 +19,7 @@
 }
 
 .schedule__title-left-block {
+    align-items: center;
     gap: 20px;
 }
 

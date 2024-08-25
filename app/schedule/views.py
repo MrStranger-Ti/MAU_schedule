@@ -132,4 +132,13 @@ class AjaxGetTeacherScheduleView(View):
             'bookmarks':  self.request.user.bookmarks.all(),
         }
 
-        return render(request, self.template_name, context=context)
+        return JsonResponse({
+            'html': render_to_string(self.template_name, context=context, request=request),
+            'notes': [
+                {
+                    'location': note.location,
+                    'text': note.text,
+                }
+                for note in request.user.notes.defer('location')
+            ],
+        })
