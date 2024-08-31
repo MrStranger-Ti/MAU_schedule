@@ -1,15 +1,10 @@
 {% load schedule_fileters %}
 {% load schedule_tags %}
 
-{% if table == GROUP_SCHEDULE_NAME %}
-  <div class="schedule__title-block flex">
+<div class="schedule__title-block flex">
+  {% if table == GROUP_SCHEDULE_NAME %}
     <h1 class="schedule__title title">{{ user.group }}</h1>
-    {% if page_obj %}
-      {% include 'schedule/pagination.html' %}
-    {% endif %}
-  </div>
-{% elif table == TEACHER_SCHEDULE_NAME %}
-  <div class="schedule__title-block flex">
+  {% elif table == TEACHER_SCHEDULE_NAME %}
     <div class="schedule__title-left-block flex">
       <h1 class="schedule__title title">{{ teacher_name }}</h1>
       {% include 'bookmarks/bookmarks.html' %}
@@ -43,14 +38,14 @@ c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
         </svg>
       </button>
     </div>
-    {% if page_obj %}
-      {% include 'schedule/pagination.html' %}
-    {% endif %}
-  </div>
-{% endif %}
-{% if page_obj %}
+  {% endif %}
+  {% if current_page %}
+    {% include 'schedule/pagination.html' %}
+  {% endif %}
+</div>
+{% if schedule_data %}
   <div class="schedule__list">
-    {% for date, day_table in page_obj %}
+    {% for date, day_table in schedule_data.items %}
       <div class="schedule__table-block">
         <div class="schedule__table-title-block flex">
           <span class="schedule__table-descr">{{ date|get_weekday }}</span>
@@ -89,9 +84,9 @@ c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
 {% else %}
   <div class="schedule__info-block">
     <p class="schedule__info">Расписание не найдено. Проверьте свои данные в профиле.</p>
-    <p class="schedule__info">Также неполадки могут быть вызваны из-за неработающего расписание на <a class="link" href="{{ original_schedule_url }}">сайте</a> университета.</p>
+    <p class="schedule__info">Также неполадки могут быть связаны с неработающим расписанием на <a class="link" href="{{ original_schedule_url }}">сайте</a> университета.</p>
   </div>
 {% endif %}
-{% if page_obj %}
+{% if schedule_data and current_page %}
   {% include 'schedule/pagination.html' %}
 {% endif %}

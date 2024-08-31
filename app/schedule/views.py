@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
@@ -30,29 +32,31 @@ class AjaxGetGroupScheduleView(View):
             return HttpResponseNotFound()
 
         user = request.user
-        page = request.GET.get('page', 1)
+        page = request.GET.get('page')
 
-        schedule_data = cache.get(f'schedule_of_group_{user.group}')
+        if not re.fullmatch(r'[1-3]', page):
+            page = 1
+        else:
+            page = int(page)
+
+        schedule_data = cache.get(f'schedule_group_{user.group}_page_{page}')
         if not schedule_data:
             mau_parser = MauScheduleParser(user)
-            schedule_data = mau_parser.get_group_schedule()
+            schedule_data = mau_parser.get_group_schedule(page)
             cache.set(
-                f'schedule_of_group_{user.group}',
+                f'schedule_group_{user.group}_page_{page}',
                 schedule_data,
                 settings.SCHEDULE_CACHE_TIME,
             )
 
-        paginator_data = schedule_data or dict()
-        paginator = Paginator(list(paginator_data.items()), 6)
-        page_obj = paginator.get_page(page)
-
         context = {
-            'page_obj': page_obj,
+            'schedule_data': schedule_data,
+            'current_page': page,
             'table': settings.GROUP_SCHEDULE_NAME,
             'original_schedule_url': settings.SCHEDULE_URL,
         }
 
-        return JsonResponse({
+        response = JsonResponse({
             'html': render_to_string(self.template_name, context=context, request=request),
             'notes': [
                 {
@@ -62,6 +66,7 @@ class AjaxGetGroupScheduleView(View):
                 for note in request.user.notes.defer('location')
             ],
         })
+        return response
 
 
 class SearchTeacherView(LoginRequiredMixin, TemplateView):
@@ -115,17 +120,24 @@ class AjaxGetTeacherScheduleView(View):
         teacher_key = request.GET.get('key')
         page = request.GET.get('page', 1)
 
-        schedule_data = cache.get(f'teacher_schedule_{teacher_key}')
+        if not re.fullmatch(r'[1-3]', page):
+            page = 1
+        else:
+            page = int(page)
+
+        schedule_data = cache.get(f'teacher_schedule_{teacher_key}_page_{page}')
         if not schedule_data:
             url = settings.SCHEDULE_URL + f'schedule2.php?key={teacher_key}'
-            schedule_data = get_schedule_data(url, tables=True)
-            cache.set(f'teacher_schedule_{teacher_key}', schedule_data, settings.SCHEDULE_CACHE_TIME)
-
-        paginator = Paginator(list(schedule_data.items()), 6)
-        page_obj = paginator.get_page(page)
+            schedule_data = get_schedule_data(url, teacher_schedule=True, week_step=page - 1)
+            cache.set(
+                f'teacher_schedule_{teacher_key}_page_{page}',
+                schedule_data,
+                settings.SCHEDULE_CACHE_TIME,
+            )
 
         context = {
-            'page_obj': page_obj,
+            'schedule_data': schedule_data,
+            'current_page': page,
             'teacher_name': teacher_name,
             'teacher_key': teacher_key,
             'table': settings.TEACHER_SCHEDULE_NAME,

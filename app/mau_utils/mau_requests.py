@@ -25,23 +25,29 @@ def get_prepared_group(group: str, spec_symbols: str = None) -> str:
     return group
 
 
-def filter_by_current_date(date_range: str) -> bool:
-    # now = datetime.now()
-
-    # test data
-    now = datetime.strptime('02.09.2024', '%d.%m.%Y')
-
-    clean_date_range = re.search(r'\d{2}\.\d{2}\.\d{4}-\d{2}\.\d{2}\.\d{4}', date_range).group()
-    first_date, last_date = map(lambda x: datetime.strptime(x, '%d.%m.%Y'), clean_date_range.split('-')[:2])
-    return first_date <= now <= last_date
+# def filter_by_current_date(date_range: str) -> bool:
+#     now = datetime.now()
+#
+#     clean_date_range = re.search(r'\d{2}\.\d{2}\.\d{4}-\d{2}\.\d{2}\.\d{4}', date_range).group()
+#     first_date, last_date = map(
+#         lambda x: datetime.strptime(x, '%d.%m.%Y'),
+#         clean_date_range.split('-'),
+#     )
+#     return first_date <= now <= last_date
 
 
 def get_query_params(institute_name: str) -> tuple[str, str]:
     response = requests.get(settings.SCHEDULE_URL, headers={'User-Agent': ua.random})
     soup = bs4.BeautifulSoup(response.content, 'lxml')
 
-    date_option = soup.select_one('select[name=pers]').find('option', value=lambda x: int(x) > 0, string=filter_by_current_date)
-    institute_option = soup.select_one('select[name=facs]').find('option', string=institute_name)
+    date_option = soup.select_one('select[name=pers]').find(
+        'option',
+        value=lambda x: int(x) > 0,
+    )
+    institute_option = soup.select_one('select[name=facs]').find(
+        'option',
+        string=institute_name,
+    )
 
     if date_option is None or institute_option is None:
         raise TagNotFound
@@ -56,10 +62,10 @@ def get_group_url(group: str, pers: str, facs: str, course: str) -> str:
     group = get_prepared_group(group)
 
     params = {
-        'facs': facs,
-        'courses': course,
         'mode': 1,
         'pers': pers,
+        'facs': facs,
+        'courses': course,
     }
     response = requests.get(settings.SCHEDULE_URL, params=params, headers={'User-Agent': ua.random})
     soup = bs4.BeautifulSoup(response.content, 'lxml')
@@ -72,9 +78,7 @@ def get_group_url(group: str, pers: str, facs: str, course: str) -> str:
     if a_tag is None:
         raise TagNotFound
 
-    group_schedule_url = urllib.parse.urljoin(settings.SCHEDULE_URL, a_tag.get('href'))
-
-    return group_schedule_url
+    return urllib.parse.urljoin(settings.SCHEDULE_URL, a_tag.get('href'))
 
 
 def parse_group_schedule(soup: bs4.BeautifulSoup, curr_week_monday: date) -> dict[int, list[str]]:
@@ -113,36 +117,29 @@ def parse_teacher_schedule(soup: bs4.BeautifulSoup, curr_week_monday: date) -> d
     return week_schedule
 
 
-def get_schedule_data(url: str, tables: bool = False, number_weeks: int = 3) -> dict[dict: list]:
-    current_calendar_date = date.today().isocalendar()
+def get_schedule_data(url: str, teacher_schedule: bool = False, week_step: int = 0) -> dict[dict: list]:
+    schedule_date = date.today()
+    if week_step:
+        schedule_date += timedelta(weeks=week_step)
+
+    current_calendar_date = schedule_date.isocalendar()
     monday = date.fromisocalendar(current_calendar_date[0], current_calendar_date[1], 1)
 
-    data = {}
-    for _ in range(number_weeks):
-        # sunday = monday + timedelta(days=6)
-        # params = {
-        #     'perstart': monday.isoformat(),
-        #     'perend': sunday.isoformat(),
-        # }
+    sunday = monday + timedelta(days=6)
+    params = {
+        'perstart': monday.isoformat(),
+        'perend': sunday.isoformat(),
+    }
 
-        # test data
-        params = {
-            'perstart': '2024-09-02',
-            'perend': '2024-09-08',
-        }
+    response = requests.get(url, params=params, headers={'User-Agent': ua.random})
+    soup = bs4.BeautifulSoup(response.content, 'lxml')
 
-        response = requests.get(url, params=params, headers={'User-Agent': ua.random})
-        soup = bs4.BeautifulSoup(response.content, 'lxml')
+    if teacher_schedule:
+        schedule_data = parse_teacher_schedule(soup, monday)
+    else:
+        schedule_data = parse_group_schedule(soup, monday)
 
-        if not tables:
-            week_schedule = parse_group_schedule(soup, monday)
-        else:
-            week_schedule = parse_teacher_schedule(soup, monday)
-
-        data.update(week_schedule)
-        monday += timedelta(days=7)
-
-    return data
+    return schedule_data
 
 
 # def get_institutes() -> set[str]:

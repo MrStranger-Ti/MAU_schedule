@@ -28,8 +28,36 @@
     gap: 10px;
 }
 
-.teacher-links {
+.schedule_teacher-links {
     padding-left: var(--content-padding);
+}
+
+.schedule__teacher-link {
+    color: var(--dark-blue);
+}
+
+.schedule__teacher-link:after {
+    border-color: var(--dark-blue);
+}
+
+.schedule__teacher-link:focus::after {
+    opacity: 0;
+}
+
+.schedule__teacher-link:hover::after {
+    opacity: 1;
+}
+
+.schedule__teacher-link:hover {
+    color: var(--dark-blue);
+}
+
+.schedule__teacher-link:active {
+    color: var(--blue);
+}
+
+.schedule__teacher-link:active::after {
+    opacity: 0;
 }
 
 .schedule__form > input {
@@ -206,15 +234,19 @@
     font-size: 16px;
 }
 
+.sun-editor .se-btn,
+.sun-editor .se-btn-list {
+    color: var(--dark);
+}
+
 .sun-editor .se-btn > svg,
 .sun-editor .se-btn-list > svg {
     width: 18px;
     height: 18px;
-    fill: var(--dark);
 }
 
-.sun-editor .se-btn:disabled svg {
-    fill: gray;
+.sun-editor .se-btn:disabled {
+    color: gray;
 }
 
 /* rgba from variable --light */
