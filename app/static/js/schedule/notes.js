@@ -83,6 +83,8 @@ const updateNote = function (noteBlock, editor) {
             const jsonData = JSON.parse(json)
             noteBlock.querySelector('.card').innerHTML = jsonData.form
             prepareNoteDisplay(noteBlock, jsonData.value)
+
+            showMauNotification('Заметка успешно обновлена', 'ok')
         })
         .catch(error => showMauNotification('Не удалось обновить заметку', 'error'))
 }
@@ -128,13 +130,16 @@ const getEditor = function (textarea) {
     return SUNEDITOR.create(textarea, {
         lang: SUNEDITOR_LANG['ru'],
         resizingBar: false,
+        width: '100%',
         height: '100%',
         minHeight: '200px',
+        font: ['Montserrat'],
+        className: 'note-block__editable',
         buttonList: [
             ['undo', 'redo'],
             ['bold', 'underline', 'italic', 'strike'],
             ['textStyle'],
-            ['align', 'horizontalRule', 'list', 'lineHeight'],
+            ['align', 'list', 'lineHeight'],
             ['fullScreen'],
         ],
     })
@@ -153,7 +158,7 @@ const prepareNoteDisplay = function (noteBlock, text) {
             deleteNote(noteBlock)
         })
 
-         noteBlock.querySelector('[name="update"]').addEventListener('click', () => {
+        noteBlock.querySelector('[name="update"]').addEventListener('click', () => {
             getUpdateNote(noteBlock)
         })
 
@@ -167,7 +172,11 @@ const prepareNoteCreate = function (noteBlock) {
     if (form) {
         const editor = getEditor(form.querySelector('textarea'))
         form.addEventListener('submit', event => {
-            createNote(noteBlock, editor)
+            if (editor.getText()) {
+                createNote(noteBlock, editor)
+            } else {
+                showMauNotification('Введите текст в поле ввода', 'error')
+            }
             event.preventDefault()
         })
 
@@ -183,7 +192,11 @@ const prepareNoteUpdate = function (noteBlock, text) {
         editor.setContents(text)
 
         form.addEventListener('submit', event => {
-            updateNote(noteBlock, editor)
+            if (editor.getText()) {
+                updateNote(noteBlock, editor)
+            } else {
+                showMauNotification('Введите текст в поле ввода', 'error')
+            }
             event.preventDefault()
         })
 

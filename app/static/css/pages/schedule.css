@@ -143,46 +143,98 @@
     border-top: 1px solid var(--dark-blue);
 }
 
-.collapse-card {
-    max-width: 1000px;
-    background-color: transparent;
+.note-block__card {
+    width: 100%;
+    padding: 30px 125px;
     border: none;
+    background-color: transparent;
+}
+
+.sun-editor {
+    margin-bottom: 5px;
+    border: 1px solid var(--light-blue);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sun-editor .se-toolbar {
+    outline: 1px solid var(--light-blue);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: var(--light-blue);
 }
 
 .note-block__form {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     width: 100%;
 }
 
-.note-block__input-block {
-    align-items: center;
-}
-
-.note-block__textarea {
+.note-block__btns {
     width: 100%;
-    min-height: 150px;
-    margin-bottom: 15px;
-    resize: none;
-    border-radius: 10px;
-}
-
-.note-block__display {
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    gap: 5px;
 }
 
-.note-block__descr {
-    text-align: left;
-    line-height: 100%;
-    overflow: hidden;
+.sun-editor .se-btn-module {
+    padding: 2px;
+    border-radius: 8px;
 }
 
-.note-block__text {
-    max-width: 100%;
-    max-height: 300px;
-    overflow: auto;
+.sun-editor button {
+    color: var(--dark-blue);
 }
+
+/* rgba from variable '--blue' */
+.sun-editor .se-btn-module {
+    border: 1px solid rgba(77, 100, 141, 30%);
+}
+
+.sun-editor .se-btn {
+    padding: 0;
+    background-color: transparent;
+}
+
+.sun-editor .se-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+}
+
+.sun-editor .se-btn-list {
+    font-size: 16px;
+}
+
+.sun-editor .se-btn > svg,
+.sun-editor .se-btn-list > svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--dark);
+}
+
+.sun-editor .se-btn:disabled svg {
+    fill: gray;
+}
+
+/* rgba from variable --light */
+.sun-editor .se-btn:enabled:focus,
+.sun-editor .se-btn:enabled:hover,
+.sun-editor .se-btn:enabled:active,
+.sun-editor .se-btn:enabled.on,
+.sun-editor .se-btn:enabled.on:hover,
+.sun-editor .se-btn:enabled.active:focus,
+.sun-editor .se-btn:enabled.active:hover {
+    background-color: rgba(219, 236, 244, 60%);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.note-block__editable * {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+}
+
 
 /* Spinners */
 
@@ -240,7 +292,7 @@
 
 .schedule__table-descr {
     font-weight: 900;
-    font-size: 18px;
+    font-size: 20px;
     line-height: 150%;
 }
 
@@ -249,7 +301,17 @@ tr td {
     border-top: 1px solid var(--dark-blue);
 }
 
+tr:nth-child(2n + 1) td {
+    text-align: center;
+    transition: color ease-in-out 0.3s;
+}
+
+tr:nth-child(2n + 1):hover td {
+    color: var(--light-blue);
+}
+
 tr:nth-child(2n + 1) td:first-child {
+    font-weight: 900;
     width: 2%;
 }
 
@@ -257,16 +319,11 @@ tr:nth-child(2n) td {
     border: none;
 }
 
-tr:nth-child(2n + 1) td {
-    text-align: center;
-}
-
 tr td:not(:last-child) {
     font-size: 20px;
 }
 
 tr td:nth-child(2n + 1) {
-    font-weight: 900;
     font-size: 18px;
     line-height: 150%;
 }

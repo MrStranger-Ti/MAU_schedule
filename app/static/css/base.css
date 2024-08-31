@@ -25,7 +25,7 @@
 body {
     min-width: 320px;
     width: 100%;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
@@ -35,10 +35,13 @@ body {
     background-color: var(--light-blue);
 }
 
+strong {
+    font-weight: 800;
+}
+
 h1, h2, h3, h4, h5, h6, p, ul {
     margin: 0;
     padding: 0;
-    color: var(--dark-blue);
 }
 
 ul {
@@ -75,9 +78,9 @@ ul {
     text-decoration: none;
     position: relative;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 150%;
-    color: var(--dark-blue);
+    color: var(--light);
     outline: none;
     transition: color 0.3s ease-in-out;
 }
@@ -85,7 +88,7 @@ ul {
 .link::after {
     content: "";
     position: absolute;
-    border-bottom: 2px solid var(--blue);
+    border-bottom: 2px solid var(--light);
     width: 100%;
     height: 100%;
     left: 0;
@@ -99,7 +102,7 @@ ul {
 }
 
 .link:hover {
-    color: var(--light);
+    color: var(--blue);
 }
 
 .link:hover::after {
@@ -107,7 +110,7 @@ ul {
 }
 
 .link:active {
-    color: var(--blue);
+    color: var(--light-blue);
 }
 
 
@@ -206,7 +209,7 @@ input {
 .notification__block {
     align-items: center;
     padding: 18px 25px;
-    gap: 10px;
+    gap: 20px;
     background-color: #fff;
     box-shadow: 0 0 10px black;
     border-radius: 10px;
@@ -214,15 +217,20 @@ input {
     transition: opacity 0.3s linear;
 }
 
-.notification__icon-ok {
-    width: 32px;
+.notification__icon-ok,
+.notification__icon-error {
+    flex-shrink: 0;
+    width: 36px;
     height: 32px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.notification__icon-ok {
     background-image: url("/static/images/icons/ok.svg");
 }
 
 .notification__icon-error {
-    width: 32px;
-    height: 32px;
     background-image: url("/static/images/icons/error.svg");
 }
 
@@ -250,14 +258,6 @@ input {
     gap: 60px;
 }
 
-.header__nav-link {
-    color: var(--light);
-}
-
-.header__nav-link:hover {
-    color: var(--light-blue);
-}
-
 .header__form {
     padding-right: 0;
     text-align: right;
@@ -268,6 +268,10 @@ input {
     border: none;
     color: var(--light);
     background-color: transparent;
+}
+
+.header__form-link:hover {
+    color: var(--blue);
 }
 
 
@@ -294,19 +298,6 @@ input {
 
 .footer__title {
     margin-bottom: 20px;
-    font-weight: 500;
+    font-weight: 700;
     color: var(--light);
-}
-
-.footer__link {
-    font-weight: 400;
-    color: var(--light);
-}
-
-.footer__link:hover {
-    color: var(--blue);
-}
-
-.footer__link::after {
-    border-bottom: 2px solid var(--light);
 }

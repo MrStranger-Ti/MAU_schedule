@@ -1,12 +1,12 @@
 from django.conf import settings
 
 from mau_auth.exceptions import TagNotFound
-from mau_auth.models import MauUser
+from django.conf import settings
 from mau_utils.mau_requests import get_query_params, get_group_url, get_schedule_data, get_teachers_urls
 
 
 class MauScheduleParser:
-    def __init__(self, user: MauUser):
+    def __init__(self, user: settings.AUTH_USER_MODEL):
         self.course = str(user.course)
         self.institute = user.institute
         self.group = user.group

@@ -29,7 +29,7 @@ def filter_by_current_date(date_range: str) -> bool:
     # now = datetime.now()
 
     # test data
-    now = datetime.strptime('04.06.2024', '%d.%m.%Y')
+    now = datetime.strptime('02.09.2024', '%d.%m.%Y')
 
     clean_date_range = re.search(r'\d{2}\.\d{2}\.\d{4}-\d{2}\.\d{2}\.\d{4}', date_range).group()
     first_date, last_date = map(lambda x: datetime.strptime(x, '%d.%m.%Y'), clean_date_range.split('-')[:2])
@@ -119,7 +119,7 @@ def get_schedule_data(url: str, tables: bool = False, number_weeks: int = 3) -> 
 
     data = {}
     for _ in range(number_weeks):
-        sunday = monday + timedelta(days=6)
+        # sunday = monday + timedelta(days=6)
         # params = {
         #     'perstart': monday.isoformat(),
         #     'perend': sunday.isoformat(),
@@ -127,8 +127,8 @@ def get_schedule_data(url: str, tables: bool = False, number_weeks: int = 3) -> 
 
         # test data
         params = {
-            'perstart': '2024-04-08',
-            'perend': '2024-04-14',
+            'perstart': '2024-09-02',
+            'perend': '2024-09-08',
         }
 
         response = requests.get(url, params=params, headers={'User-Agent': ua.random})
