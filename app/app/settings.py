@@ -92,8 +92,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'schedule.context_processors.group_schedule_name',
-                'schedule.context_processors.teacher_schedule_name',
+                'core.context_processors.schedule_data',
             ],
         },
     },
@@ -196,6 +195,7 @@ MAU_DOMAINS = [
 
 GROUP_SCHEDULE_NAME = 'group'
 TEACHER_SCHEDULE_NAME = 'teacher'
+DEVELOPER_URL = os.getenv('DEVELOPER_URL')
 
 WEEKDAYS_NAMES = {
     0: 'Понедельник',

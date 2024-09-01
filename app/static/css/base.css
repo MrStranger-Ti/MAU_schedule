@@ -113,6 +113,18 @@ ul {
     color: var(--light-blue);
 }
 
+.dark-link {
+    color: var(--dark);
+}
+
+.dark-link::after {
+    border-bottom: 2px solid var(--dark-blue);
+}
+
+.dark-link:active {
+    color: var(--dark-blue);
+}
+
 
 /* Buttons */
 

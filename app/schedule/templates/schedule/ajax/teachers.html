@@ -2,7 +2,7 @@
   <ul class="schedule__teacher-links">
     {% for teacher_name, teacher_link in teachers_links.items %}
       <li>
-        <a class="link schedule__teacher-link" href="{% url 'schedule:teacher_schedule' %}?key={{ teacher_link }}&name={{ teacher_name|urlencode }}&page=1">{{ teacher_name }}</a>
+        <a class="dark-link link" href="{% url 'schedule:teacher_schedule' %}?key={{ teacher_link }}&name={{ teacher_name|urlencode }}&page=1">{{ teacher_name }}</a>
       </li>
     {% endfor %}
   </ul>

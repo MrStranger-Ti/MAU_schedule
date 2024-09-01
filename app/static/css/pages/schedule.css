@@ -32,34 +32,6 @@
     padding-left: var(--content-padding);
 }
 
-.schedule__teacher-link {
-    color: var(--dark-blue);
-}
-
-.schedule__teacher-link:after {
-    border-color: var(--dark-blue);
-}
-
-.schedule__teacher-link:focus::after {
-    opacity: 0;
-}
-
-.schedule__teacher-link:hover::after {
-    opacity: 1;
-}
-
-.schedule__teacher-link:hover {
-    color: var(--dark-blue);
-}
-
-.schedule__teacher-link:active {
-    color: var(--blue);
-}
-
-.schedule__teacher-link:active::after {
-    opacity: 0;
-}
-
 .schedule__form > input {
     min-width: 300px;
 }
@@ -157,8 +129,8 @@
     font-size: 24px;
 }
 
-.schedule__info > a:focus::after {
-    opacity: 0;
+.schedule__info > a::after {
+    opacity: 1;
 }
 
 
