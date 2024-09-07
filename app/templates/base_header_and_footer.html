@@ -8,14 +8,41 @@
       <nav class="header__nav">
         <ul class="header__nav-list flex">
           <li class="header__nav-item"><a class="link header__nav-link" href="{% url 'profiles:profile' %}">Профиль</a></li>
-          <li class="header__nav-item"><a class="link header__nav-link" href="{% url 'schedule:group_schedule' %}">Группа {% if user.group %}{{ user.group }}{% endif %}</a></li>
-          <li class="header__nav-item"><a class="link header__nav-link" href="{% url 'schedule:teacher_search' %}">Расписание преподавателей</a></li>
+          <li class="header__nav-item"><a class="link header__nav-link" href="{% url 'schedule:group_schedule' %}">{% if user.group %}{{ user.group }}{% endif %}</a></li>
+          <li class="header__nav-item"><a class="link header__nav-link" href="{% url 'schedule:teacher_search' %}">Преподаватели</a></li>
         </ul>
       </nav>
       <form class="header__form" action="{% url 'mau_auth:logout' %}" method="post">
         {% csrf_token %}
         <button class="link header__form-link" type="submit">Выйти</button>
       </form>
+      <nav class="header__menu">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="64.000000pt" height="64.000000pt" viewBox="0 0 64.000000 64.000000" preserveAspectRatio="xMidYMid meet">
+              <g transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)">
+                <path d="M12 548 c-16 -16 -15 -43 2 -57 9 -8 100 -11 311 -9 271 3 299 5 309
+                  21 8 12 8 22 0 35 -10 15 -38 17 -310 20 -225 2 -303 -1 -312 -10z"/>
+                <path d="M12 348 c-16 -16 -15 -43 2 -57 9 -8 100 -11 311 -9 271 3 299 5 309
+                  21 8 12 8 22 0 35 -10 15 -38 17 -310 20 -225 2 -303 -1 -312 -10z"/>
+                <path d="M12 148 c-16 -16 -15 -43 2 -57 9 -8 100 -11 311 -9 271 3 299 5 309
+                  21 8 12 8 22 0 35 -10 15 -38 17 -310 20 -225 2 -303 -1 -312 -10z"/>
+              </g>
+            </svg>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item link dark-link" href="{% url 'profiles:profile' %}">Профиль</a></li>
+            <li><a class="dropdown-item link dark-link" href="{% url 'schedule:group_schedule' %}">{% if user.group %}{{ user.group }}{% endif %}</a></li>
+            <li><a class="dropdown-item link dark-link" href="{% url 'schedule:teacher_search' %}">Преподаватели</a></li>
+            <li>
+              <form class="dropdown-item" action="{% url 'mau_auth:logout' %}" method="post">
+                {% csrf_token %}
+                <button class="link dark-link header__form-link" type="submit">Выйти</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </div>
   </header>
   <main>
@@ -31,7 +58,8 @@
           <p class="footer__title">Навигация</p>
           <ul class="footer__nav-list">
             <li class="footer__nav-item"><a class="footer__link link" href="{% url 'profiles:profile' %}">Профиль</a></li>
-            <li class="footer__nav-item"><a class="footer__link link" href="{% url 'schedule:group_schedule' %}">Группа {% if user.group %}{{ user.group }}{% endif %}</a></li>
+            {% if user.group %}
+              <li class="footer__nav-item"><a class="footer__link link" href="{% url 'schedule:group_schedule' %}">{{ user.group }}</a></li>{% endif %}
             <li class="footer__nav-item"><a class="footer__link link" href="{% url 'schedule:teacher_search' %}">Преподаватели</a></li>
           </ul>
         </nav>

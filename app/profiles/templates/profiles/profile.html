@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block profile_content %}
-  <div class="row row-cols-2 justify-content-between profile__lists-block">
+  <div class="row justify-content-between profile__lists-block flex-wrap gap-5">
     <div class="col profile__list-block">
       <h2 class="profile__list-title">Личная информация</h2>
       <ul class="profile__list">
@@ -26,5 +26,5 @@
       </ul>
     </div>
   </div>
-  <div class="profile__btn-block"><a class="btn" href="{% url 'profiles:profile_update' %}">Изменить данные</a></div>
+  <div class="profile__btn-block"><a class="btn" href="{% url 'profiles:profile_update' %}">Редактировать</a></div>
 {% endblock %}

@@ -124,7 +124,3 @@ class CustomSetPasswordForm(SetPasswordForm):
         strip=False,
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password2', 'autocomplete': 'new-password'}),
     )
-
-    error_messages = {
-        'password_mismatch': 'Пароль не совпадает',
-    }

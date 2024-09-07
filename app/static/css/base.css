@@ -8,13 +8,13 @@
     --dark: #273655;
     --error-color: #e81e1e;
 
-    --header-height: 101px;
+    --header-height: 100px;
     --footer-height: 200px;
 
     --title-height: 45px;
     --title-margin-bottom: 20px;
 
-    --container-padding-top-left: 20px;
+    --container-padding-top-bottom: 20px;
     --content-padding: 24px;
 }
 
@@ -60,15 +60,39 @@ ul {
 .container {
     margin: 0 auto;
     max-width: 1400px;
-    padding: var(--container-padding-top-left) 0;
+    padding: var(--container-padding-top-bottom) 30px;
 }
 
 .title {
-    min-height: var(--title-height);
     font-weight: 900;
     font-size: 30px;
     line-height: 150%;
     color: var(--dark-blue);
+}
+
+@media (max-width: 1024px) {
+    :root {
+        --container-padding-top-bottom: 10px;
+        --title-margin-bottom: 10px;
+    }
+
+    .container {
+        padding: var(--container-padding-top-bottom) 10px;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: var(--container-padding-top-bottom) 5px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
 }
 
 
@@ -125,6 +149,12 @@ ul {
     color: var(--dark-blue);
 }
 
+@media (max-width: 1024px) {
+    .link {
+        font-size: 18px;
+    }
+}
+
 
 /* Buttons */
 
@@ -152,22 +182,21 @@ ul {
     color: var(--light-blue);
 }
 
+@media (max-width: 1024px) {
+    .btn {
+        font-size: 18px;
+    }
+}
+
 
 /* Inputs */
 
-input {
-    /*max-width: 400px;*/
-}
-
-.form-floating > input, .form-floating > select {
-    width: 100%;
-    min-width: 400px;
-    font-size: 18px;
+.form-floating > input,
+.form-floating > select {
     min-height: 64px;
+    font-size: 18px;
     border-radius: 8px;
 }
-
-.form-floating > select {}
 
 .form-floating > input:focus,
 .form-floating > select:focus {
@@ -179,12 +208,37 @@ input {
     color: var(--dark-blue);
 }
 
+@media (max-width: 1024px) {
+    .form-floating > input,
+    .form-floating > select {
+        min-height: auto;
+        font-size: 16px;
+    }
+
+    .form-floating > label {
+        padding: 14px 10px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 764px) {
+    .form-floating > input,
+    .form-floating > select {
+
+    }
+
+    .form-floating > label {
+        font-size: 16px;
+    }
+}
+
 
 /* Errors */
 
 .errors-list {
     list-style: initial;
     margin-left: 15px;
+    padding-left: 10px;
     font-size: 16px;
     font-weight: 600;
     line-height: 22px;
@@ -200,8 +254,19 @@ input {
 
 .main-logo {
     width: 250px;
-    height: 250px;
     margin-bottom: 20px;
+}
+
+@media (max-width: 1024px) {
+    .main-logo {
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-logo {
+        width: 150px;
+    }
 }
 
 
@@ -250,7 +315,6 @@ input {
 /* Header */
 
 .header {
-    /*border-bottom: var(--header-border) solid var(--dark-blue);*/
     background-color: var(--dark-blue);
 }
 
@@ -258,16 +322,20 @@ input {
     justify-content: space-between;
     align-items: center;
     height: var(--header-height);
+    gap: 50px;
 }
 
 .header__logo {
-    width: auto;
-    height: 60px;
+    width: 60px;
 }
 
 .header__nav-list {
     justify-content: space-between;
-    gap: 60px;
+    gap: 50px;
+}
+
+.header__menu {
+    display: none;
 }
 
 .header__form {
@@ -278,12 +346,71 @@ input {
 .header__form-link {
     padding: 0;
     border: none;
-    color: var(--light);
     background-color: transparent;
 }
 
 .header__form-link:hover {
     color: var(--blue);
+}
+
+@media (max-width: 1024px) {
+    .header__container,
+    .header__nav-list {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --header-height: 60px;
+
+    }
+
+    .header__logo {
+        width: 40px;
+    }
+
+    .header__menu {
+        display: block;
+    }
+
+    .header__nav,
+    .header__form {
+        display: none;
+    }
+
+    .header__menu button {
+        padding: 0;
+        border: none;
+        background-color: transparent;
+    }
+
+    .header__menu svg {
+        width: 40px;
+        height: 40px;
+        fill: var(--light);
+    }
+
+    .header__menu button::after {
+        display: none;
+    }
+
+    .header__menu button:focus,
+    .header__menu button:hover,
+    .header__menu button:active,
+    .header__menu button:focus:active{
+        border: none;
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    .header__menu button svg {
+        transition: fill ease-in-out 0.3s;
+    }
+
+    .header__menu button:hover svg {
+        fill: var(--light-blue);
+    }
 }
 
 

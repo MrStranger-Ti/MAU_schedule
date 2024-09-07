@@ -6,5 +6,5 @@
   {% else %}
     <p class="auth__descr">Не удалось подтвердить почту.</p>
   {% endif %}
-  <a class="dark-link link" href="{% url 'mau_auth:login' %}">Войти</a>
+  <a class="btn auth__btn" href="{% url 'mau_auth:login' %}">Войти</a>
 {% endblock %}

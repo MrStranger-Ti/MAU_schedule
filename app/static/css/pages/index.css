@@ -7,6 +7,7 @@
 }
 
 .hero__title {
+    text-align: center;
     font-size: 26px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -15,4 +16,16 @@
 
 .hero__btn {
     margin-bottom: 5px;
+}
+
+@media (max-width: 1024px) {
+    .hero__title {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero__title {
+        font-size: 18px;
+    }
 }
