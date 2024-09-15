@@ -56,10 +56,12 @@
 @media (max-width: 1024px) {
     .profile__title {
         margin-bottom: 5px;
+        padding-left: 16px;
     }
 
     .profile__content {
         padding: 10px 50px;
+        gap: 10px;
     }
 
     .profile__list-title {
@@ -72,8 +74,13 @@
 }
 
 @media (max-width: 768px) {
+    .profile__title {
+        padding-left: 10px;
+    }
+
     .profile__content {
         padding: 10px 5px;
+        gap: 5px;
     }
 
     .profile__list-title {

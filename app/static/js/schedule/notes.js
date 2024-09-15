@@ -129,17 +129,18 @@ const getDisplayNote = function (noteBlock) {
 const getEditor = function (textarea) {
     return SUNEDITOR.create(textarea, {
         lang: SUNEDITOR_LANG['ru'],
-        resizingBar: false,
         width: '100%',
         height: '100%',
+        maxHeight: '1000px',
+        resizingBar: false,
         minHeight: '200px',
         font: ['Montserrat'],
         className: 'note-block__editable',
         buttonList: [
             ['undo', 'redo'],
-            ['bold', 'underline', 'italic', 'strike'],
+            [':p-More Paragraph-default.more_paragraph', 'bold', 'underline', 'italic', 'strike'],
             ['textStyle'],
-            ['align', 'list', 'lineHeight'],
+            ['align', 'list'],
             ['fullScreen'],
         ],
     })

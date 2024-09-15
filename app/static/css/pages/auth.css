@@ -78,9 +78,7 @@
     .auth__descr {
         font-size: 22px;
     }
-}
 
-@media (max-width: 375px) {
     .auth__title {
         font-size: 22px;
     }
