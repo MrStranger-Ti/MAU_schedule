@@ -41,12 +41,11 @@ def check_period_for_current_date(date_period: str) -> bool:
 class ParserStorage:
     def __init__(self, user: settings.AUTH_USER_MODEL):
         self.user: settings.AUTH_USER_MODEL = user
-        self.weeks_options: List[str] | None = None
         self.__storage: Dict[str, Any] = {}
 
-        weeks_options = cache.get(f'schedule_group_options_{self.user.group}')
-        if weeks_options:
-            self.weeks_options = weeks_options
+        data = cache.get(f'parsing_data_{self.user.group}')
+        if data:
+            self.storage = data
 
     def __getitem__(self, item):
         return self.__storage[item]
@@ -54,14 +53,23 @@ class ParserStorage:
     def __setitem__(self, key, value):
         self.__storage[key] = value
 
-    def save_weeks_options(self, weeks_options: List[Tuple[str, str]]) -> None:
+    @property
+    def storage(self):
+        return self.__storage
+
+    @storage.setter
+    def storage(self, value):
+        self.__storage = value
+
+    def get(self, key: str) -> Any:
+        return self.storage.get(key)
+
+    def save_storage(self):
         cache.set(
-            f'schedule_group_options_{self.user.group}',
-            weeks_options,
+            f'parsing_data_{self.user.group}',
+            self.storage,
             settings.SCHEDULE_CACHE_TIME,
         )
-
-        self.weeks_options = weeks_options
 
 
 class ScheduleParser:
@@ -69,23 +77,33 @@ class ScheduleParser:
         self.user: settings.AUTH_USER_MODEL = user
         self.period = period
         self.base_url: str = settings.SCHEDULE_URL
-        self.storage = ParserStorage(user)
         self.teacher_schedule: bool = teacher_schedule
         self.schedule_url: str = settings.SCHEDULE_URL
+        self.storage: ParserStorage = ParserStorage(user)
 
     def get_group_schedule(self) -> Dict[int, List[str]] | None:
-        group_url = cache.get(f'group_schedule_url_{self.user.group}')
+        group_url = self.storage.get('group_url')
         if not group_url:
             group_url = self.__get_group_url()
-            cache.set(
-                f'group_schedule_url_{self.user.group}',
-                group_url,
-                settings.SCHEDULE_CACHE_TIME,
-            )
 
+        self.storage.save_storage()
         return self.__get_schedule_data(group_url)
 
     def __get_group_url(self) -> str | None:
+        self.__find_params_for_group_url()
+        weeks_options = self.storage['weeks_options']
+        institute_value = self.storage['institute_value']
+        if not weeks_options or not institute_value:
+            return None
+
+        self.__find_group_url()
+        group_url = self.storage['group_url']
+        if not group_url:
+            return None
+
+        return group_url
+
+    def __find_params_for_group_url(self) -> None:
         response = get_response(self.base_url)
         if not response:
             return None
@@ -94,27 +112,7 @@ class ScheduleParser:
         self.__find_weeks_options(soup)
         self.__find_institute_value(soup)
 
-        weeks_options, institute_value
-
-        if not weeks_options or not institute_value:
-            return None
-
-        params = {
-            'mode': 1,
-            'pers': weeks_options[0][0],
-            'facs': institute_value,
-            'courses': self.user.course,
-        }
-        response = get_response(self.base_url, params=params)
-        soup = get_soup(response)
-        group_url = join_url(self.base_url, self.__find_group_url(soup))
-
-        if not group_url:
-            return None
-
-        return group_url
-
-    def __find_weeks_options(self, soup: bs4.BeautifulSoup) -> List[Tuple[str, str]]:
+    def __find_weeks_options(self, soup: bs4.BeautifulSoup) -> None:
         date_options = soup.select_one('select[name=pers]').find_all(
             'option',
             value=lambda value: int(value) > 0,
@@ -123,17 +121,24 @@ class ScheduleParser:
             (option.get('value'), clean_date_period(option.text))
             for option in date_options
         ]
-        self.storage.save_weeks_options(weeks_options)
-        return weeks_options
+        self.storage['weeks_options'] = weeks_options
 
-    def __find_institute_value(self, soup: bs4.BeautifulSoup) -> str | None:
+    def __find_institute_value(self, soup: bs4.BeautifulSoup) -> None:
         institute_option = soup.select_one('select[name=facs]').find(
             'option',
             string=self.user.institute,
         )
-        return institute_option.get('value')
+        self.storage['institute_value'] = institute_option.get('value')
 
-    def __find_group_url(self, soup: bs4.BeautifulSoup) -> str | None:
+    def __find_group_url(self) -> None:
+        params = {
+            'mode': 1,
+            'pers': self.storage['weeks_options'][0][0],
+            'facs': self.storage['institute_value'],
+            'courses': self.user.course,
+        }
+        response = get_response(self.base_url, params=params)
+        soup = get_soup(response)
         group_link = soup.find(
             'a',
             string=re.compile(fr'\s*{self.user.group}\s*'),
@@ -143,7 +148,7 @@ class ScheduleParser:
         if not group_link:
             return None
 
-        return group_link.get('href')
+        self.storage['group_url'] = join_url(self.base_url, group_link.get('href'))
 
     def __get_schedule_data(self, url: str) -> dict[dict: list]:
         start, end = self.__get_start_end()
@@ -164,7 +169,7 @@ class ScheduleParser:
         return schedule_data
 
     def __get_start_end(self) -> Tuple[str, str]:
-        storage_periods = [period for _, period in self.storage.weeks_options]
+        storage_periods = [period for _, period in self.storage['weeks_options']]
         if self.period in storage_periods:
             start, end = self.__get_start_end_period(self.period)
         else:
@@ -174,7 +179,7 @@ class ScheduleParser:
 
     def __define_week_option(self) -> Tuple[str, str]:
         week_period = None
-        for period in self.storage.weeks_options:
+        for _, period in self.storage['weeks_options']:
             if check_period_for_current_date(period):
                 week_period = period
                 break
@@ -182,7 +187,7 @@ class ScheduleParser:
         if week_period:
             start, end = self.__get_start_end_period(week_period)
         else:
-            start, end = self.__get_start_end_period(self.storage.weeks_options[0])
+            start, end = self.__get_start_end_period(self.storage['weeks_options'][0][1])
 
         return start, end
 

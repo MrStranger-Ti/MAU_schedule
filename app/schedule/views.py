@@ -34,23 +34,19 @@ class AjaxGetGroupScheduleView(View):
 
         user = request.user
         period = request.GET.get('period')
-        if week and week.isdigit():
-            week = int(week)
-        else:
-            week = None
 
-        mau_parser = ScheduleParser(user, teacher_schedule=False)
-        schedule_data = cache.get(f'schedule_group_{user.group}_week_{week or "current"}')
+        mau_parser = ScheduleParser(user, period=period, teacher_schedule=False)
+        schedule_data = cache.get(f'schedule_group_{user.group}_week_{period or "current"}')
         if not schedule_data:
-            schedule_data = mau_parser.get_group_schedule(week)
+            schedule_data = mau_parser.get_group_schedule()
             cache.set(
-                f'schedule_group_{user.group}_week_{week}',
+                f'schedule_group_{user.group}_week_{period or "current"}',
                 schedule_data,
                 settings.SCHEDULE_CACHE_TIME,
             )
 
         form = WeeksForm()
-        form.fields['weeks_periods'].choices = mau_parser.storage.weeks_options
+        form.fields['weeks_periods'].choices = mau_parser.storage['weeks_options']
 
         context = {
             'form': form,
