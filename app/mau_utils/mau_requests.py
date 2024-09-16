@@ -1,10 +1,11 @@
 import re
 import urllib.parse
+from typing import Any
 
 import bs4
 import requests
 
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 
 from fake_useragent import UserAgent
 
@@ -34,6 +35,15 @@ def get_prepared_group(group: str, spec_symbols: str = None) -> str:
 #         clean_date_range.split('-'),
 #     )
 #     return first_date <= now <= last_date
+
+
+def get_response(url: str, **kwargs: Any) -> requests.Response | None:
+    try:
+        response = requests.get(url, headers={'User-Agent': ua.random}, timeout=5, **kwargs)
+    except requests.exceptions.Timeout:
+        return None
+
+    return response
 
 
 def get_query_params(institute_name: str) -> tuple[str, str]:

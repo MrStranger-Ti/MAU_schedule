@@ -9,8 +9,10 @@
       <h1 class="schedule__title title">{{ teacher_name }}</h1>
       {% include 'bookmarks/bookmarks.html' %}
       {% has_bookmark as has_bookamrk %}
-      <button class="btn schedule__bookmarks-btn" name="bookmark-create" type="button" {% if has_bookamrk %}disabled{% endif %}>
-        <svg version="1.0" width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+      <button class="btn schedule__bookmarks-btn" name="bookmark-create" type="button"
+              {% if has_bookamrk %}disabled{% endif %}>
+        <svg version="1.0" width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+             preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)">
             <path d="M1259 5105 c-150 -30 -270 -96 -390 -216 -72 -71 -94 -101 -133 -180
 -85 -173 -78 -73 -86 -1354 -4 -627 -9 -1610 -11 -2185 -2 -958 -1 -1048 14
@@ -39,9 +41,10 @@ c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
       </button>
     </div>
   {% endif %}
-  {% if current_page %}
-    {% include 'schedule/pagination.html' %}
-  {% endif %}
+  <form class="schedule__form" action="." method="get">
+    {{ form }}
+    <button>Отправить</button>
+  </form>
 </div>
 {% if schedule_data %}
   <div class="schedule__list">
@@ -57,7 +60,9 @@ c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
           {% for row in day_table %}
             {% prepare_location table user.group date forloop.counter as note_location %}
             {% get_user_note note_location as note %}
-            <tr {% if note %} class="schedule__existing-note-tr" {% endif %} data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseExample" role="button">
+            <tr {% if note %} class="schedule__existing-note-tr" {% endif %} data-bs-toggle="collapse"
+                              data-bs-target="#collapse-{{ forloop.parentloop.counter }}-{{ forloop.counter }}"
+                              aria-expanded="false" aria-controls="collapseExample" role="button">
               {% for cell in row %}
                 <td>{{ cell }}</td>
               {% endfor %}
@@ -84,9 +89,6 @@ c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
 {% else %}
   <div class="schedule__info-block">
     <p class="schedule__info">Расписание не найдено. Проверьте свои данные в профиле.</p>
-    <p class="schedule__info">Также неполадки могут быть связаны с неработающим расписанием на <a class="dark-link link" href="{{ original_schedule_url }}" target="_blank">сайте</a> университета.</p>
+    <p class="schedule__info">Также неполадки могут быть связаны с неработающим расписанием на <a class="dark-link link" href="{{ original_schedule_url }}" target="_blank">сайте</a>университета.</p>
   </div>
-{% endif %}
-{% if schedule_data and current_page %}
-  {% include 'schedule/pagination.html' %}
 {% endif %}

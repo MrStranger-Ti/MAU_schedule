@@ -10,8 +10,9 @@ from django.views.generic import TemplateView
 from django.core.cache import cache
 from django.conf import settings
 
-from mau_utils.mau_parser import MauScheduleParser
+from mau_utils.mau_parser import ScheduleParser
 from mau_utils.mau_requests import get_teachers_urls, get_schedule_data
+from schedule.forms import WeeksForm
 
 
 class GroupScheduleView(LoginRequiredMixin, View):
@@ -32,26 +33,28 @@ class AjaxGetGroupScheduleView(View):
             return HttpResponseNotFound()
 
         user = request.user
-        page = request.GET.get('page')
-
-        if not re.fullmatch(r'[1-3]', page):
-            page = 1
+        period = request.GET.get('period')
+        if week and week.isdigit():
+            week = int(week)
         else:
-            page = int(page)
+            week = None
 
-        schedule_data = cache.get(f'schedule_group_{user.group}_page_{page}')
+        mau_parser = ScheduleParser(user, teacher_schedule=False)
+        schedule_data = cache.get(f'schedule_group_{user.group}_week_{week or "current"}')
         if not schedule_data:
-            mau_parser = MauScheduleParser(user)
-            schedule_data = mau_parser.get_group_schedule(page)
+            schedule_data = mau_parser.get_group_schedule(week)
             cache.set(
-                f'schedule_group_{user.group}_page_{page}',
+                f'schedule_group_{user.group}_week_{week}',
                 schedule_data,
                 settings.SCHEDULE_CACHE_TIME,
             )
 
+        form = WeeksForm()
+        form.fields['weeks_periods'].choices = mau_parser.storage.weeks_options
+
         context = {
+            'form': form,
             'schedule_data': schedule_data,
-            'current_page': page,
             'table': settings.GROUP_SCHEDULE_NAME,
             'original_schedule_url': settings.SCHEDULE_URL,
         }

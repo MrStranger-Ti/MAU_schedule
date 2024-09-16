@@ -1,4 +1,9 @@
 const getSchedule = function (url) {
+    const spinner = document.querySelector('.spinner-border')
+    document.querySelector('.schedule__content').innerHTML = ''
+    spinner.classList.remove('spinner-border-hidden')
+    spinner.classList.add('spinner-border-visible')
+
     fetch(url, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -22,9 +27,21 @@ const getSchedule = function (url) {
 
             prepareBookmarkDisplay()
             prepareBookmarkAdd()
+            prepareScheduleForm()
 
             const spinner = document.querySelector('.spinner-border')
             spinner.classList.remove('spinner-border-visible')
             spinner.classList.add('spinner-border-hidden')
         })
+}
+
+
+const prepareScheduleForm = function () {
+    document.querySelector('.schedule__form').addEventListener('submit', event => {
+        const value = event.target.elements.weeks_periods.value
+        const url = getIndex() + `/schedule/get-group-schedule/?week=${value}`
+
+        getSchedule(url)
+        event.preventDefault()
+    })
 }

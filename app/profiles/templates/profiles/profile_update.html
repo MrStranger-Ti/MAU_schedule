@@ -21,10 +21,10 @@
         {% endfor %}
       </ul>
     {% endif %}
-    <div class="row row-cols-2 g-3 justify-content-between profile__inputs-block">
+    <div class="row row-cols-md-2 g-1 g-md-3 justify-content-between profile__inputs-block flex-wrap">
       {% for field in form %}
         {% clear_label_suffix field as clean_field %}
-        <div class="col profile__field-block">
+        <div class="col-md profile__field-block">
           <div class="form-floating">
             {{ clean_field }}
             {{ clean_field.label_tag }}
