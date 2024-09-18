@@ -7,46 +7,78 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mau_auth', '0002_alter_mauuser_course_alter_mauuser_email_and_more'),
+        ("mau_auth", "0002_alter_mauuser_course_alter_mauuser_email_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MauGroup',
+            name="MauGroup",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20, verbose_name='Название')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=20, verbose_name="Название")),
             ],
             options={
-                'verbose_name': 'группа',
-                'verbose_name_plural': 'группы',
-                'ordering': ('name',),
+                "verbose_name": "группа",
+                "verbose_name_plural": "группы",
+                "ordering": ("name",),
             },
         ),
         migrations.CreateModel(
-            name='MauInstitute',
+            name="MauInstitute",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20, verbose_name='Название')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=20, verbose_name="Название")),
             ],
             options={
-                'verbose_name': 'институт',
-                'verbose_name_plural': 'институты',
-                'ordering': ('name',),
+                "verbose_name": "институт",
+                "verbose_name_plural": "институты",
+                "ordering": ("name",),
             },
         ),
         migrations.AlterModelOptions(
-            name='mauuser',
-            options={'ordering': ('course', 'full_name'), 'verbose_name': 'Пользователь', 'verbose_name_plural': 'Пользователи'},
+            name="mauuser",
+            options={
+                "ordering": ("course", "full_name"),
+                "verbose_name": "Пользователь",
+                "verbose_name_plural": "Пользователи",
+            },
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='group',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='mauusers', to='mau_auth.maugroup', verbose_name='Группа'),
+            model_name="mauuser",
+            name="group",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="mauusers",
+                to="mau_auth.maugroup",
+                verbose_name="Группа",
+            ),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='institute',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='mauusers', to='mau_auth.mauinstitute', verbose_name='Институт'),
+            model_name="mauuser",
+            name="institute",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="mauusers",
+                to="mau_auth.mauinstitute",
+                verbose_name="Институт",
+            ),
         ),
     ]

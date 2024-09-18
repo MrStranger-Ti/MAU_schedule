@@ -3,11 +3,11 @@ import django_tables2 as tables
 
 data = [
     {
-        'number_lesson': '1',
-        'time': '12:00 - 12:45',
-        'name': 'Говнопара',
-        'teacher': 'Говноед',
-        'address': 'Ленина',
+        "number_lesson": "1",
+        "time": "12:00 - 12:45",
+        "name": "Говнопара",
+        "teacher": "Говноед",
+        "address": "Ленина",
     },
 ]
 

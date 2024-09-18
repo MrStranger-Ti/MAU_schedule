@@ -7,33 +7,37 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mau_auth', '0001_initial'),
+        ("mau_auth", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='mauuser',
-            name='course',
-            field=models.PositiveSmallIntegerField(default=1, verbose_name='Курс'),
+            model_name="mauuser",
+            name="course",
+            field=models.PositiveSmallIntegerField(default=1, verbose_name="Курс"),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='email',
-            field=models.EmailField(max_length=254, unique=True, verbose_name='Email'),
+            model_name="mauuser",
+            name="email",
+            field=models.EmailField(max_length=254, unique=True, verbose_name="Email"),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='full_name',
-            field=models.CharField(max_length=256, validators=[mau_auth.validators.validate_full_name], verbose_name='ФИО'),
+            model_name="mauuser",
+            name="full_name",
+            field=models.CharField(
+                max_length=256,
+                validators=[mau_auth.validators.validate_full_name],
+                verbose_name="ФИО",
+            ),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='group',
-            field=models.CharField(verbose_name='Группа'),
+            model_name="mauuser",
+            name="group",
+            field=models.CharField(verbose_name="Группа"),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='institute',
-            field=models.CharField(verbose_name='Институт'),
+            model_name="mauuser",
+            name="institute",
+            field=models.CharField(verbose_name="Институт"),
         ),
     ]

@@ -8,5 +8,5 @@ register = template.Library()
 
 @register.simple_tag
 def clear_label_suffix(field: BoundField) -> BoundField:
-    field.field.label_suffix = ''
+    field.field.label_suffix = ""
     return field

@@ -17,7 +17,7 @@ from schedule.parser.storage import ParserStorage
 
 
 class Parser(ABC):
-    def __init__(self, user: settings.AUTH_USER_MODEL, parser: str = 'lxml'):
+    def __init__(self, user: settings.AUTH_USER_MODEL, parser: str = "lxml"):
         self.user: settings.AUTH_USER_MODEL = user
         self.base_url: str = settings.SCHEDULE_URL
         self.parser: str = parser
@@ -34,7 +34,7 @@ class Parser(ABC):
         try:
             response = requests.get(
                 url,
-                headers={'User-Agent': self.user_agent_manager.random},
+                headers={"User-Agent": self.user_agent_manager.random},
                 timeout=5,
                 **kwargs,
             )
@@ -54,7 +54,7 @@ class ScheduleParser(Parser, ABC):
 
         self.schedule_storage: ParserStorage | None = None
         self.parsing_storage: ParserStorage = ParserStorage(
-            cache_key=f'group_parsing_data_{self.user.group}',
+            cache_key=f"group_parsing_data_{self.user.group}",
         )
 
     @abc.abstractmethod
@@ -66,7 +66,7 @@ class ScheduleParser(Parser, ABC):
         pass
 
     def get_data(self):
-        schedule_data = self.schedule_storage.get('schedule_data')
+        schedule_data = self.schedule_storage.get("schedule_data")
         if not schedule_data:
             schedule_data = self._get_schedule()
 
@@ -77,35 +77,37 @@ class ScheduleParser(Parser, ABC):
         current_week = date(2024, 7, 2).isocalendar()
         monday = date.fromisocalendar(current_week[0], current_week[1], 1)
         sunday = date.fromisocalendar(current_week[0], current_week[1], 7)
-        self.period = monday.strftime('%d.%m.%Y') + '-' + sunday.strftime('%d.%m.%Y')
+        self.period = monday.strftime("%d.%m.%Y") + "-" + sunday.strftime("%d.%m.%Y")
 
     def _collect_schedule(self, url: str) -> None:
         self._define_week_period()
         start, end = self._get_start_end()
         params = {
-            'perstart': start,
-            'perend': end,
+            "perstart": start,
+            "perend": end,
         }
         response = self.get_response(url, params=params)
         if response and response.status_code == 200:
             soup = self.get_soup(response)
-            week_monday = date(*map(int, start.split('-')))
+            week_monday = date(*map(int, start.split("-")))
             schedule_data = self._parse_schedule(soup, week_monday)
-            self.schedule_storage['schedule_data'] = schedule_data
+            self.schedule_storage["schedule_data"] = schedule_data
 
     def _get_start_end(self) -> Tuple[str, str]:
         start, end = self._get_start_end_period(self.period)
         return start, end
 
     def _define_week_period(self) -> None:
-        storage_periods = [period for _, period in self.parsing_storage.get('weeks_options', [])]
+        storage_periods = [
+            period for _, period in self.parsing_storage.get("weeks_options", [])
+        ]
         if self.period not in storage_periods:
             self._change_period_by_weeks_options()
 
         self._collect_current_week_option()
 
     def _change_period_by_weeks_options(self) -> None:
-        weeks_options = self.parsing_storage.get('weeks_options', [])
+        weeks_options = self.parsing_storage.get("weeks_options", [])
         for _, period in weeks_options:
             if check_period_for_current_date(period):
                 self.period = period
@@ -116,21 +118,21 @@ class ScheduleParser(Parser, ABC):
 
     @staticmethod
     def _get_start_end_period(week_period: str) -> Tuple[str, ...]:
-        return tuple(map(convert_to_iso_8601, week_period.split('-')))
+        return tuple(map(convert_to_iso_8601, week_period.split("-")))
 
     def _collect_current_week_option(self) -> None:
-        for option in self.parsing_storage.get('weeks_options', []):
+        for option in self.parsing_storage.get("weeks_options", []):
             if self.period == option[1]:
-                self.parsing_storage['current_week_value'] = option[0]
+                self.parsing_storage["current_week_value"] = option[0]
                 break
 
     def _collect_weeks_options(self, soup: bs4.BeautifulSoup) -> None:
-        date_options = soup.select_one('select[name=pers]').find_all(
-            'option',
+        date_options = soup.select_one("select[name=pers]").find_all(
+            "option",
             value=lambda value: int(value) > 0,
         )
         weeks_options = [
-            (option.get('value'), clean_date_period(option.text))
+            (option.get("value"), clean_date_period(option.text))
             for option in date_options
         ]
-        self.parsing_storage['weeks_options'] = weeks_options
+        self.parsing_storage["weeks_options"] = weeks_options

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notes', '0003_note_group'),
+        ("notes", "0003_note_group"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='note',
-            name='expired_date',
-            field=models.DateField(null=True, verbose_name='Дата удаления'),
+            model_name="note",
+            name="expired_date",
+            field=models.DateField(null=True, verbose_name="Дата удаления"),
         ),
     ]

@@ -11,41 +11,54 @@ User = get_user_model()
 class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = 'full_name', 'email', 'password', 'course', 'institute', 'group'
+        fields = "full_name", "email", "password", "course", "institute", "group"
         widgets = {
-            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'full_name'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email'}),
-            'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password'}),
-            'course': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'course'}),
-            'group': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'group'}),
+            "full_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "full_name"}
+            ),
+            "email": forms.EmailInput(
+                attrs={"class": "form-control", "placeholder": "email"}
+            ),
+            "password": forms.PasswordInput(
+                attrs={"class": "form-control", "placeholder": "password"}
+            ),
+            "course": forms.NumberInput(
+                attrs={"class": "form-control", "placeholder": "course"}
+            ),
+            "group": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "group"}
+            ),
         }
-        labels = {'password': 'Пароль'}
+        labels = {"password": "Пароль"}
 
     institute = forms.ModelChoiceField(
-        widget=forms.Select(attrs={'class': 'form-select', 'placeholder': 'institute'}),
+        widget=forms.Select(attrs={"class": "form-select", "placeholder": "institute"}),
         queryset=MauInstitute.objects.all(),
-        empty_label='Открыть меню',
-        to_field_name='name',
-        label='Институт',
+        empty_label="Открыть меню",
+        to_field_name="name",
+        label="Институт",
     )
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.set_password(self.cleaned_data['password'])
+        user.set_password(self.cleaned_data["password"])
         return user
 
 
 class UserLoginForm(forms.Form):
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'example@example.com'}),
-        label='Email',
-        label_suffix='',
-
+        widget=forms.EmailInput(
+            attrs={"class": "form-control", "placeholder": "example@example.com"}
+        ),
+        label="Email",
+        label_suffix="",
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password'}),
-        label='Пароль',
-        label_suffix='',
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "password"}
+        ),
+        label="Пароль",
+        label_suffix="",
     )
 
     error_messages = {
@@ -68,7 +81,7 @@ class UserLoginForm(forms.Form):
             )
             if self.user_cache is None:
                 for field in self.fields.values():
-                    field.widget.attrs['class'] += ' error-input'
+                    field.widget.attrs["class"] += " error-input"
 
                 raise self.get_invalid_login_error()
             else:
@@ -105,22 +118,34 @@ class UserLoginForm(forms.Form):
 
 class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ввод'}),
-        label='Email',
-        label_suffix='',
+        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "Ввод"}),
+        label="Email",
+        label_suffix="",
     )
 
 
 class CustomSetPasswordForm(SetPasswordForm):
     new_password1 = forms.CharField(
-        label='Новый пароль',
-        label_suffix='',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password1', 'autocomplete': 'new-password'}),
+        label="Новый пароль",
+        label_suffix="",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "password1",
+                "autocomplete": "new-password",
+            }
+        ),
         strip=False,
     )
     new_password2 = forms.CharField(
-        label='Подтверждение нового пароля',
-        label_suffix='',
+        label="Подтверждение нового пароля",
+        label_suffix="",
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'password2', 'autocomplete': 'new-password'}),
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "password2",
+                "autocomplete": "new-password",
+            }
+        ),
     )

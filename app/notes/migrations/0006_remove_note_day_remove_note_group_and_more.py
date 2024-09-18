@@ -6,29 +6,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notes', '0005_alter_note_expired_date_alter_note_text'),
+        ("notes", "0005_alter_note_expired_date_alter_note_text"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='note',
-            name='day',
+            model_name="note",
+            name="day",
         ),
         migrations.RemoveField(
-            model_name='note',
-            name='group',
+            model_name="note",
+            name="group",
         ),
         migrations.RemoveField(
-            model_name='note',
-            name='lesson_number',
+            model_name="note",
+            name="lesson_number",
         ),
         migrations.RemoveField(
-            model_name='note',
-            name='schedule_name',
+            model_name="note",
+            name="schedule_name",
         ),
         migrations.AddField(
-            model_name='note',
-            name='location',
-            field=models.CharField(null=True, unique=True, verbose_name='расположение'),
+            model_name="note",
+            name="location",
+            field=models.CharField(null=True, unique=True, verbose_name="расположение"),
         ),
     ]

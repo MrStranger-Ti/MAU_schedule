@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -25,24 +26,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-k-nlhgsc-7js6kcoy6bijf8zff(t1ebrftyo$7rx_h7yg5%$jc')
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "django-insecure-k-nlhgsc-7js6kcoy6bijf8zff(t1ebrftyo$7rx_h7yg5%$jc"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', '0') == '1'
+DEBUG = os.getenv("DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    '0.0.0.0',
-] + (os.getenv('ALLOWED_HOSTS').split(','))
+    "127.0.0.1",
+    "0.0.0.0",
+] + (os.getenv("ALLOWED_HOSTS").split(","))
 
 INTERNAL_IPS = [
-    '127.0.0.1',
-    '0.0.0.0',
+    "127.0.0.1",
+    "0.0.0.0",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://147.45.103.191:1337',
+    "http://127.0.0.1:8000",
+    "http://147.45.103.191:1337",
 ]
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
@@ -51,70 +54,68 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    'debug_toolbar',
-
-    'mau_auth.apps.MauAuthConfig',
-    'schedule.apps.ScheduleConfig',
-    'profiles.apps.ProfilesConfig',
-    'notes.apps.NotesConfig',
-    'core.apps.CoreConfig',
-    'bookmarks.apps.BookmarksConfig',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "debug_toolbar",
+    "mau_auth.apps.MauAuthConfig",
+    "schedule.apps.ScheduleConfig",
+    "profiles.apps.ProfilesConfig",
+    "notes.apps.NotesConfig",
+    "core.apps.CoreConfig",
+    "bookmarks.apps.BookmarksConfig",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'app.urls'
+ROOT_URLCONF = "app.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'core.context_processors.schedule_data',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "core.context_processors.schedule_data",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'app.wsgi.application'
+WSGI_APPLICATION = "app.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
-        'TEST': {
-            'NAME': 'test_mau',
-        }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+        "TEST": {
+            "NAME": "test_mau",
+        },
     }
 }
 
@@ -124,16 +125,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'mau_auth.validators.CustomUserAttributeSimilarityValidator',
+        "NAME": "mau_auth.validators.CustomUserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'mau_auth.validators.CustomMinimumLengthValidator',
+        "NAME": "mau_auth.validators.CustomMinimumLengthValidator",
     },
     {
-        'NAME': 'mau_auth.validators.CustomCommonPasswordValidator',
+        "NAME": "mau_auth.validators.CustomCommonPasswordValidator",
     },
     {
-        'NAME': 'mau_auth.validators.CustomNumericPasswordValidator',
+        "NAME": "mau_auth.validators.CustomNumericPasswordValidator",
     },
 ]
 
@@ -141,9 +142,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = "ru"
 
-TIME_ZONE = os.getenv('TIME_ZONE', 'UTC')
+TIME_ZONE = os.getenv("TIME_ZONE", "UTC")
 
 USE_I18N = True
 
@@ -153,73 +154,73 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / "static",
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # Authentication
 
-AUTH_USER_MODEL = 'mau_auth.MauUser'
+AUTH_USER_MODEL = "mau_auth.MauUser"
 
-LOGIN_URL = reverse_lazy('mau_auth:login')
-LOGIN_REDIRECT_URL = reverse_lazy('schedule:group_schedule')
-LOGOUT_REDIRECT_URL = reverse_lazy('core:index')
+LOGIN_URL = reverse_lazy("mau_auth:login")
+LOGIN_REDIRECT_URL = reverse_lazy("schedule:group_schedule")
+LOGOUT_REDIRECT_URL = reverse_lazy("core:index")
 
 
 # Email
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-DEFAULT_FROM_EMAIL = 'mauadmin@mauniver.ru'
+DEFAULT_FROM_EMAIL = "mauadmin@mauniver.ru"
 
 
 # Mau data
 
-SCHEDULE_URL = os.getenv('SCHEDULE_URL')
+SCHEDULE_URL = os.getenv("SCHEDULE_URL")
 
 MAU_DOMAINS = [
-    'masu.edu.ru',
-    'mstu.edu.ru',
-    'mauniver.ru',
+    "masu.edu.ru",
+    "mstu.edu.ru",
+    "mauniver.ru",
 ]
 
-GROUP_SCHEDULE_NAME = 'group'
-TEACHER_SCHEDULE_NAME = 'teacher'
-DEVELOPER_URL = os.getenv('DEVELOPER_URL')
+GROUP_SCHEDULE_NAME = "group"
+TEACHER_SCHEDULE_NAME = "teacher"
+DEVELOPER_URL = os.getenv("DEVELOPER_URL")
 
 WEEKDAYS_NAMES = {
-    0: 'Понедельник',
-    1: 'Вторник',
-    2: 'Среда',
-    3: 'Четверг',
-    4: 'Пятница',
-    5: 'Суббота',
-    6: 'Воскресенье',
+    0: "Понедельник",
+    1: "Вторник",
+    2: "Среда",
+    3: "Четверг",
+    4: "Пятница",
+    5: "Суббота",
+    6: "Воскресенье",
 }
 
 
 # Redis
 
-REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
-REDIS_PORT = '6379'
+REDIS_HOST = os.getenv("REDIS_HOST", "127.0.0.1")
+REDIS_PORT = "6379"
 
 
 # Cache
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://{REDIS_HOST}:6379/0',
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:6379/0",
     },
 }
 
@@ -229,24 +230,24 @@ SCHEDULE_CACHE_TIME = 60 * 20
 # Data Migrations
 
 INSTITUTES = [
-    'ЕТИ',
-    'ИГ и СН',
-    'ИИС и ЦТ',
-    'ИКИ и П',
-    'ИП и П',
-    'ИПАТ',
-    'МА',
-    'МБИ',
-    'ФФК и С',
-    'ЮФ',
+    "ЕТИ",
+    "ИГ и СН",
+    "ИИС и ЦТ",
+    "ИКИ и П",
+    "ИП и П",
+    "ИПАТ",
+    "МА",
+    "МБИ",
+    "ФФК и С",
+    "ЮФ",
 ]
 
 
 # Celery
 
-CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_URL = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
 CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'visibility_timeout': 3600,
-    'max_retries': 3,
+    "visibility_timeout": 3600,
+    "max_retries": 3,
 }
-CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_RESULT_BACKEND = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"

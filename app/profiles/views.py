@@ -11,24 +11,24 @@ User = get_user_model()
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = 'profiles/profile.html'
+    template_name = "profiles/profile.html"
 
 
 class ProfileUpdateView(LoginRequiredMixin, FormView):
-    template_name = 'profiles/profile_update.html'
+    template_name = "profiles/profile_update.html"
     form_class = ProfileUpdateForm
-    success_url = reverse_lazy('profiles:profile')
+    success_url = reverse_lazy("profiles:profile")
 
     def form_valid(self, form):
         user = self.request.user
-        user.full_name = form.cleaned_data['full_name']
-        user.institute = form.cleaned_data['institute']
-        user.course = form.cleaned_data['course']
-        user.group = form.cleaned_data['group']
+        user.full_name = form.cleaned_data["full_name"]
+        user.institute = form.cleaned_data["institute"]
+        user.course = form.cleaned_data["course"]
+        user.group = form.cleaned_data["group"]
         user.save()
 
         return super().form_valid(form)
-    
+
     def form_invalid(self, form):
         add_error_class(form)
         return super().form_invalid(form)
@@ -36,16 +36,16 @@ class ProfileUpdateView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        form = context.get('form')
+        form = context.get("form")
         if not form.errors:
             user = self.request.user
             prepared_user_data = {
-                'full_name': user.full_name,
-                'institute': user.institute,
-                'course': user.course,
-                'group': user.group,
+                "full_name": user.full_name,
+                "institute": user.institute,
+                "course": user.course,
+                "group": user.group,
             }
             form = self.form_class(prepared_user_data)
-            context['form'] = form
+            context["form"] = form
 
         return context

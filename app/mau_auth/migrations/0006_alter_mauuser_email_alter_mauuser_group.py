@@ -7,18 +7,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mau_auth', '0005_alter_mauuser_group_alter_mauuser_full_name_and_more'),
+        ("mau_auth", "0005_alter_mauuser_group_alter_mauuser_full_name_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='mauuser',
-            name='email',
-            field=models.EmailField(max_length=254, unique=True, validators=[mau_auth.validators.validate_email], verbose_name='Email'),
+            model_name="mauuser",
+            name="email",
+            field=models.EmailField(
+                max_length=254,
+                unique=True,
+                validators=[mau_auth.validators.validate_email],
+                verbose_name="Email",
+            ),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='group',
-            field=models.CharField(max_length=20, null=True, verbose_name='Группа'),
+            model_name="mauuser",
+            name="group",
+            field=models.CharField(max_length=20, null=True, verbose_name="Группа"),
         ),
     ]
