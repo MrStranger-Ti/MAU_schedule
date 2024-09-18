@@ -1,52 +1,72 @@
-import re
-
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
-from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseForbidden
+from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import TemplateView
-from django.core.cache import cache
 from django.conf import settings
 
-from mau_utils.mau_parser import ScheduleParser
-from mau_utils.mau_requests import get_teachers_urls, get_schedule_data
+from schedule.parser import (
+    GroupScheduleParser,
+    TeacherScheduleParser,
+    TeacherLinksParser,
+)
 from schedule.forms import WeeksForm
 
 
-class GroupScheduleView(LoginRequiredMixin, View):
+class GroupScheduleView(LoginRequiredMixin, TemplateView):
     template_name = 'schedule/group/group_schedule.html'
+
+
+class SearchTeacherView(LoginRequiredMixin, TemplateView):
+    template_name = 'schedule/teacher/search_teacher.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bookmarks'] = self.request.user.bookmarks.all()
+        context['original_schedule_url'] = settings.SCHEDULE_URL
+        return context
+
+
+class TeacherScheduleView(View):
+    template_name = 'schedule/teacher/teacher_schedule.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
         context = {
+            'teacher_key': request.GET.get('key'),
+            'teacher_name': request.GET.get('name'),
             'page': request.GET.get('page', 1),
+            'table_type': 'teacher',
+            'bookmarks': request.user.bookmarks.all(),
         }
         return render(request, self.template_name, context=context)
 
 
-class AjaxGetGroupScheduleView(View):
+class AjaxView(UserPassesTestMixin, View):
+    def test_func(self) -> bool:
+        if self.request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+            return False
+        return True
+
+    def handle_no_permission(self):
+        return HttpResponseForbidden()
+
+
+class AjaxGetGroupScheduleView(AjaxView):
     template_name = 'schedule/ajax/table.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-            return HttpResponseNotFound()
-
         user = request.user
         period = request.GET.get('period')
 
-        mau_parser = ScheduleParser(user, period=period, teacher_schedule=False)
-        schedule_data = cache.get(f'schedule_group_{user.group}_week_{period or "current"}')
-        if not schedule_data:
-            schedule_data = mau_parser.get_group_schedule()
-            cache.set(
-                f'schedule_group_{user.group}_week_{period or "current"}',
-                schedule_data,
-                settings.SCHEDULE_CACHE_TIME,
-            )
+        parser = GroupScheduleParser(user, period=period)
+        schedule_data = parser.get_data()
 
-        form = WeeksForm()
-        form.fields['weeks_periods'].choices = mau_parser.storage['weeks_options']
+        form = WeeksForm({'periods': parser.parsing_storage.get('current_week_value')})
+        form.set_choices(
+            'periods',
+            parser.parsing_storage.get('weeks_options', []),
+        )
 
         context = {
             'form': form,
@@ -68,79 +88,40 @@ class AjaxGetGroupScheduleView(View):
         return response
 
 
-class SearchTeacherView(LoginRequiredMixin, TemplateView):
-    template_name = 'schedule/teacher/search_teacher.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['bookmarks'] = self.request.user.bookmarks.all()
-        context['original_schedule_url'] = settings.SCHEDULE_URL
-        return context
-
-
-class AjaxTeachersListView(View):
+class AjaxTeachersListView(AjaxView):
     template_name = 'schedule/ajax/teachers.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-            return HttpResponseNotFound()
-
         query = self.request.GET.get('query')
-        teachers_links = cache.get(f'query_{query}')
-        if not teachers_links:
-            teachers_links = get_teachers_urls(query)
-            cache.set(f'query_{query}', teachers_links, settings.SCHEDULE_CACHE_TIME)
-
+        parser = TeacherLinksParser(request.user)
+        teachers_links = parser.get_data(query)
         return render(request, self.template_name, context={'teachers_links': teachers_links})
 
 
-class TeacherScheduleView(View):
-    template_name = 'schedule/teacher/teacher_schedule.html'
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        context = {
-            'teacher_key': request.GET.get('key'),
-            'teacher_name': request.GET.get('name'),
-            'page': request.GET.get('page', 1),
-            'table_type': 'teacher',
-            'bookmarks': request.user.bookmarks.all(),
-        }
-        return render(request, self.template_name, context=context)
-
-
-class AjaxGetTeacherScheduleView(View):
+class AjaxGetTeacherScheduleView(AjaxView):
     template_name = 'schedule/ajax/table.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-            return HttpResponseNotFound()
-
         teacher_name = request.GET.get('name')
         teacher_key = request.GET.get('key')
-        page = request.GET.get('page', 1)
+        period = request.GET.get('period')
 
-        if not re.fullmatch(r'[1-3]', page):
-            page = 1
-        else:
-            page = int(page)
+        parser = TeacherScheduleParser(request.user, teacher_key, period=period)
+        schedule_data = parser.get_data()
 
-        schedule_data = cache.get(f'teacher_schedule_{teacher_key}_page_{page}')
-        if not schedule_data:
-            url = settings.SCHEDULE_URL + f'schedule2.php?key={teacher_key}'
-            schedule_data = get_schedule_data(url, teacher_schedule=True, week_step=page - 1)
-            cache.set(
-                f'teacher_schedule_{teacher_key}_page_{page}',
-                schedule_data,
-                settings.SCHEDULE_CACHE_TIME,
-            )
+        form = WeeksForm({'periods': parser.parsing_storage.get('current_week_value')})
+        form.set_choices(
+            'periods',
+            parser.parsing_storage.get('weeks_options', []),
+        )
 
         context = {
+            'form': form,
             'schedule_data': schedule_data,
-            'current_page': page,
             'teacher_name': teacher_name,
             'teacher_key': teacher_key,
             'table': settings.TEACHER_SCHEDULE_NAME,
-            'bookmarks':  self.request.user.bookmarks.all(),
+            'bookmarks': self.request.user.bookmarks.all(),
         }
 
         return JsonResponse({

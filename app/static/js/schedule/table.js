@@ -27,7 +27,7 @@ const getSchedule = function (url) {
 
             prepareBookmarkDisplay()
             prepareBookmarkAdd()
-            prepareScheduleForm()
+            prepareScheduleForm(url)
 
             const spinner = document.querySelector('.spinner-border')
             spinner.classList.remove('spinner-border-visible')
@@ -36,12 +36,16 @@ const getSchedule = function (url) {
 }
 
 
-const prepareScheduleForm = function () {
-    document.querySelector('.schedule__form').addEventListener('submit', event => {
-        const value = event.target.elements.weeks_periods.value
-        const url = getIndex() + `/schedule/get-group-schedule/?week=${value}`
+const prepareScheduleForm = function (url) {
+    const form = document.querySelector('.schedule__form')
+    if (form) {
+        addEventListener('submit', event => {
+            const period = event.target.elements[0].querySelector(':checked').text
+            url = new URL(url)
+            url.searchParams.set('period', period)
 
-        getSchedule(url)
-        event.preventDefault()
-    })
+            getSchedule(url.href)
+            event.preventDefault()
+        })
+    }
 }

@@ -350,7 +350,6 @@
 
 .schedule__list {
     width: 100%;
-    margin-bottom: 20px;
 }
 
 .schedule__table-block:not(:last-child) {

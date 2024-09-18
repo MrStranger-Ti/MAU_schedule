@@ -41,10 +41,12 @@ c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
       </button>
     </div>
   {% endif %}
-  <form class="schedule__form" action="." method="get">
-    {{ form }}
-    <button>Отправить</button>
-  </form>
+  {% if form.fields.periods.choices %}
+    <form class="schedule__form" action="." method="get">
+      {{ form }}
+      <button>Отправить</button>
+    </form>
+  {% endif %}
 </div>
 {% if schedule_data %}
   <div class="schedule__list">
@@ -89,6 +91,6 @@ c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
 {% else %}
   <div class="schedule__info-block">
     <p class="schedule__info">Расписание не найдено. Проверьте свои данные в профиле.</p>
-    <p class="schedule__info">Также неполадки могут быть связаны с неработающим расписанием на <a class="dark-link link" href="{{ original_schedule_url }}" target="_blank">сайте</a>университета.</p>
+    <p class="schedule__info">Также неполадки могут быть связаны с неработающим расписанием на <a class="dark-link link" href="{{ original_schedule_url }}" target="_blank">сайте</a> университета.</p>
   </div>
 {% endif %}
