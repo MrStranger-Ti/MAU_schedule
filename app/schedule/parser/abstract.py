@@ -91,7 +91,8 @@ class ScheduleParser(Parser, ABC):
             soup = self.get_soup(response)
             week_monday = date(*map(int, start.split("-")))
             schedule_data = self._parse_schedule(soup, week_monday)
-            self.schedule_storage["schedule_data"] = schedule_data
+            if schedule_data:
+                self.schedule_storage["schedule_data"] = schedule_data
 
     def _get_start_end(self) -> Tuple[str, str]:
         start, end = self._get_start_end_period(self.period)
@@ -127,12 +128,15 @@ class ScheduleParser(Parser, ABC):
                 break
 
     def _collect_weeks_options(self, soup: bs4.BeautifulSoup) -> None:
-        date_options = soup.select_one("select[name=pers]").find_all(
-            "option",
-            value=lambda value: int(value) > 0,
-        )
-        weeks_options = [
-            (option.get("value"), clean_date_period(option.text))
-            for option in date_options
-        ]
-        self.parsing_storage["weeks_options"] = weeks_options
+        select = soup.select_one("select[name=pers]")
+        if select:
+            date_options = select.find_all(
+                "option",
+                value=lambda value: int(value) > 0,
+            )
+            weeks_options = [
+                (option.get("value"), clean_date_period(option.text))
+                for option in date_options
+            ]
+            if weeks_options:
+                self.parsing_storage["weeks_options"] = weeks_options

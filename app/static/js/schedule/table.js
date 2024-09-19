@@ -4,7 +4,7 @@ const getSchedule = function (url) {
     spinner.classList.remove('spinner-border-hidden')
     spinner.classList.add('spinner-border-visible')
 
-    fetch(url, {
+    return fetch(url, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
         },
@@ -27,7 +27,6 @@ const getSchedule = function (url) {
 
             prepareBookmarkDisplay()
             prepareBookmarkAdd()
-            prepareScheduleForm(url)
 
             const spinner = document.querySelector('.spinner-border')
             spinner.classList.remove('spinner-border-visible')

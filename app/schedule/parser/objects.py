@@ -44,11 +44,14 @@ class GroupScheduleParser(ScheduleParser):
             self._collect_institute_value(soup)
 
     def _collect_institute_value(self, soup: bs4.BeautifulSoup) -> None:
-        institute_option = soup.select_one("select[name=facs]").find(
-            "option",
-            string=self.user.institute,
-        )
-        self.parsing_storage["institute_value"] = institute_option.get("value")
+        select = soup.select_one("select[name=facs]")
+        if select:
+            institute_option = select.find(
+                "option",
+                string=self.user.institute,
+            )
+            if institute_option:
+                self.parsing_storage["institute_value"] = institute_option.get("value")
 
     def _collect_group_url(self) -> None:
         weeks_options = self.parsing_storage.get("weeks_options")

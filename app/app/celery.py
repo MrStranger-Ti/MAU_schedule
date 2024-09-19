@@ -13,6 +13,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     "check_and_delete_note": {
         "task": "notes.tasks.delete_expired_notes",
-        "schedule": crontab(minute=0, hour=0),
+        "schedule": crontab(minute="0", hour="0"),
     },
 }

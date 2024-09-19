@@ -25,7 +25,6 @@ class Note(models.Model):
         return f"Заметка, ID: {self.pk}"
 
     def clean(self):
-        print(self.location)
         schedule_name, _, day, lesson_number = self.location.split(":")
 
         if schedule_name not in (
