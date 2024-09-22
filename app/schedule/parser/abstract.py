@@ -35,7 +35,7 @@ class Parser(ABC):
             response = requests.get(
                 url,
                 headers={"User-Agent": self.user_agent_manager.random},
-                timeout=5,
+                timeout=settings.REQUESTS_TIMEOUT,
                 **kwargs,
             )
         except requests.exceptions.Timeout:

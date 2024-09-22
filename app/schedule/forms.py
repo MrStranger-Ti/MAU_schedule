@@ -4,7 +4,15 @@ from django import forms
 
 
 class WeeksForm(forms.Form):
-    periods = forms.ChoiceField(label="Период")
+    EMPTY_CHOICE = [("", "Выберите период")]
 
-    def set_choices(self, field_name: str, value: Iterable) -> None:
-        self.fields[field_name].choices = value
+    periods = forms.ChoiceField(
+        widget=forms.Select(),
+    )
+
+    def set_period_choices(self, choices: Iterable) -> None:
+        self._get_empty_choice()
+        self.fields["periods"].choices += choices
+
+    def _get_empty_choice(self):
+        self.fields["periods"].choices = self.EMPTY_CHOICE

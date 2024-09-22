@@ -8,13 +8,13 @@
 {% block schedule %}
   <div class="schedule__title-block flex">
     <div class="schedule__title-left-block flex">
-      <h1 class="schedule__title title">Расписание преподавателей</h1>
+      <h1 class="schedule__title title">Преподаватели</h1>
       <div class="schedule__options">
         {% include 'bookmarks/bookmarks.html' %}
       </div>
     </div>
-    <form class="schedule__form flex" name="search-teacher" method="get">
-      <input class="form-control" type="text" name="query" id="floatingInput" placeholder="Введите преподавателя">
+    <form class="schedule__form schedule__teacher-searching-form flex" name="search-teacher" method="get">
+      <input type="text" name="query" id="floatingInput" placeholder="Введите преподавателя">
       <button class="btn schedule__search-btn" type="submit">
         <span class="spinner-border spinner-border-sm btn-spinner-hidden" role="status" aria-hidden="true"></span>
         <span class="schedule__btn-text">Найти</span>

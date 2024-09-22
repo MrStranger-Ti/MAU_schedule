@@ -24,17 +24,18 @@
 }
 
 .schedule__form {
+    min-width: 300px;
     justify-content: center;
     gap: 10px;
 }
 
-.schedule_teacher-links {
-    padding-left: var(--content-padding);
+.schedule__period-form select {
+    padding-left: 5px;
+    padding-top: 3px;
 }
 
-.schedule__form > input {
-    min-width: 300px;
-    font-size: 18px;
+.schedule_teacher-links {
+    padding-left: var(--content-padding);
 }
 
 .schedule__bookmarks {
@@ -136,13 +137,12 @@
 
 @media (max-width: 1024px) {
     .schedule__title-block {
-        justify-content: center;
         flex-wrap: wrap;
         padding: 0 16px;
     }
 
-    .schedule__form > input {
-        min-width: auto;
+    .schedule__teacher-searching-form > input {
+        font-size: 16px;
     }
 
     .schedule__info,
@@ -153,7 +153,7 @@
 
 @media (max-width: 768px) {
     .schedule__title-block {
-        padding: 0 10px;
+        padding: 0;
     }
 
     .schedule__info,
@@ -399,9 +399,10 @@ tr:nth-child(2n + 1) td:nth-child(5) {
     width: 15%;
 }
 
+/* rgba from dark-blue variable */
 tr td {
     padding: 10px;
-    border-top: 1px solid var(--dark-blue);
+    border-top: 1px solid rgba(26, 69, 104, 50%);
     font-size: 18px;
 }
 
@@ -458,45 +459,9 @@ tbody tr:nth-child(2n + 1):hover {
     background-image: url("/static/images/icons/note.svg");
 }
 
-.schedule__pagination {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-}
-
 .schedule__arrow-block {
     width: 30px;
     height: 30px;
-}
-
-.schedule__pagination-arrow {
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.schedule__pagination-arrow > svg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 50%;
-    transform: translate(0, -50%);
-    fill: var(--dark-blue);
-    transition: fill ease-in-out 0.3s;
-}
-
-.schedule__pagination-arrow > svg:hover {
-    fill: var(--light);
-}
-
-.schedule__left-pagination-arrow {
-    rotate: 180deg;
-}
-
-.schedule__pagination-page-number {
-    font-size: 28px;
-    font-weight: 600;
 }
 
 @media (max-width: 1024px) {
@@ -548,7 +513,7 @@ tbody tr:nth-child(2n + 1):hover {
         border-top: none;
     }
 
-    tr:nth-child(2n + 1) td:nth-child(1) {
+    tr:nth-child(2n + 1) td:nth-child(n) {
         width: 100%;
     }
 }

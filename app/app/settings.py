@@ -184,9 +184,9 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "mauadmin@mauniver.ru"
 
 
-# Mau data
+# Parsing
 
-SCHEDULE_URL = os.getenv("SCHEDULE_URL")
+SCHEDULE_URL = "https://www.mauniver.ru/student/timetable/new/"
 
 MAU_DOMAINS = [
     "masu.edu.ru",
@@ -196,7 +196,13 @@ MAU_DOMAINS = [
 
 GROUP_SCHEDULE_NAME = "group"
 TEACHER_SCHEDULE_NAME = "teacher"
-DEVELOPER_URL = os.getenv("DEVELOPER_URL")
+
+REQUESTS_TIMEOUT = os.getenv("REQUESTS_TIMEOUT", 5)
+if REQUESTS_TIMEOUT.isdigit():
+    REQUESTS_TIMEOUT = int(REQUESTS_TIMEOUT)
+else:
+    REQUESTS_TIMEOUT = 5
+
 
 WEEKDAYS_NAMES = {
     0: "Понедельник",
@@ -207,6 +213,8 @@ WEEKDAYS_NAMES = {
     5: "Суббота",
     6: "Воскресенье",
 }
+
+DEVELOPER_URL = os.getenv("DEVELOPER_URL")
 
 
 # Redis

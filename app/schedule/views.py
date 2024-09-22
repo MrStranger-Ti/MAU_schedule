@@ -63,10 +63,7 @@ class AjaxGetGroupScheduleView(AjaxView):
         schedule_data = parser.get_data()
 
         form = WeeksForm({"periods": parser.parsing_storage.get("current_week_value")})
-        form.set_choices(
-            "periods",
-            parser.parsing_storage.get("weeks_options", []),
-        )
+        form.set_period_choices(parser.parsing_storage.get("weeks_options", []))
 
         context = {
             "form": form,
@@ -116,10 +113,7 @@ class AjaxGetTeacherScheduleView(AjaxView):
         schedule_data = parser.get_data()
 
         form = WeeksForm({"periods": parser.parsing_storage.get("current_week_value")})
-        form.set_choices(
-            "periods",
-            parser.parsing_storage.get("weeks_options", []),
-        )
+        form.set_period_choices(parser.parsing_storage.get("weeks_options", []))
 
         context = {
             "form": form,
