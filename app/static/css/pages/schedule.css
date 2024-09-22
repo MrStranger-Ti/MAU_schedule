@@ -190,6 +190,24 @@
     gap: 5px;
 }
 
+.note-block__adaptive-btns {
+    display: none;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.note-block__adaptive-btns button {
+    padding: 0;
+    border: 1px solid var(--dark-blue);
+    background-color: transparent;
+}
+
+.note-block__adaptive-btns button svg {
+    width: 45px;
+    height: 45px;
+    fill: var(--dark-blue);
+}
+
 .sun-editor {
     margin-bottom: 5px;
     border: 1px solid var(--light-blue);
@@ -293,6 +311,14 @@
 }
 
 @media (max-width: 768px) {
+    .note-block__btns {
+        display: none;
+    }
+
+    .note-block__adaptive-btns {
+        display: inherit;
+    }
+
     .note-block__card {
         padding: 5px 0;
     }
