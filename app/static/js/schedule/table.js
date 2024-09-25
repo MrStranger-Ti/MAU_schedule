@@ -1,8 +1,7 @@
 const getSchedule = function (url) {
     const spinner = document.querySelector('.spinner-border')
     document.querySelector('.schedule__content').innerHTML = ''
-    spinner.classList.remove('spinner-border-hidden')
-    spinner.classList.add('spinner-border-visible')
+    spinner.removeAttribute('hidden')
 
     return fetch(url, {
         headers: {
@@ -27,10 +26,10 @@ const getSchedule = function (url) {
 
             prepareBookmarkDisplay()
             prepareBookmarkAdd()
+            prepareScheduleForm(url)
 
             const spinner = document.querySelector('.spinner-border')
-            spinner.classList.remove('spinner-border-visible')
-            spinner.classList.add('spinner-border-hidden')
+            spinner.setAttribute('hidden', '')
         })
 }
 
@@ -38,13 +37,17 @@ const getSchedule = function (url) {
 const prepareScheduleForm = function (url) {
     const form = document.querySelector('.schedule__form')
     if (form) {
-        addEventListener('submit', event => {
-            const period = event.target.elements[0].querySelector(':checked').text
-            url = new URL(url)
-            url.searchParams.set('period', period)
+        const searchBtn = form.querySelector('button')
+        searchBtn.addEventListener('click', event => {
+            const period = form.elements[0].querySelector(':checked')
+            if (period.value) {
+                url = new URL(url)
+                url.searchParams.set('period', period.text)
 
-            getSchedule(url.href)
-            event.preventDefault()
+                getSchedule(url.href)
+            } else {
+                showMauNotification('Выберите период', 'error')
+            }
         })
     }
 }

@@ -1,10 +1,11 @@
 import abc
 from abc import ABC
 from datetime import date
-from typing import Any, Tuple
+from typing import Any, Tuple, List, Dict
 
 import bs4
 import requests
+from bs4 import BeautifulSoup
 from django.conf import settings
 from fake_useragent import UserAgent
 
@@ -65,16 +66,16 @@ class ScheduleParser(Parser, ABC):
     def _parse_schedule(self):
         pass
 
-    def get_data(self):
+    def get_data(self) -> Dict[date, List[List[str]]]:
         schedule_data = self.schedule_storage.get("schedule_data")
-        if not schedule_data:
+        week_options = self.parsing_storage.get("weeks_options")
+        if not schedule_data or not week_options:
             schedule_data = self._get_schedule()
 
-        self._collect_current_week_option()
         return schedule_data
 
-    def _set_default_period(self):
-        current_week = date(2024, 7, 2).isocalendar()
+    def _set_default_period(self) -> None:
+        current_week = date.today().isocalendar()
         monday = date.fromisocalendar(current_week[0], current_week[1], 1)
         sunday = date.fromisocalendar(current_week[0], current_week[1], 7)
         self.period = monday.strftime("%d.%m.%Y") + "-" + sunday.strftime("%d.%m.%Y")
@@ -105,8 +106,6 @@ class ScheduleParser(Parser, ABC):
         if self.period not in storage_periods:
             self._change_period_by_weeks_options()
 
-        self._collect_current_week_option()
-
     def _change_period_by_weeks_options(self) -> None:
         weeks_options = self.parsing_storage.get("weeks_options", [])
         for _, period in weeks_options:
@@ -121,11 +120,12 @@ class ScheduleParser(Parser, ABC):
     def _get_start_end_period(week_period: str) -> Tuple[str, ...]:
         return tuple(map(convert_to_iso_8601, week_period.split("-")))
 
-    def _collect_current_week_option(self) -> None:
+    def get_current_week_option(self) -> str | None:
         for option in self.parsing_storage.get("weeks_options", []):
             if self.period == option[1]:
-                self.parsing_storage["current_week_value"] = option[0]
-                break
+                return option[0]
+
+        return None
 
     def _collect_weeks_options(self, soup: bs4.BeautifulSoup) -> None:
         select = soup.select_one("select[name=pers]")
@@ -140,3 +140,12 @@ class ScheduleParser(Parser, ABC):
             ]
             if weeks_options:
                 self.parsing_storage["weeks_options"] = weeks_options
+
+    def get_base_soup(self) -> BeautifulSoup | None:
+        response = self.get_response(self.base_url)
+        if response and response.status_code == 200:
+            soup = self.get_soup(response)
+            self._collect_weeks_options(soup)
+            return soup
+
+        return None

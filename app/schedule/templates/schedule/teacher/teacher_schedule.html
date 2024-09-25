@@ -6,18 +6,9 @@
   Расписание преподавателя
 {% endblock %}
 
-{% block schedule %}
-  <div class="schedule__content"></div>
-  <div class="schedule__spinner-block">
-    <div class="spinner-border spinner-border-visible" role="status">
-      <span class="visually-hidden"></span>
-    </div>
-  </div>
-{% endblock %}
-
 {% block html_loaded_scripts %}
   <script>
       const url = getIndex() + '/schedule/get-teacher-schedule/?&key={{ teacher_key }}&name={{ teacher_name }}'
-      document.addEventListener('DOMContentLoaded', () => getSchedule(url).then(_ => prepareScheduleForm(url)))
+      document.addEventListener('DOMContentLoaded', () => getSchedule(url))
   </script>
 {% endblock %}

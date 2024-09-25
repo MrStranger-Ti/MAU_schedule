@@ -30,18 +30,11 @@ class GroupScheduleParser(ScheduleParser):
         self.parsing_storage.save_db()
         return schedule_data
 
-    def _collect_parsing_params(self):
-        group_url = self.parsing_storage.get("group_url")
-        if not group_url:
-            self._collect_params_for_group_url()
-            self._collect_group_url()
-
-    def _collect_params_for_group_url(self) -> None:
-        response = self.get_response(self.base_url)
-        if response and response.status_code == 200:
-            soup = self.get_soup(response)
-            self._collect_weeks_options(soup)
+    def _collect_parsing_params(self) -> None:
+        if not self.parsing_storage.get("group_url"):
+            soup = self.get_base_soup()
             self._collect_institute_value(soup)
+            self._collect_group_url()
 
     def _collect_institute_value(self, soup: bs4.BeautifulSoup) -> None:
         select = soup.select_one("select[name=facs]")
@@ -135,19 +128,13 @@ class TeacherScheduleParser(ScheduleParser):
         )
 
     def _get_schedule(self) -> Dict[Dict, List]:
-        self._find_weeks_options()
+        self.get_base_soup()
         self._collect_schedule(self.teacher_url)
 
         schedule_data = self.schedule_storage.get("schedule_data")
         self.schedule_storage.save_db()
         self.parsing_storage.save_db()
         return schedule_data
-
-    def _find_weeks_options(self) -> None:
-        response = self.get_response(self.base_url)
-        if response and response.status_code == 200:
-            soup = self.get_soup(response)
-            self._collect_weeks_options(soup)
 
     def _parse_schedule(
         self, soup: bs4.BeautifulSoup, week_monday: date

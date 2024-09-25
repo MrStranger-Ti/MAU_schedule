@@ -22,7 +22,12 @@
   <section class="schedule">
     <div class="container schedule__container">
       {% block schedule %}
-
+        <div class="schedule__content"></div>
+        <div class="schedule__spinner-block">
+          <div class="spinner-border spinner-border-visible" role="status" hidden>
+            <span class="visually-hidden"></span>
+          </div>
+        </div>
       {% endblock %}
     </div>
   </section>

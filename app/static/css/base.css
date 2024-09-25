@@ -194,6 +194,11 @@ ul {
         padding: 4px 14px;
         font-size: 16px;
     }
+
+    .btn:active {
+        background-color: var(--dark-blue);
+        color: var(--light);
+    }
 }
 
 

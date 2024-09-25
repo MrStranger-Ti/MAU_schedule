@@ -16,16 +16,17 @@
     <form class="schedule__form schedule__teacher-searching-form flex" name="search-teacher" method="get">
       <input type="text" name="query" id="floatingInput" placeholder="Введите преподавателя">
       <button class="btn schedule__search-btn" type="submit">
-        <span class="spinner-border spinner-border-sm btn-spinner-hidden" role="status" aria-hidden="true"></span>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
         <span class="schedule__btn-text">Найти</span>
       </button>
     </form>
   </div>
-  <div class="schedule__info-block">
+  <div class="schedule__teachers-list">
+    <div class="schedule__info-block">
     <p class="schedule__info">Найти преподавателя можно по Фамилии, Имени или Отчеству.</p>
     <p class="schedule__info">Вы также можете посмотреть расписание на <a class="dark-link link" href="{{ original_schedule_url }}" target="_blank">сайте</a> университета.</p>
   </div>
-  <div class="schedule__teachers-list"></div>
+  </div>
 {% endblock %}
 
 {% block html_loaded_scripts %}

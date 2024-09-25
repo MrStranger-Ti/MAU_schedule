@@ -1,3 +1,5 @@
+from audioop import reverse
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
@@ -35,7 +37,6 @@ class TeacherScheduleView(View):
         context = {
             "teacher_key": request.GET.get("key"),
             "teacher_name": request.GET.get("name"),
-            "page": request.GET.get("page", 1),
             "table_type": "teacher",
             "bookmarks": request.user.bookmarks.all(),
         }
@@ -62,7 +63,7 @@ class AjaxGetGroupScheduleView(AjaxView):
         parser = GroupScheduleParser(user, period=period)
         schedule_data = parser.get_data()
 
-        form = WeeksForm({"periods": parser.parsing_storage.get("current_week_value")})
+        form = WeeksForm({"periods": parser.get_current_week_option()})
         form.set_period_choices(parser.parsing_storage.get("weeks_options", []))
 
         context = {
@@ -112,7 +113,7 @@ class AjaxGetTeacherScheduleView(AjaxView):
         parser = TeacherScheduleParser(request.user, teacher_key, period=period)
         schedule_data = parser.get_data()
 
-        form = WeeksForm({"periods": parser.parsing_storage.get("current_week_value")})
+        form = WeeksForm({"periods": parser.get_current_week_option()})
         form.set_period_choices(parser.parsing_storage.get("weeks_options", []))
 
         context = {

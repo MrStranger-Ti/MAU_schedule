@@ -155,15 +155,15 @@ const prepareNoteDisplay = function (noteBlock, text) {
         editor.toolbar.hide()
         editor.disable()
 
-        noteBlock.querySelector('[name="delete"]').addEventListener('click', () => {
-            deleteNote(noteBlock)
+        noteBlock.querySelectorAll('[name="delete"]').forEach(btn => {
+            btn.addEventListener('click', () => deleteNote(noteBlock))
         })
 
-        noteBlock.querySelector('[name="update"]').addEventListener('click', () => {
-            getUpdateNote(noteBlock)
+        noteBlock.querySelectorAll('[name="update"]').forEach(btn => {
+            btn.addEventListener('click', () => getUpdateNote(noteBlock))
         })
 
-        prepareBtnCollapse(noteBlock.querySelector('[name="close"]'))
+        prepareBtnCollapse(noteBlock)
     }
 }
 
@@ -181,7 +181,7 @@ const prepareNoteCreate = function (noteBlock) {
             event.preventDefault()
         })
 
-        prepareBtnCollapse(noteBlock.querySelector('[name="close"]'))
+        prepareBtnCollapse(noteBlock)
     }
 }
 
@@ -201,22 +201,26 @@ const prepareNoteUpdate = function (noteBlock, text) {
             event.preventDefault()
         })
 
-        noteBlock.querySelector('[name="display"]').addEventListener('click', () => {
-            getDisplayNote(noteBlock)
+        noteBlock.querySelectorAll('[name="display"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                getDisplayNote(noteBlock)
+            })
         })
 
-        prepareBtnCollapse(noteBlock.querySelector('[name="close"]'))
+        prepareBtnCollapse(noteBlock)
     }
 }
 
 
-const prepareBtnCollapse = function (btnClose) {
-    btnClose.addEventListener('click', event => {
-        const collapseId = btnClose.closest('.collapse').getAttribute('id')
-        const bsCollapse = new bootstrap.Collapse(`#${collapseId}`, {
-            toggle: false
+const prepareBtnCollapse = function (noteBlock) {
+    noteBlock.querySelectorAll('[name="close"]').forEach(btn => {
+        btn.addEventListener('click', event => {
+            const collapseId = btn.closest('.collapse').getAttribute('id')
+            const bsCollapse = new bootstrap.Collapse(`#${collapseId}`, {
+                toggle: false
+            })
+            bsCollapse.hide()
         })
-        bsCollapse.hide()
     })
 }
 
