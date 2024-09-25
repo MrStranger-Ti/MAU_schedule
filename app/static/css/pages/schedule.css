@@ -1,0 +1,576 @@
+/* Base */
+
+.schedule__container {
+    position: relative;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+.schedule__content {
+    width: 100%;
+}
+
+.schedule__title-block {
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0 24px;
+    margin-bottom: var(--title-margin-bottom);
+    gap: 10px;
+}
+
+.schedule__title-left-block {
+    align-items: center;
+    gap: 20px;
+}
+
+.schedule__form {
+    min-width: 300px;
+    justify-content: center;
+    gap: 10px;
+}
+
+.schedule__period-form select {
+    padding-left: 5px;
+    padding-top: 3px;
+}
+
+.schedule_teacher-links {
+    padding-left: var(--content-padding);
+}
+
+.schedule__bookmarks {
+    height: 100%;
+    font-size: 0;
+}
+
+.schedule__bookmark-link {
+    font-size: 16px;
+    color: var(--dark-blue);
+}
+
+.schedule__bookmark-link:hover {
+    background-color: transparent;
+    color: var(--light-blue);
+}
+
+.schedule__bookmarks-btn {
+    height: 100%;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+.schedule__bookmarks-btn:focus {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.schedule__bookmarks-btn:active:focus {
+    box-shadow: none;
+}
+
+.schedule__bookmarks-btn:hover {
+    background-color: transparent;
+}
+
+.schedule__bookmarks-btn svg {
+    width: 40px;
+    height: 40px;
+    fill: var(--dark-blue);
+    transition: fill ease-in-out 0.3s;
+}
+
+.schedule__bookmarks-btn:hover > svg {
+    fill: var(--light);
+}
+
+.schedule__bookmark-btn {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}
+
+.schedule__bookmark-btn:hover {
+    background-color: transparent;
+}
+
+.schedule__bookmark-btn svg {
+    width: 30px;
+    stroke: var(--dark-blue);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2px;
+    transition: stroke ease-in-out 0.3s;
+}
+
+.schedule__bookmark-btn:hover > svg {
+    stroke: var(--light-blue);
+}
+
+.schedule__bookmarks-empty {
+    margin: 0;
+    text-align: center;
+    line-height: normal;
+}
+
+.schedule__info-block {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+}
+
+.schedule__info {
+    font-size: 24px;
+}
+
+.schedule__info > a {
+    font-size: 24px;
+}
+
+.schedule__info > a::after {
+    opacity: 1;
+}
+
+@media (max-width: 1024px) {
+    .schedule__title-block {
+        padding: 0 16px;
+    }
+
+    .schedule__teacher-searching-form > input {
+        font-size: 16px;
+    }
+
+    .schedule__info,
+    .schedule__info > a {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 768px) {
+    .schedule__title-block {
+        padding: 0;
+    }
+
+    .schedule__info,
+    .schedule__info > a {
+        font-size: 18px;
+    }
+}
+
+
+/* Notes */
+
+.note-block {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border-top: 1px solid var(--dark-blue);
+}
+
+.note-block__card {
+    padding: 30px;
+    border: none;
+    background-color: transparent;
+}
+
+.note-block__form {
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.note-block__btns {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.note-block__adaptive-btns {
+    display: none;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.note-block__adaptive-btns button {
+    padding: 0;
+    background-color: transparent;
+}
+
+.note-block__adaptive-btns button:hover {
+    background-color: transparent;
+}
+
+.note-block__adaptive-btns button svg {
+    width: 45px;
+    height: 45px;
+    fill: var(--dark-blue);
+}
+
+.sun-editor {
+    margin-bottom: 5px;
+    border: 1px solid var(--light-blue);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sun-editor .se-toolbar {
+    outline: 1px solid var(--light-blue);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: var(--light-blue);
+}
+
+.sun-editor .se-btn-module {
+    padding: 2px;
+    border-radius: 8px;
+}
+
+.sun-editor button {
+    color: var(--dark-blue);
+}
+
+/* rgba from variable '--blue' */
+.sun-editor .se-btn-module {
+    border: 1px solid rgba(77, 100, 141, 30%);
+}
+
+.sun-editor .se-btn {
+    padding: 0;
+    background-color: transparent;
+}
+
+.sun-editor .se-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+}
+
+.sun-editor .se-btn-list {
+    font-size: 16px;
+}
+
+.sun-editor .se-btn,
+.sun-editor .se-btn-list {
+    color: var(--dark);
+}
+
+.sun-editor .se-btn > svg,
+.sun-editor .se-btn-list > svg {
+    width: 18px;
+    height: 18px;
+}
+
+.sun-editor .se-btn:disabled {
+    color: gray;
+}
+
+/* rgba from variable --light */
+.sun-editor .se-btn:enabled:focus,
+.sun-editor .se-btn:enabled:hover,
+.sun-editor .se-btn:enabled:active,
+.sun-editor .se-btn:enabled.on,
+.sun-editor .se-btn:enabled.on:hover,
+.sun-editor .se-btn:enabled.active:focus,
+.sun-editor .se-btn:enabled.active:hover {
+    background-color: rgba(219, 236, 244, 60%);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.note-block__editable {
+    white-space: nowrap;
+    overflow-wrap: normal;
+}
+
+.note-block__editable * {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+}
+
+@media (max-width: 1024px) {
+    .sun-editor .se-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .sun-editor .se-btn-list {
+        padding: 0 10px;
+    }
+
+    .sun-editor .se-btn-list > svg,
+    .sun-editor .se-btn-list > svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .note-block__editable * {
+        font-size: 16px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .note-block__btns {
+        display: none;
+    }
+
+    .note-block__adaptive-btns {
+        display: inherit;
+    }
+
+    .note-block__card {
+        padding: 5px 0;
+    }
+
+    .sun-editor .se-btn {
+        width: 26px;
+        height: 26px;
+    }
+
+    .sun-editor .se-btn-list {
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .sun-editor .se-btn-list > svg,
+    .sun-editor .se-btn-list > svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .note-block__editable * {
+        font-size: 14px !important;
+    }
+}
+
+
+/* Spinners */
+
+.schedule__spinner-block {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.spinner-border-visible {
+    width: 180px;
+    height: 180px;
+    margin: auto 0;
+    border: 10px solid var(--dark-blue);
+    border-right-color: transparent;
+}
+
+
+@media (max-width: 1024px) {
+    .spinner-border-visible {
+        width: 140px;
+        height: 140px;
+        border-width: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .spinner-border-visible {
+        width: 100px;
+        height: 100px;
+        border-width: 6px;
+    }
+}
+
+
+/* Table */
+
+.schedule__list {
+    width: 100%;
+}
+
+.schedule__table-block:not(:last-child) {
+    margin-bottom: 24px;
+}
+
+.schedule__table-block {
+    padding: 20px;
+    background-color: var(--light);
+    border-radius: 8px;
+}
+
+.schedule__table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule__table-title-block {
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.schedule__table-descr {
+    font-weight: 900;
+    font-size: 20px;
+    line-height: 150%;
+}
+
+tr:nth-child(2n + 1) td:nth-child(1) {
+    width: 2%;
+}
+
+tr:nth-child(2n + 1) td:nth-child(2) {
+    width: 12%;
+}
+
+tr:nth-child(2n + 1) td:nth-child(3) {
+    width: 56%;
+}
+
+tr:nth-child(2n + 1) td:nth-child(4) {
+    width: 15%;
+}
+
+tr:nth-child(2n + 1) td:nth-child(5) {
+    width: 15%;
+}
+
+/* rgba from dark-blue variable */
+tr td {
+    padding: 10px;
+    border-top: 1px solid rgba(26, 69, 104, 50%);
+    font-size: 18px;
+}
+
+tr:nth-child(2n + 1) td {
+    text-align: center;
+    transition: color ease-in-out 0.3s;
+}
+
+tr:nth-child(2n + 1):hover td {
+    color: var(--light-blue);
+}
+
+tr:nth-child(2n + 1) td:nth-child(1) {
+    text-align: left;
+    font-weight: 900;
+}
+
+tr:nth-child(2n) td {
+    border: none;
+}
+
+tr td:nth-child(2n + 1) {
+    line-height: 150%;
+}
+
+tr td:not(:first-child) {
+    font-weight: 600;
+    line-height: 150%;
+}
+
+tr td:nth-child(3) {
+    font-weight: 800;
+}
+
+tbody tr:nth-child(2n + 1):hover {
+    cursor: pointer;
+}
+
+.schedule__existing-note-tr > td:first-child {
+    position: relative;
+}
+
+.schedule__existing-note-tr > td:first-child::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    margin-left: -18px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("/static/images/icons/note.svg");
+}
+
+.schedule__arrow-block {
+    width: 30px;
+    height: 30px;
+}
+
+@media (max-width: 1024px) {
+    .schedule__list {
+        margin-bottom: 10px;
+    }
+
+    .schedule__table-block {
+        padding: 14px 12px;
+    }
+
+    .schedule__table-block:not(:last-child) {
+        margin-bottom: 16px;
+    }
+
+    .schedule__table-descr {
+        font-size: 18px;
+    }
+
+    .schedule__existing-note-tr > td:first-child::before {
+        left: auto;
+        right: 0;
+        width: 30px;
+        height: 30px;
+    }
+
+    td {
+        display: block;
+    }
+
+    tr:nth-child(2n + 1) td {
+        text-align: left;
+    }
+
+    tr:nth-child(2n + 1):hover td {
+        color: var(--dark-blue);
+    }
+
+    tr td {
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    tr td:empty {
+        display: none;
+    }
+
+    tr:nth-child(2n + 1) td:not(:first-child) {
+        border-top: none;
+    }
+
+    tr:nth-child(2n + 1) td:nth-child(n) {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .schedule__table-block {
+        padding: 10px 8px;
+    }
+
+    .schedule__table-block:not(:last-child) {
+        margin-bottom: 10px;
+    }
+
+    .schedule__table-descr {
+        font-size: 16px;
+    }
+
+    tr td {
+        padding: 6px;
+        font-size: 14px;
+    }
+}

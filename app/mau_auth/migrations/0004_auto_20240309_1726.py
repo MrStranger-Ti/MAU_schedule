@@ -14,7 +14,7 @@ def set_institutes(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mau_auth', '0003_maugroup_mauinstitute_alter_mauuser_options_and_more'),
+        ("mau_auth", "0003_maugroup_mauinstitute_alter_mauuser_options_and_more"),
     ]
 
     operations = [

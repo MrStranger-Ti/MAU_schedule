@@ -1,11 +1,13 @@
 {% if teachers_links %}
-  <ul class="teacher-links">
+  <ul class="schedule__teacher-links">
     {% for teacher_name, teacher_link in teachers_links.items %}
       <li>
-        <a class="schedule__teacher-link" href="{% url 'schedule:teacher_schedule' %}?key={{ teacher_link }}&name={{ teacher_name|urlencode }}&page=1">{{ teacher_name }}</a>
+        <a class="dark-link link" href="{% url 'schedule:teacher_schedule' %}?key={{ teacher_link }}&name={{ teacher_name|urlencode }}&page=1">{{ teacher_name }}</a>
       </li>
     {% endfor %}
   </ul>
 {% else %}
-  <p>Ни одного преподавателя не найдено.</p>
+  <div class="schedule__info-block">
+    <p class="schedule__info">Ни одного преподавателя не найдено.</p>
+  </div>
 {% endif %}

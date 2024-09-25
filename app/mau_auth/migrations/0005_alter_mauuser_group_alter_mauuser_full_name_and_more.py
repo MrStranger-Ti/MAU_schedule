@@ -7,21 +7,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mau_auth', '0004_auto_20240309_1726'),
+        ("mau_auth", "0004_auto_20240309_1726"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='mauuser',
-            name='group',
+            model_name="mauuser",
+            name="group",
             field=models.CharField(max_length=20, null=True),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='full_name',
-            field=models.CharField(max_length=50, validators=[mau_auth.validators.validate_full_name], verbose_name='ФИО'),
+            model_name="mauuser",
+            name="full_name",
+            field=models.CharField(
+                max_length=50,
+                validators=[mau_auth.validators.validate_full_name],
+                verbose_name="ФИО",
+            ),
         ),
         migrations.DeleteModel(
-            name='MauGroup',
+            name="MauGroup",
         ),
     ]

@@ -1,1 +1,27 @@
-{% extends 'base.html' %}
+{% extends 'base_header_and_footer.html' %}
+{% load static %}
+
+{% block head_links %}
+  <link rel="stylesheet" href="{% static 'css/pages/profile.css' %}">
+{% endblock %}
+
+{% block head_scripts %}
+  <script src="{% static 'js/auth/forms/error_box_shadow.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+  <section class="profile">
+    <div class="container profile__container">
+      <h1 class="profile__title title">
+        {% block profile_title %}
+        
+        {% endblock %}
+      </h1>
+      <div class="profile__content flex">
+        {% block profile_content %}
+        
+        {% endblock %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

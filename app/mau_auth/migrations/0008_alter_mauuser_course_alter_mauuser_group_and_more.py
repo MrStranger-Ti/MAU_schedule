@@ -7,23 +7,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mau_auth', '0007_alter_mauuser_course_alter_mauuser_group_and_more'),
+        ("mau_auth", "0007_alter_mauuser_course_alter_mauuser_group_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='mauuser',
-            name='course',
-            field=models.PositiveSmallIntegerField(null=True, verbose_name='Курс'),
+            model_name="mauuser",
+            name="course",
+            field=models.PositiveSmallIntegerField(null=True, verbose_name="Курс"),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='group',
-            field=models.CharField(max_length=20, null=True, verbose_name='Группа'),
+            model_name="mauuser",
+            name="group",
+            field=models.CharField(max_length=20, null=True, verbose_name="Группа"),
         ),
         migrations.AlterField(
-            model_name='mauuser',
-            name='institute',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='mauusers', to='mau_auth.mauinstitute', verbose_name='Институт'),
+            model_name="mauuser",
+            name="institute",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="mauusers",
+                to="mau_auth.mauinstitute",
+                verbose_name="Институт",
+            ),
         ),
     ]

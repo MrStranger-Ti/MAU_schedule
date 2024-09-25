@@ -25,6 +25,7 @@ services:
       - 8000
     depends_on:
       - postgres_db
+    restart: always
 
   nginx:
     build: ./nginx
@@ -34,6 +35,7 @@ services:
       - static_data:/home/app/staticfiles
     depends_on:
       - app
+    restart: always
 
   postgres_db:
     image: postgres
@@ -45,11 +47,13 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - '5000:5432'
+    restart: always
 
   redis:
     image: redis
     ports:
       - '6379:6379'
+    restart: always
 
   celery:
     build:
@@ -64,6 +68,7 @@ services:
       - celery_data:/usr/src/app/
     depends_on:
       - redis
+    restart: always
 
   celery-beat:
     build:
@@ -78,6 +83,7 @@ services:
       - celery_data:/usr/src/app/
     depends_on:
       - redis
+    restart: always
 
 volumes:
   static_data:

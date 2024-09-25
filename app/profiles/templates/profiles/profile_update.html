@@ -1,18 +1,45 @@
 {% extends 'profiles/base_profile.html' %}
+{% load form_tags %}
 
 {% block head_title %}
   Редактирование профиля
 {% endblock %}
 
-{% block main %}
-  <section class="profile-update">
-    <div class="container profile-update__container">
-      <h1 class="profile-update__title">Редактирование профиля</h1>
-      <form class="profile-update__form" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn profile-update__btn" type="submit">Обновить профиль</button>
-      </form>
+{% block profile_title %}
+  Редактирование профиля
+{% endblock %}
+
+{% block profile_content %}
+  <form class="profile__form" method="post" id="profile-update">
+    {% csrf_token %}
+    {% if form.errors %}
+      <ul class="errors-list profile__errors">
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li class="auth__error">{{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <div class="row row-cols-md-2 g-1 g-md-3 justify-content-between profile__inputs-block flex-wrap">
+      {% for field in form %}
+        {% clear_label_suffix field as clean_field %}
+        <div class="col-md profile__field-block">
+          <div class="form-floating">
+            {{ clean_field }}
+            {{ clean_field.label_tag }}
+          </div>
+        </div>
+      {% endfor %}
     </div>
-  </section>
+  </form>
+  <div class="profile__btn-block">
+    <button class="btn profile__btn" type="submit" form="profile-update">Обновить профиль</button>
+  </div>
+{% endblock %}
+
+{% block html_loaded_scripts %}
+  <script>
+    prepareRemoveErrorStyle()
+  </script>
 {% endblock %}

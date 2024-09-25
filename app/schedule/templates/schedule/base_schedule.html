@@ -1,16 +1,34 @@
-{% extends 'base.html' %}
+{% extends 'base_header_and_footer.html' %}
 {% load static %}
 
 {% block head_links %}
-  <link rel="stylesheet" href="{% static 'css/pages/schedule/layout.css' %}">
-  <link rel="stylesheet" href="{% static 'css/pages/schedule/extra.css' %}">
+  <link href="{% static 'css/utils/suneditor.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/pages/schedule.css' %}">
 {% endblock %}
 
 {% block head_scripts %}
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="{% static 'js/utils/suneditor.min.js' %}"></script>
+  <script src="{% static 'js/utils/ko.js' %}"></script>
   <script src="{% static 'js/utils/urls.js' %}"></script>
   <script src="{% static 'js/utils/csrf.js' %}"></script>
-  <script>
 
-  </script>
+  <script src="{% static 'js/schedule/teacher_searching.js' %}"></script>
+  <script src="{% static 'js/schedule/table.js' %}"></script>
+  <script src="{% static 'js/schedule/notes.js' %}"></script>
+  <script src="{% static 'js/schedule/bookmarks.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+  <section class="schedule">
+    <div class="container schedule__container">
+      {% block schedule %}
+        <div class="schedule__content"></div>
+        <div class="schedule__spinner-block">
+          <div class="spinner-border spinner-border-visible" role="status" hidden>
+            <span class="visually-hidden"></span>
+          </div>
+        </div>
+      {% endblock %}
+    </div>
+  </section>
 {% endblock %}

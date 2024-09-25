@@ -1,0 +1,29 @@
+<div class="schedule__pagination">
+  <div class="schedule__arrow-block">
+    {% if current_page > 1 %}
+      <a class="schedule__pagination-arrow schedule__left-pagination-arrow" href="?page={{ current_page|add:-1 }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">
+        <svg version="1.0" width="50.000000pt" height="50.000000pt" viewBox="0 0 50.000000 50.000000" preserveAspectRatio="xMidYMid meet">
+          <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)">
+            <path d="M134 459 c-4 -6 36 -53 92 -110 l99 -99 -100 -100 c-79 -79 -97 -102
+              -87 -112 10 -10 35 11 125 100 l112 112 -110 110 c-60 60 -113 110 -117 110
+              -4 0 -10 -5 -14 -11z"/>
+          </g>
+        </svg>
+      </a>
+    {% endif %}
+  </div>
+  <span class="schedule__pagination-page-number">{{ current_page }}</span>
+  <div class="schedule__arrow-block">
+    {% if current_page < 3 %}
+      <a class="schedule__pagination-arrow" href="?page={{ current_page|add:1 }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">
+        <svg version="1.0" width="50.000000pt" height="50.000000pt" viewBox="0 0 50.000000 50.000000" preserveAspectRatio="xMidYMid meet">
+          <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)">
+            <path d="M134 459 c-4 -6 36 -53 92 -110 l99 -99 -100 -100 c-79 -79 -97 -102
+                -87 -112 10 -10 35 11 125 100 l112 112 -110 110 c-60 60 -113 110 -117 110
+                -4 0 -10 -5 -14 -11z"/>
+          </g>
+        </svg>
+      </a>
+    {% endif %}
+  </div>
+</div>

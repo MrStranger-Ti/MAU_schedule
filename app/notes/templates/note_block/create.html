@@ -1,9 +1,0 @@
-<form name="note-create" class="note-block__form" method="post">
-  {% csrf_token %}
-  <p class="note-block__title">Добавление заметки</p>
-  <textarea class="note-block__textarea" type="text" name="note" required></textarea>
-  <div class="note-block__options">
-    <button class="btn note-block__btn" type="submit">Создать заметку</button>
-    <button class="btn close-btn note-block__btn" name="close" type="button">Закрыть</button>
-  </div>
-</form>

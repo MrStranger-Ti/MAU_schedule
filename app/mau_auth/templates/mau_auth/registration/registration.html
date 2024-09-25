@@ -1,11 +1,64 @@
-{% extends 'mau_auth/registration/base_auth.html' %}
+{% extends 'mau_auth/base_auth.html' %}
+{% load static %}
+{% load form_tags %}
 
-{% block register %}
-  <h1 class="register__title">Регистрация</h1>
-  <form class="register__form" action="." method="post">
+{% block auth %}
+  <h1 class="auth__title">Регистрация</h1>
+  <form class="auth__form flex" action="." method="post">
+    <h2 class="auth__step-title">Шаг&nbsp;<span id="step-number">1</span>/2</h2>
     {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn register__btn" type="submit">Зарегистрироваться</button>
+    <div class="auth__step-1 flex">
+      <div class="auth__inputs-block flex">
+        {% for field in form %}
+          {% clear_label_suffix field as clean_field %}
+          {% if forloop.counter0 <= 2 %}
+            <div class="auth__field-block">
+              <ul class="errors-list auth__errors">
+                {% for error in field.errors %}
+                  <li class="auth__error">{{ error }}</li>
+                {% endfor %}
+              </ul>
+              <div class="form-floating">
+                {{ clean_field }}
+                {{ clean_field.label_tag }}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <button class="btn auth__btn" id="step-1" type="button">Следующий шаг</button>
+    </div>
+    <div class="auth__step-2 flex" hidden>
+      <div class="auth__inputs-block flex">
+        {% for field in form %}
+          {% clear_label_suffix field as clean_field %}
+          {% if forloop.counter0 >= 3 %}
+            <div class="auth__field-block">
+              <ul class="errors-list auth__errors">
+                {% for error in field.errors %}
+                  <li class="auth__error">{{ error }}</li>
+                {% endfor %}
+              </ul>
+              <div class="form-floating">
+                {{ clean_field }}
+                {{ clean_field.label_tag }}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="auth__btns-block flex">
+        <button class="btn auth__btn" id="step-2" type="button">Предыдущий шаг</button>
+        <button class="btn auth__btn" id="registration" type="submit">Зарегистрироваться</button>
+      </div>
+    </div>
   </form>
-  <div class="register__link-block"><a class="register__link" href="{% url 'mau_auth:login' %}">Войти</a></div>
+  <div class="auth__link-block"><a class="dark-link link" href="{% url 'mau_auth:login' %}">Войти</a></div>
+{% endblock %}
+
+{% block html_loaded_scripts %}
+  <script>
+    prepareSwitchForm()
+    prepareRemoveErrorStyle()
+  </script>
 {% endblock %}

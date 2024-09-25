@@ -15,17 +15,33 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='TeacherScheduleBookmark',
+            name="TeacherScheduleBookmark",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('teacher_name', models.CharField(verbose_name='ФИО преподавателя')),
-                ('teacher_key', models.CharField(verbose_name='Ключ преподавателя')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bookmarks', to=settings.AUTH_USER_MODEL, verbose_name='пользователь')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("teacher_name", models.CharField(verbose_name="ФИО преподавателя")),
+                ("teacher_key", models.CharField(verbose_name="Ключ преподавателя")),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="bookmarks",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="пользователь",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'история посещения',
-                'verbose_name_plural': 'история посещений',
+                "verbose_name": "история посещения",
+                "verbose_name_plural": "история посещений",
             },
         ),
     ]

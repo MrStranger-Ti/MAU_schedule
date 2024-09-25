@@ -1,55 +1,100 @@
+{% load schedule_fileters %}
 {% load schedule_tags %}
 
-{% if page_obj %}
-  {% for date, day_table in page_obj %}
-    <table class="schedule_table">
-      <thead>
-      <tr>
-        <th colspan="5" class="table_title">{{ date }}</th>
-      </tr>
-      <tr class="table_heads">
-        <th>№</th>
-        <th>Время</th>
-        <th>Название</th>
-        <th>
-          {% if table == 'group' %}
-            Преподаватель
-          {% else %}
-            Группа
-          {% endif %}
-        </th>
-        <th>Корпус</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for row in day_table %}
-        {% get_user_note table date forloop.counter as note %}
-        <tr {% if note %} class="existing_note_tr" {% endif %}>
-          {% for cell in row %}
-            <td>{{ cell }}</td>
-          {% endfor %}
-          <td class="note-pop-up hidden">
-            <div class="note-block flex" data-schedule-name="{{ table }}" data-day="{{ date }}" data-lesson-number="{{ forloop.counter }}">
-              {% if note %}
-                {% include 'note_block/display.html' %}
-              {% else %}
-                {% include 'note_block/create.html' %}
-              {% endif %}
-            </div>
-          </td>
-        </tr>
+<div class="schedule__title-block flex">
+  {% if table == GROUP_SCHEDULE_NAME %}
+    <h1 class="schedule__title title">{{ user.group }}</h1>
+  {% elif table == TEACHER_SCHEDULE_NAME %}
+    <div class="schedule__title-left-block flex">
+      <h1 class="schedule__title title">{{ teacher_name }}</h1>
+      {% include 'bookmarks/bookmarks.html' %}
+      {% has_bookmark as has_bookamrk %}
+      <button class="btn schedule__bookmarks-btn" name="bookmark-create" type="button"
+              {% if has_bookamrk %}disabled{% endif %}>
+        <svg version="1.0" width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+             preserveAspectRatio="xMidYMid meet">
+          <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)">
+            <path d="M1259 5105 c-150 -30 -270 -96 -390 -216 -72 -71 -94 -101 -133 -180
+-85 -173 -78 -73 -86 -1354 -4 -627 -9 -1610 -11 -2185 -2 -958 -1 -1048 14
+-1077 33 -62 113 -102 181 -89 21 4 385 216 877 511 462 278 845 505 849 505
+5 0 377 -221 827 -491 450 -270 836 -500 857 -511 78 -40 180 -5 224 75 16 30
+17 155 17 2202 0 2069 -1 2174 -18 2248 -66 280 -298 501 -589 561 -68 14
+-222 16 -1315 15 -984 -1 -1252 -4 -1304 -14z m2551 -335 c129 -24 237 -105
+293 -219 l32 -66 3 -2003 c1 -1102 -1 -2001 -5 -1999 -5 2 -345 206 -758 453
+l-750 449 -65 0 -65 0 -735 -441 c-404 -243 -746 -447 -759 -454 l-23 -12 7
+1949 c4 1148 11 1974 16 2011 24 158 139 283 302 327 43 11 251 14 1253 14
+768 1 1220 -3 1254 -9z"/>
+            <path d="M2354 4256 c-580 -111 -994 -607 -994 -1194 0 -548 370 -1024 910
+-1170 87 -24 112 -26 290 -26 179 0 203 2 293 27 756 204 1127 1038 769 1731
+-155 300 -438 526 -769 613 -82 21 -126 26 -263 29 -111 2 -188 -1 -236 -10z
+m368 -340 c318 -61 566 -290 665 -613 24 -79 26 -104 26 -238 0 -134 -2 -159
+-26 -238 -117 -382 -440 -627 -827 -627 -163 0 -332 48 -459 132 -529 346
+-533 1113 -7 1462 74 49 206 103 294 121 90 18 244 18 334 1z"/>
+            <path d="M2507 3666 c-22 -8 -50 -25 -64 -38 -45 -41 -53 -75 -53 -237 l0
+-149 -162 -3 c-141 -4 -168 -7 -197 -24 -60 -35 -76 -67 -76 -150 0 -83 16
+-115 76 -150 29 -17 56 -20 196 -24 l162 -3 3 -163 c3 -146 5 -167 24 -192 26
+-36 99 -73 144 -73 59 0 122 38 148 90 20 40 22 59 22 191 l0 147 163 3 c142
+4 166 7 197 25 104 61 106 232 3 295 -34 22 -51 24 -200 27 l-162 4 -3 162
+c-3 161 -3 163 -31 199 -48 63 -122 88 -190 63z"/>
+          </g>
+        </svg>
+      </button>
+    </div>
+  {% endif %}
+  {% if form.fields.periods.choices %}
+    <form class="schedule__form schedule__period-form flex" method="get">
+      {% for field in form %}
+        <div class="form-floating">
+          {{ field }}
+        </div>
       {% endfor %}
-      </tbody>
-    </table>
-  {% endfor %}
-  <div class="tables__pagination">
-    {% if page_obj.has_previous %}
-      <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">Предыдущая неделя</a>
-    {% endif %}
-    {% if page_obj.has_next %}
-      <a class="pagination-link" href="?page={{ page_obj.next_page_number }}{% if teacher_key %}&key={{ teacher_key }}{% endif %}{% if teacher_name %}&name={{ teacher_name|urlencode }}{% endif %}">Следующая неделя</a>
-    {% endif %}
+      <button class="btn" type="button">Найти</button>
+    </form>
+  {% endif %}
+</div>
+{% if schedule_data %}
+  <div class="schedule__list">
+    {% for date, day_table in schedule_data.items %}
+      <div class="schedule__table-block">
+        <div class="schedule__table-title-block flex">
+          <span class="schedule__table-descr">{{ date|get_weekday }}</span>
+          <span class="schedule__table-descr">{{ date|date:'d.m.Y' }}</span>
+        </div>
+        <table class="schedule__table">
+          <thead></thead>
+          <tbody>
+          {% for row in day_table %}
+            {% prepare_location table user.group date forloop.counter as note_location %}
+            {% get_user_note note_location as note %}
+            <tr {% if note %} class="schedule__existing-note-tr" {% endif %} data-bs-toggle="collapse"
+                              data-bs-target="#collapse-{{ forloop.parentloop.counter }}-{{ forloop.counter }}"
+                              aria-expanded="false" aria-controls="collapseExample" role="button">
+              {% for cell in row %}
+                <td>{{ cell }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <td class="note-block" colspan="5" data-note-location="{{ note_location }}">
+                <div class="collapse" id="collapse-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+                  <div class="card card-body note-block__card">
+                    {% if note %}
+                      {% include 'notes/display.html' %}
+                    {% else %}
+                      {% include 'notes/create.html' with form=form %}
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
   </div>
 {% else %}
-  <p>Расписание не найдено. Проверьте свои данные в профиле.</p>
+  <div class="schedule__info-block">
+    <p class="schedule__info">Расписание не найдено. Проверьте свои данные в профиле.</p>
+    <p class="schedule__info">Также неполадки могут быть связаны с неработающим расписанием на <a class="dark-link link" href="{{ original_schedule_url }}" target="_blank">сайте</a> университета.</p>
+  </div>
 {% endif %}

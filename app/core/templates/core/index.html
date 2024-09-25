@@ -1,14 +1,21 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block head_title %}
   Главная
 {% endblock %}
 
-{% block main %}
+{% block head_links %}
+  <link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
+{% endblock %}
+
+{% block body %}
   <section class="hero">
-    <div class="container hero__container">
-      <h1 class="hero__title">Функциональность данного приложения</h1>
-      <p class="hero__descr">{% lorem %}</p>
+    <div class="container hero__container flex">
+      <img class="main-logo" src="{% static 'images/logo/bear_face.png' %}" alt="логотип лицо медведя">
+      <h1 class="hero__title">Расписание доступно только для учащихся МАУ</h1>
+      <a href="{% url 'mau_auth:login' %}" class="btn hero__btn">Войти</a>
+      <a href="{% url 'mau_auth:registration' %}" class="link dark-link">Регистрация</a>
     </div>
   </section>
 {% endblock %}
