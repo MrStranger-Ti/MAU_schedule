@@ -10,7 +10,7 @@ services:
       - DJANGO_SETTINGS_MODULE=app.settings
       - PYTHONPATH=/usr/src/app
       - PYTHONUTF8=1
-      - DB_HOST=postgres_db
+      - POSTGRES_HOST=postgres_db
       - REDIS_HOST=redis
     command: >
       bash -c
@@ -25,10 +25,8 @@ services:
 
   postgres_db:
     image: postgres
-    environment:
-      - POSTGRES_PASSWORD=12321
-      - POSTGRES_USER=mau_admin
-      - POSTGRES_DB=mau_schedule
+    env_file:
+      - .env
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:

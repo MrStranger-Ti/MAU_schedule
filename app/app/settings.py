@@ -108,11 +108,11 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
+        "NAME": os.getenv("POSTGRES_DB", "MauSchedule"),
+        "USER": os.getenv("POSTGRES_USER", "MauUser"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "12345"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
         "TEST": {
             "NAME": "test_mau",
         },
@@ -214,13 +214,13 @@ WEEKDAYS_NAMES = {
     6: "Воскресенье",
 }
 
-DEVELOPER_URL = os.getenv("DEVELOPER_URL")
+DEVELOPER_URL = "https://t.me/MrStrangerTi"
 
 
 # Redis
 
-REDIS_HOST = os.getenv("REDIS_HOST", "127.0.0.1")
-REDIS_PORT = "6379"
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
 
 
 # Cache
