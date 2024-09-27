@@ -5,33 +5,35 @@
 --------------------
 
 
-<a href="https://www.python.org/" style="text-decoration: none">
+<a href="https://www.python.org/" style="text-decoration: none;">
   <img alt="Python" src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54&link=https://www.djangoproject.com/">
 </a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none">
+<a href="https://www.djangoproject.com/" style="text-decoration: none;">
   <img alt="Django" src="https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white">
 </a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none">
+<a href="https://www.djangoproject.com/" style="text-decoration: none;">
   <img alt="Docker" src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white">
 </a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none">
+<a href="https://www.djangoproject.com/" style="text-decoration: none;">
   <img alt="PostgreSQL" src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white">
 </a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none">
+<a href="https://www.djangoproject.com/" style="text-decoration: none;">
   <img alt="Redis" src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
 </a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none">
+<a href="https://www.djangoproject.com/" style="text-decoration: none;">
   <img alt="Celery" src="https://img.shields.io/badge/celery-%23a9cc54.svg?style=for-the-badge&logo=celery&logoColor=ddf4a4">
 </a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/HTML" style="text-decoration: none">
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTML" style="text-decoration: none;">
   <img alt="HTML5" src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white">
 </a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/CSS" style="text-decoration: none">
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS" style="text-decoration: none;">
   <img alt="CSS3" src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white">
 </a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" style="text-decoration: none">
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" style="text-decoration: none;">
   <img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E">
 </a>
+
+--------------------
 
 Приложение представляет собой сайт-расписание для студентов Мурманского Арктического Университета (МАУ).
 
@@ -79,11 +81,77 @@
 
 #### Настройка виртуального окружения
 
-#### Установка PostgreSQL
+- Создайте виртуальное окружение:
+  ```
+  python -m venv venv
+  ```
+- Активируйте виртуальное окружение:
+    - Linux/MacOS:
+      ```
+      source venv/bin/activate
+      ```
+    - Windows
+      ```
+      venv/Scripts/activate
+      ```
+
+#### Установка и настройка PostgreSQL
+
+- Установите [PostgreSQL](https://www.postgresql.org/download/)
+- Войдите в оболочку PostgreSQL:
+    - Linux/MacOS:
+      ```
+      sudo -u postgres psql
+      ```
+    - Windows:
+      ```
+      psql
+      ```
+- Создайте нового пользователя:
+  ```
+  CREATE USER <имя> WITH PASSWORD '<пароль>';
+  ```
+- Создайте новую базу данных:
+  ```
+  CREATE DATABASE <имя>;
+  ```
+- Дайте права только что созданному пользователю:
+  ```
+  GRANT ALL PRIVILEGES ON DATABASE <имя базы данных> TO <имя пользователя>;
+  ```
+- Укажите в ```.env``` все переменные, связанные с PostgreSQL.
 
 #### Установка Redis
 
+Redis не поддерживается на Windows, поэтому можно воспользоваться Docker образом [redis](https://hub.docker.com/_/redis) или установить подсистему Ubuntu на Windows с помощью [WSL](https://learn.microsoft.com/ru-ru/windows/wsl/install).
+
+- Установка Redis:
+  ```
+  sudo apt install redis-server
+  ```
+- Запуск сервера Redis:
+  ```
+  sudo service redis-server start
+  ```
+
+- Укажите в ```.env``` все переменные, связанных с Redis (если вы не меняли конфигурацию Redis, то можете оставить значения переменных по умолчанию).
+
+
+- Остановить Redis можно следующей командой:
+  ```
+  sudo service redis-server stop
+  ```
+
 #### Запуск Celery
+
+- Запустите worker:
+  ```
+  celery -A app worker -l info
+  ```
+- Запустите планировщик задач
+  ```
+  celery -A app beat -l info
+  ```
 
 #### Запуск приложения
 
@@ -112,6 +180,8 @@ python manage.py runserver
 
 В этом разделе описаны подробности о переменных окружения проекта.
 
+### Django
+
 - <span style="color: pink;">DEBUG</span> - если 1, то запустить приложение в debug режиме, если 0, то запустить в производственном режиме
 
   **По умолчанию:** 0
@@ -133,6 +203,7 @@ python manage.py runserver
 
   **По умолчанию:** UTC
 
+### PostgreSQL
 
 - <span style="color: pink;">POSTGRES_DB</span> - название базы данных
 
@@ -158,11 +229,7 @@ python manage.py runserver
 
   **По умолчанию:** 5432
 
-
-- <span style="color: pink;">REQUESTS_TIMEOUT</span> - время ожидания ответа от сайта университета в секундах
-
-  **По умолчанию:** 5
-
+### Redis
 
 - <span style="color: pink;">REDIS_HOST</span> - хост для Redis, где хранится кэш
 
@@ -172,6 +239,12 @@ python manage.py runserver
 - <span style="color: pink;">REDIS_PORT</span> - порт для Redis
 
   **По умолчанию:** 6379
+
+### App
+
+- <span style="color: pink;">REQUESTS_TIMEOUT</span> - время ожидания ответа от сайта университета в секундах
+
+  **По умолчанию:** 5
 
 ## Функционал
 
