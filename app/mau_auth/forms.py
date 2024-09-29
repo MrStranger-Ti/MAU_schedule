@@ -14,25 +14,27 @@ class UserRegistrationForm(forms.ModelForm):
         fields = "full_name", "email", "password", "course", "institute", "group"
         widgets = {
             "full_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "full_name"}
+                attrs={"class": "main-input form-control", "placeholder": "full_name"}
             ),
             "email": forms.EmailInput(
-                attrs={"class": "form-control", "placeholder": "email"}
+                attrs={"class": "main-input form-control", "placeholder": "email"}
             ),
             "password": forms.PasswordInput(
-                attrs={"class": "form-control", "placeholder": "password"}
+                attrs={"class": "main-input form-control", "placeholder": "password"}
             ),
             "course": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "course"}
+                attrs={"class": "main-input form-control", "placeholder": "course"}
             ),
             "group": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "group"}
+                attrs={"class": "main-input form-control", "placeholder": "group"}
             ),
         }
         labels = {"password": "Пароль"}
 
     institute = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": "form-select", "placeholder": "institute"}),
+        widget=forms.Select(
+            attrs={"class": "main-select form-select", "placeholder": "institute"}
+        ),
         queryset=MauInstitute.objects.all(),
         empty_label="Открыть меню",
         to_field_name="name",
@@ -48,14 +50,17 @@ class UserRegistrationForm(forms.ModelForm):
 class UserLoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(
-            attrs={"class": "form-control", "placeholder": "example@example.com"}
+            attrs={
+                "class": "main-input form-control",
+                "placeholder": "example@example.com",
+            }
         ),
         label="Email",
         label_suffix="",
     )
     password = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": "password"}
+            attrs={"class": "main-input form-control", "placeholder": "password"}
         ),
         label="Пароль",
         label_suffix="",
@@ -81,7 +86,7 @@ class UserLoginForm(forms.Form):
             )
             if self.user_cache is None:
                 for field in self.fields.values():
-                    field.widget.attrs["class"] += " error-input"
+                    field.widget.attrs["class"] += " error-main-input"
 
                 raise self.get_invalid_login_error()
             else:
@@ -118,7 +123,9 @@ class UserLoginForm(forms.Form):
 
 class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "Ввод"}),
+        widget=forms.EmailInput(
+            attrs={"class": "main-input form-control", "placeholder": "Ввод"}
+        ),
         label="Email",
         label_suffix="",
     )
@@ -130,7 +137,7 @@ class CustomSetPasswordForm(SetPasswordForm):
         label_suffix="",
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control",
+                "class": "main-input form-control",
                 "placeholder": "password1",
                 "autocomplete": "new-password",
             }
@@ -143,7 +150,7 @@ class CustomSetPasswordForm(SetPasswordForm):
         strip=False,
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control",
+                "class": "main-input form-control",
                 "placeholder": "password2",
                 "autocomplete": "new-password",
             }

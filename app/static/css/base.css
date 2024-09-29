@@ -204,8 +204,8 @@ ul {
 
 /* Inputs */
 
-input,
-select,
+main-input,
+main-select,
 .form-floating > .form-control,
 .form-floating > .form-select {
     font-size: 18px;
@@ -213,8 +213,8 @@ select,
     box-shadow: 0 0 0 2px rgba(77, 100, 141, 20%)
 }
 
-input,
-select,
+main-input,
+main-select,
 .form-floating > .form-control,
 .form-floating > .form-select,
 select:focus-visible {
@@ -222,15 +222,15 @@ select:focus-visible {
     outline: none;
 }
 
-input:focus,
-select:focus,
+main-input:focus,
+main-select:focus,
 .form-floating > input:focus,
 .form-floating > select:focus {
     box-shadow: 0 0 0 2px rgba(77, 100, 141, 50%);
 }
 
-input,
-select {
+main-input,
+main-select {
     min-width: 300px;
     height: 45px;
 }
@@ -242,14 +242,14 @@ select {
 }
 
 @media (max-width: 1024px) {
-    input,
-    select {
+    main-input,
+    main-select {
         min-width: 250px;
         height: 40px;
     }
 
-    select,
-    input,
+    main-input,
+    main-select,
     .form-floating > .form-control,
     .form-floating > .form-select {
         font-size: 16px;
@@ -262,8 +262,8 @@ select {
 }
 
 @media (max-width: 768px) {
-    input,
-    select {
+    main-input,
+    main-select {
         min-width: 217px;
         height: 35px;
     }
@@ -282,8 +282,8 @@ select {
     color: var(--error-color);
 }
 
-input > .error-input,
-select > .error-input,
+main-input > .error-input,
+main-select > .error-input,
 .form-floating > .error-input,
 .form-floating > .error-input {
     box-shadow: 0 0 5px 2px rgba(232, 30, 30, 80%);

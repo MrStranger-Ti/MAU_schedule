@@ -7,7 +7,7 @@ class WeeksForm(forms.Form):
     EMPTY_CHOICE = [("", "Выберите период")]
 
     periods = forms.ChoiceField(
-        widget=forms.Select(),
+        widget=forms.Select(attrs={"class": "main-select"}),
     )
 
     def set_period_choices(self, choices: Iterable) -> None:
