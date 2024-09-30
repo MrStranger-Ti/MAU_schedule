@@ -17,7 +17,7 @@ class Note(models.Model):
         related_name="notes",
         verbose_name="пользователь",
     )
-    location = models.CharField(null=True, unique=True, verbose_name="расположение")
+    location = models.CharField(null=True, verbose_name="расположение")
     text = models.TextField(verbose_name="текст")
     expired_date = models.DateField(null=True, verbose_name="дата удаления")
 
