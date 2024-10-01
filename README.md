@@ -32,6 +32,9 @@
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" style="text-decoration: none;">
   <img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E">
 </a>
+<a href="https://getbootstrap.com/" style="text-decoration: none;">
+  <img alt="JavaScript" src="https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white">
+</a>
 
 --------------------
 
@@ -50,7 +53,7 @@
 - [Запуск](#запуск)
 - [Env файл](#env-файл)
 - [Функционал](#функционал)
-- [Контакты](#контакты)
+- [Команда и Обязанности](#команда-и-обязанности)
 
 ## Технологии
 
@@ -66,6 +69,7 @@
 - [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML)
 - [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [Bootstrap](https://getbootstrap.com/)
 - [SunEditor](https://github.com/JiHong88/suneditor)
 
 ## Запуск
@@ -148,16 +152,27 @@ Redis не поддерживается на Windows, поэтому можно 
   ```
   celery -A app worker -l info
   ```
-- Запустите планировщик задач
+- Запустите планировщик задач:
   ```
   celery -A app beat -l info
   ```
 
 #### Запуск приложения
 
-```
-python manage.py runserver
-```
+- Установите миграции:
+  ```
+  python manage.py migrate
+  ```
+
+- Создание суперпользователя (для входа в админ. панель):
+  ```
+  python manage.py createsuperuser
+  ```
+
+- Запуск приложения:
+  ```
+  python manage.py runserver
+  ```
 
 ### Запуск с помощью Docker
 
@@ -240,7 +255,7 @@ python manage.py runserver
 
   **По умолчанию:** 6379
 
-### App
+### MAU Schedule
 
 - <span style="color: pink;">REQUESTS_TIMEOUT</span> - время ожидания ответа от сайта университета в секундах
 
@@ -250,6 +265,84 @@ python manage.py runserver
 
 --------------------
 
-## Контакты
+### Идентификация / Аутентификация
+
+--------------------
+
+#### Главная
+
+Зарегистрироваться в системе может человек с почтой, у которой домен МАУ (...@masu.edu.ru, ...@mstu.edu.ru, ...@mauniver.ru):
+
+<img width="800px" src="readme_images/images/mau_domain_required.png" alt="Главная">
+
+#### Регистрация
+
+Для регистрации нужно указать несколько данных:
+
+<img src="readme_images/gifs/sign-up.gif" alt="Регистрация">
+
+В письме можно перейти по ссылке, чтобы подтвердить почту:
+
+<img width="800px" src="readme_images/images/email_confirmed.png" alt="Отправлена ссылка для подтверждения почты">
+
+#### Сброс пароля
+
+Для сброса пароля нужно указать почту:
+
+<img src="readme_images/gifs/password-reset-email-form.gif" alt="Отправка письма для сброса пароля">
+
+В письме можно перейти по ссылке, чтобы сбросить пароль:
+
+<img src="readme_images/gifs/password-reset-new.gif" alt="Установка нового пароля">
+
+#### Вход
+
+Для входа достаточно указать email и пароль:
+
+<img src="readme_images/gifs/sign-in.gif" alt="Вход">
+
+### Профиль
+
+В профиле находится вся необходимая информация для отображения расписания:
+
+<img src="readme_images/gifs/profile.gif" alt="Профиль">
+
+### Расписание
+
+#### Расписание группы
+
+В расписании можно удобно выбирать неделю, по умолчанию будет выставлена текущая неделя:
+
+<img src="readme_images/gifs/group-schedule.gif" alt="Расписание группы">
+
+#### Расписание преподавателя
+
+Для просмотра по расписания преподавателя необходимо его найти:
+
+<img src="readme_images/gifs/teacher-schedule.gif" alt="Работа с профилем">
+
+
+### Заметки
+
+Можно добавлять заметки и редактировать их для каждой пары прямо в расписании:
+
+<img src="readme_images/gifs/notes.gif" alt="Работа с профилем">
+
+### Адаптивность
+
+Приложением **MAU Schedule** можно пользоваться на разных устройствах с удобством:
+
+<img src="readme_images/gifs/adaptability.gif" alt="Работа с профилем">
+
+
+## Команда и Обязанности
+
+- Сорокожердьев Андрей - Fullstack-разработчик
+  
+  - [Telegram](https://t.me/MrStrangerTi)
+  - asorokozherdyev@gmail.com
+
+
+- ... - Веб-дизайнер
 
 --------------------
