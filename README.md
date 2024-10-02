@@ -5,36 +5,16 @@
 --------------------
 
 
-<a href="https://www.python.org/" style="text-decoration: none;">
-  <img alt="Python" src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54&link=https://www.djangoproject.com/">
-</a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none;">
-  <img alt="Django" src="https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white">
-</a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none;">
-  <img alt="Docker" src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white">
-</a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none;">
-  <img alt="PostgreSQL" src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white">
-</a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none;">
-  <img alt="Redis" src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
-</a>
-<a href="https://www.djangoproject.com/" style="text-decoration: none;">
-  <img alt="Celery" src="https://img.shields.io/badge/celery-%23a9cc54.svg?style=for-the-badge&logo=celery&logoColor=ddf4a4">
-</a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/HTML" style="text-decoration: none;">
-  <img alt="HTML5" src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white">
-</a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/CSS" style="text-decoration: none;">
-  <img alt="CSS3" src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white">
-</a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" style="text-decoration: none;">
-  <img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E">
-</a>
-<a href="https://getbootstrap.com/" style="text-decoration: none;">
-  <img alt="JavaScript" src="https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white">
-</a>
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54&link=https://www.djangoproject.com/)
+![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+![Celery](https://img.shields.io/badge/celery-%23a9cc54.svg?style=for-the-badge&logo=celery&logoColor=ddf4a4)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 
 --------------------
 
@@ -78,6 +58,10 @@
 
 - Установите [Python 3.12](https://www.python.org/downloads/)
 - Создайте файл ```.env``` и укажите настройки, используя [шаблон](.env.template) и [описание настроек](#env-файл).
+- Откройте командную строку и перейдите в корень проекта:
+  ```
+  cd <путь до проекта>
+  ```
 
 ### Настройка и запуск вручную
 
@@ -105,11 +89,13 @@
 - Войдите в оболочку PostgreSQL:
     - Linux/MacOS:
       ```
-      sudo -u postgres psql
+      sudo -U postgres psql
       ```
     - Windows:
       ```
-      psql
+      cd "C:\Program Files\PostgreSQL\<версия>\bin"
+      
+      psql -U postgres
       ```
 - Создайте нового пользователя:
   ```
@@ -164,7 +150,7 @@ Redis не поддерживается на Windows, поэтому можно 
   python manage.py migrate
   ```
 
-- Создание суперпользователя (для входа в админ. панель):
+- Создайте суперпользователя (для входа в админ. панель):
   ```
   python manage.py createsuperuser
   ```
@@ -177,7 +163,6 @@ Redis не поддерживается на Windows, поэтому можно 
 ### Запуск с помощью Docker
 
 - Установите [Docker](https://www.docker.com/)
-
 - Сборка и запуск приложения:
 
   ```
@@ -188,6 +173,17 @@ Redis не поддерживается на Windows, поэтому можно 
   ```
   docker compose down
   ```
+
+### Использование
+
+Если запустили приложение локально, то можно перейти по следующему адресу в браузере:
+
+http://127.0.0.1:8000
+
+Войти в админ. панель можно по следующему адресу:
+
+http://127.0.0.1:8000/admin
+
 
 ## Env файл
 
@@ -335,7 +331,7 @@ Redis не поддерживается на Windows, поэтому можно 
 <img src="readme_images/gifs/adaptability.gif" alt="Работа с профилем">
 
 
-## Команда и Обязанности
+## Команда и обязанности
 
 - Сорокожердьев Андрей - Fullstack-разработчик
   
@@ -343,6 +339,7 @@ Redis не поддерживается на Windows, поэтому можно 
   - asorokozherdyev@gmail.com
 
 
-- ... - Веб-дизайнер
-
---------------------
+- Егорова Софья - Веб-дизайнер
+  
+  - [Telegram](https://t.me/alrdseled)
+  - [Vk](https://vk.com/alrdseled)
