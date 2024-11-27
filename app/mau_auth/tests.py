@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse_lazy, reverse
 
-from mau_auth.forms import UserRegistrationForm
+from mau_auth.html.forms import UserRegistrationForm
 from mau_auth.models import MauInstitute
 
 User = get_user_model()

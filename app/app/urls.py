@@ -19,14 +19,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("core.urls")),
-    path("accounts/", include("mau_auth.urls")),
+    path("accounts/", include("mau_auth.html.urls")),
     path("schedule/", include("schedule.urls")),
     path("profile/", include("profiles.urls")),
     path("notes/", include("notes.urls")),
-    path("bookmarks/", include("bookmarks.urls")),
+    # path("bookmarks/", include("bookmarks.urls")),
+    # RestAPI paths
+    path("api/accounts/", include("mau_auth.api.urls")),
 ]
 
 if settings.DEBUG:

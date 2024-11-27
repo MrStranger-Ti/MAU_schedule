@@ -88,10 +88,14 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         ordering = "course", "full_name"
 
     full_name = models.CharField(
-        max_length=50, validators=[validate_full_name], verbose_name="ФИО"
+        max_length=50,
+        validators=[validate_full_name],
+        verbose_name="ФИО",
     )
     email = models.EmailField(
-        unique=True, validators=[validate_email], verbose_name="Email"
+        unique=True,
+        validators=[validate_email],
+        verbose_name="Email",
     )
     institute = models.ForeignKey(
         "MauInstitute",
@@ -100,14 +104,23 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         related_name="mauusers",
         verbose_name="Институт",
     )
-    course = models.PositiveSmallIntegerField(null=True, verbose_name="Курс")
-    group = models.CharField(null=True, max_length=20, verbose_name="Группа")
+    course = models.PositiveSmallIntegerField(
+        null=True,
+        verbose_name="Курс",
+    )
+    group = models.CharField(
+        null=True,
+        max_length=20,
+        verbose_name="Группа",
+    )
 
     objects = MauUserManager()
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["full_name"]
+    REQUIRED_FIELDS = [
+        "full_name",
+    ]
 
     is_staff = models.BooleanField(
         "staff status",
@@ -120,7 +133,10 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         help_text="Designates whether this user should be treated as active. "
         "Unselect this instead of deleting accounts.",
     )
-    date_joined = models.DateTimeField("date joined", default=timezone.now)
+    date_joined = models.DateTimeField(
+        "date joined",
+        default=timezone.now,
+    )
 
     def _get_confirmation_message(self, request: HttpRequest) -> str:
         current_site = get_current_site(request)

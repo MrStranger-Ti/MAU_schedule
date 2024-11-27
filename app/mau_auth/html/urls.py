@@ -1,8 +1,7 @@
 from django.contrib.auth.views import LogoutView
-from django.contrib import admin
 from django.urls import path
 
-from mau_auth.views import (
+from mau_auth.html.views import (
     MauRegistrationView,
     MauLoginView,
     MauPasswordResetView,

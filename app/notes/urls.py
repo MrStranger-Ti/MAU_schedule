@@ -9,7 +9,6 @@ from notes.views import (
 
 app_name = "notes"
 
-
 urlpatterns = [
     path("display/", AjaxNoteDisplayView.as_view(), name="note_display"),
     path("create/", AjaxNoteCreateView.as_view(), name="note_create"),

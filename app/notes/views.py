@@ -15,8 +15,12 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
 from django.core.exceptions import ValidationError
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 from notes.models import Note
+from notes.serializers import NoteSerializer
 
 
 class AjaxNoteDisplayView(View):
@@ -120,3 +124,31 @@ class AjaxNoteUpdateView(View):
         return redirect(
             reverse("notes:note_display") + "?" + urllib.parse.urlencode(data)
         )
+
+
+# RestAPI views
+
+
+class NoteViewSet(ModelViewSet):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+    search_fields = [
+        "location",
+        "text",
+    ]
+    filterset_fields = [
+        "user",
+        "location",
+        "text",
+        "expired_date",
+    ]
+    ordering_fields = [
+        "pk",
+        "user",
+        "text",
+    ]
