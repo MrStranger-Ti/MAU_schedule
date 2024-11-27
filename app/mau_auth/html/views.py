@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import (
     LoginView,
@@ -7,7 +7,6 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView,
 )
-from django.forms import ModelForm, Form
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
@@ -18,7 +17,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 from django.views.generic import TemplateView
 
-from mau_auth.forms import (
+from mau_auth.html.forms import (
     UserRegistrationForm,
     UserLoginForm,
     CustomPasswordResetForm,
@@ -41,7 +40,6 @@ class MauRegistrationView(UserPassesTestMixin, View):
         form = self.form_class(request.POST)
         if form.is_valid():
             user = form.save()
-            user.set_password(form.cleaned_data["password"])
             user.is_active = False
             user.save()
 
