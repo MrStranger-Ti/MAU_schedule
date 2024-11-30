@@ -43,7 +43,10 @@ class MauRegistrationView(UserPassesTestMixin, View):
             user.is_active = False
             user.save()
 
-            user.send_email_confirmation(request)
+            user.send_email_confirmation(
+                request=request,
+                confirmation_url_pattern="mau_auth:registration_email_confirm",
+            )
             return redirect(reverse("mau_auth:registration_email_sent"))
 
         add_error_class(form, all_fields=False)

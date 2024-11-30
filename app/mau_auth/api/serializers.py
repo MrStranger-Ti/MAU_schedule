@@ -1,9 +1,14 @@
-from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_decode
-from rest_framework import serializers
+from mailbox import NotEmptyError
 
-from mau_auth.models import MauUser
+from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.password_validation import validate_password
+from django.db.models import Model
+from django.shortcuts import get_object_or_404
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.reverse import reverse
+
+from mau_auth.models import MauUser, Token
 
 User: type[MauUser] = get_user_model()
 
@@ -29,57 +34,47 @@ class UserSerializer(serializers.ModelSerializer):
             "last_login",
         ]
 
-    def get_no_create_fields(self) -> list[str]:
-        return [
-            "password",
-        ]
+    password = serializers.CharField(
+        required=True,
+        write_only=True,
+        validators=[validate_password],
+    )
 
-    def get_no_update_fields(self) -> list[str]:
-        return [
-            "email",
-            "password",
-        ]
-
-    def exclude_fields(self, validate_data: dict, exclude_fields: list[str]) -> dict:
-        for field_name in exclude_fields:
-            if field_name in validate_data:
-                validate_data.pop(field_name)
-
-        return validate_data
-
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> User:
         password = validated_data.get("password")
-        self.exclude_fields(
-            validate_data=validated_data,
-            exclude_fields=self.get_no_create_fields(),
-        )
 
         user = super().create(validated_data)
         user.set_password(password)
         user.is_active = False
         user.save()
 
-        request = self.context.get("request")
-        user.send_email_confirmation(request)
-
         return user
 
-    def update(self, instance, validated_data):
-        self.exclude_fields(
-            validate_data=validated_data,
-            exclude_fields=self.get_no_update_fields(),
-        )
+    def update(self, instance: Model, validated_data: dict) -> User:
         user = super().update(instance, validated_data)
+        # ?
+        # ?
+        # ?
         return user
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation.pop("password", None)
-        return representation
+    def validate(self, attrs: dict) -> dict:
+        if attrs.get("password") and self.instance:
+            raise ValidationError(
+                detail={
+                    "detail": "You need to go to this url to change_password.",
+                    "help_url": reverse("api_mau_auth:password_reset"),
+                },
+            )
+        elif attrs.get("email") and self.instance:
+            raise ValidationError(
+                detail="You can not change your email.",
+            )
+
+        return attrs
 
 
-class ConfirmationEmailSerializer(serializers.Serializer):
-    uid = serializers.CharField(
+class EmailConfirmationSerializer(serializers.Serializer):
+    uidb64 = serializers.CharField(
         max_length=256,
         required=True,
     )
@@ -89,32 +84,32 @@ class ConfirmationEmailSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs: dict) -> dict:
-        uidb64 = attrs.get("uid")
-        token = attrs.get("token")
-
-        params_exc = serializers.ValidationError(
-            detail="Invalid uid or token.",
+        user = User.check_email_confirmation(
+            uidb64=attrs.get("uidb64"),
+            token=attrs.get("token"),
         )
+        if not user:
+            raise ValidationError(
+                detail="Invalid uid or token.",
+            )
 
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-        except ValueError as exc:
-            raise params_exc
-
-        user = User.objects.filter(pk=uid).first()
-        if user and default_token_generator.check_token(user, token):
-            attrs["user"] = user
-            return attrs
-
-        raise params_exc
+        attrs["user"] = user
+        return attrs
 
     def save(self) -> User:
-        if user := self.validated_data.get("user"):
-            user.is_active = True
-            user.save()
-            return user
+        return self.validated_data.get("user")
 
-        raise ValueError("Context 'user' not found.")
+
+class RegisterConfirmationSerializer(EmailConfirmationSerializer):
+    def save(self) -> User:
+        user = super().save()
+        user.is_active = True
+        user.save()
+        return user
+
+
+class PasswordResetConfirmationSerializer(EmailConfirmationSerializer):
+    pass
 
 
 class AuthTokenSerializer(serializers.Serializer):
@@ -128,7 +123,12 @@ class AuthTokenSerializer(serializers.Serializer):
         trim_whitespace=True,
     )
 
-    def validate(self, attrs):
+    def save(self, **kwargs):
+        user = self.validated_data.get("user")
+        token, _ = Token.objects.get_or_create(user=user)
+        return token.key
+
+    def validate(self, attrs: dict) -> dict:
         email = attrs.get("email")
         password = attrs.get("password")
 
@@ -148,4 +148,51 @@ class AuthTokenSerializer(serializers.Serializer):
             )
 
         attrs["user"] = user
+        return attrs
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField(
+        required=True,
+        write_only=True,
+    )
+
+    def create(self, validated_data):
+        user = get_object_or_404(
+            klass=User,
+            email=validated_data.get("email"),
+        )
+        return user
+
+
+class PasswordSetSerializer(serializers.Serializer):
+    password1 = serializers.CharField(
+        required=True,
+        write_only=True,
+    )
+    password2 = serializers.CharField(
+        required=True,
+        write_only=True,
+    )
+
+    def get_user_from_context(self) -> User:
+        return self.context.get("user")
+
+    def save(self):
+        password = self.validated_data.get("password1")
+        user = self.get_user_from_context()
+        user.set_password(password)
+        user.auth_token.delete()
+        user.save()
+        return user
+
+    def validate(self, attrs):
+        password1 = attrs.get("password1")
+        password2 = attrs.get("password2")
+
+        validate_password(password=password1, user=self.get_user_from_context())
+
+        if password1 != password2:
+            raise ValidationError(detail="Passwords do not match.")
+
         return attrs

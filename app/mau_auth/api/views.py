@@ -1,20 +1,27 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, ViewSet
+from rest_framework.reverse import reverse
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
 from rest_framework import status
 
 from mau_auth.api.permissions import IsOwner
 from mau_auth.models import MauUser
 from mau_auth.api.serializers import (
     UserSerializer,
-    ConfirmationEmailSerializer,
     AuthTokenSerializer,
     AdminUserSerializer,
+    PasswordResetSerializer,
+    PasswordSetSerializer,
+    RegisterConfirmationSerializer,
+    PasswordResetConfirmationSerializer,
 )
 
 User: type[MauUser] = get_user_model()
@@ -48,49 +55,128 @@ class AdminViewSet(ModelViewSet):
     ]
 
 
-class UserViewSet(ViewSet):
+class UserDataViewSet(GenericViewSet):
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    @action(detail=False, permission_classes=[IsAuthenticated, IsOwner])
     def my(self, request: Request) -> Response:
-        serializer = self.serializer_class(request.user)
+        serializer = self.get_serializer(instance=request.user)
         return Response(
             data=serializer.data,
             status=status.HTTP_200_OK,
         )
 
+
+class RegisterViewSet(ViewSet):
     def register(self, request: Request) -> Response:
-        serializer = self.serializer_class(request.data)
+        serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(
-            data=serializer.data,
-            status=status.HTTP_201_CREATED,
+        user = serializer.save()
+
+        user.send_email_confirmation(
+            request=request,
+            confirmation_url_pattern="api_mau_auth:register_confirm",
         )
 
-    def register_confirm(self, request: Request) -> Response:
-        confirm_serializer = ConfirmationEmailSerializer(
+        return Response(
             data={
-                "uid": request.data.get("uid"),
-                "token": request.data.get("token"),
+                "message": "Check your email to confirm register.",
+            },
+            status=status.HTTP_201_CREATED,
+            headers={
+                "Location": reverse("api_mau_auth:my"),
+            },
+        )
+
+    def register_confirm(
+        self,
+        request: Request,
+        uidb64: str,
+        token: str,
+    ) -> Response:
+        confirm_serializer = RegisterConfirmationSerializer(
+            data={
+                "uidb64": uidb64,
+                "token": token,
             },
         )
         confirm_serializer.is_valid(raise_exception=True)
-
         user = confirm_serializer.save()
-        user_serializer = self.serializer_class(user)
+
+        user_serializer = UserSerializer(user)
         return Response(
             data=user_serializer.data,
             status=status.HTTP_200_OK,
         )
 
-    def get_permissions(self):
-        if self.action == "my":
-            permission_classes = [IsAuthenticated, IsOwner]
-        else:
-            permission_classes = [AllowAny]
 
-        return [permission() for permission in permission_classes]
+class ObtainAuthToken(APIView):
+    def post(self, request: Request) -> Response:
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        token = serializer.save()
+        return Response(
+            data={"token": token},
+            status=status.HTTP_200_OK,
+        )
 
 
-class CustomObtainAuthToken(ObtainAuthToken):
-    serializer_class = AuthTokenSerializer
+class PasswordResetViewSet(ViewSet):
+    def password_reset(self, request: Request) -> Response:
+        serializer = PasswordResetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        user.send_email_confirmation(
+            request=request,
+            confirmation_url_pattern="api_mau_auth:password_set",
+        )
+        return Response(
+            data={
+                "message": "Check your email to set the new password.",
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def password_reset_confirm(
+        self,
+        request: Request,
+        uidb64: str,
+        token: str,
+    ) -> Response:
+        user = self.get_user_by_uidb64_and_token(uidb64=uidb64, token=token)
+        self.check_password(user=user)
+
+        return Response(
+            data={
+                "message": (
+                    "Your password was successfully changed. "
+                    "You need to get a new token."
+                ),
+                "help_url": reverse("api_mau_auth:get_token"),
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def get_user_by_uidb64_and_token(
+        self,
+        uidb64: str,
+        token: str,
+    ) -> User:
+        serializer = PasswordResetConfirmationSerializer(
+            data={
+                "uidb64": uidb64,
+                "token": token,
+            },
+        )
+        serializer.is_valid(raise_exception=True)
+        return serializer.save()
+
+    def check_password(self, user: User) -> None:
+        serializer = PasswordSetSerializer(
+            data=self.request.data,
+            context={"user": user},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()

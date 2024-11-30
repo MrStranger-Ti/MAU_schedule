@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from urllib.parse import urljoin
+
 from django.apps import apps
 from django.contrib import auth
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
@@ -12,7 +16,9 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.conf import settings
 from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from rest_framework.authtoken.models import Token
+from rest_framework.reverse import reverse
 
 from mau_auth.validators import validate_full_name, validate_email
 
@@ -138,34 +144,67 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         default=timezone.now,
     )
 
-    def _get_confirmation_message(self, request: HttpRequest) -> str:
+    def get_confirmation_message(
+        self,
+        request: HttpRequest,
+        confirmation_url_pattern: str,
+    ) -> str:
         current_site = get_current_site(request)
         context = {
             "domain": current_site.domain,
-            "uid": urlsafe_base64_encode(force_bytes(self.pk)),
-            "token": default_token_generator.make_token(self),
+            "url": self.get_confirmation_url(base_url=confirmation_url_pattern),
         }
         return render_to_string(
-            "mau_auth/registration/email_message.html", context=context
+            "mau_auth/registration/email_message.html",
+            context=context,
         )
+
+    def get_confirmation_url(self, base_url: str) -> str:
+        uidb64, token = self.get_uidb64_and_token()
+        return reverse(
+            viewname=base_url,
+            kwargs={
+                "uidb64": uidb64,
+                "token": token,
+            },
+        )
+
+    def get_uidb64_and_token(self) -> tuple[str, str]:
+        uid = urlsafe_base64_encode(force_bytes(self.pk))
+        token = default_token_generator.make_token(self)
+        return uid, token
 
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        """Send an email to this user."""
-        send_mail(subject, message, from_email, [self.email], **kwargs)
-
-    def send_email_confirmation(self, request: HttpRequest) -> None:
+    def send_email_confirmation(
+        self,
+        request: HttpRequest,
+        confirmation_url_pattern: str,
+    ) -> None:
         subject = "Подтвердите почту в приложении MAU schedule"
-        message = self._get_confirmation_message(request)
+        message = self.get_confirmation_message(
+            request=request,
+            confirmation_url_pattern=confirmation_url_pattern,
+        )
         send_mail(
             subject=subject,
             from_email=settings.DEFAULT_FROM_EMAIL,
             message=message,
             recipient_list=[self.email],
         )
+
+    @classmethod
+    def check_email_confirmation(cls, uidb64: str, token: str) -> MauUser | None:
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+        except ValueError as exc:
+            return
+
+        user = cls.objects.filter(pk=uid).first()
+        if user and default_token_generator.check_token(user, token):
+            return user
 
 
 class MauInstitute(models.Model):
