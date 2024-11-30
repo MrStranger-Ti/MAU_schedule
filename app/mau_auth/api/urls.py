@@ -1,6 +1,12 @@
 from django.urls import path
 
-from mau_auth.api.views import UserViewSet, CustomObtainAuthToken, AdminViewSet
+from mau_auth.api.views import (
+    UserDataViewSet,
+    AdminViewSet,
+    RegisterViewSet,
+    ObtainAuthToken,
+    PasswordResetViewSet,
+)
 
 app_name = "api_mau_auth"
 
@@ -29,26 +35,8 @@ urlpatterns = [
         name="user_details",
     ),
     path(
-        "register/",
-        UserViewSet.as_view(
-            {
-                "post": "register",
-            },
-        ),
-        name="register",
-    ),
-    path(
-        "register/confirm/",
-        UserViewSet.as_view(
-            {
-                "post": "register_confirm",
-            },
-        ),
-        name="register_confirm",
-    ),
-    path(
         "my/",
-        UserViewSet.as_view(
+        UserDataViewSet.as_view(
             {
                 "get": "my",
             },
@@ -56,8 +44,36 @@ urlpatterns = [
         name="my",
     ),
     path(
+        "register/",
+        RegisterViewSet.as_view(
+            {
+                "post": "register",
+            },
+        ),
+        name="register",
+    ),
+    path(
+        "register/confirm/<uidb64>/<token>/",
+        RegisterViewSet.as_view(
+            {
+                "get": "register_confirm",
+            },
+        ),
+        name="register_confirm",
+    ),
+    path(
         "token/",
-        CustomObtainAuthToken.as_view(),
-        name="login",
+        ObtainAuthToken.as_view(),
+        name="get_token",
+    ),
+    path(
+        "password-reset/",
+        PasswordResetViewSet.as_view({"post": "password_reset"}),
+        name="password_reset",
+    ),
+    path(
+        "password-reset/confirm/<uidb64>/<token>/",
+        PasswordResetViewSet.as_view({"post": "password_reset_confirm"}),
+        name="password_set",
     ),
 ]

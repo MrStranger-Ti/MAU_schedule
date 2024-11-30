@@ -163,7 +163,23 @@ AUTH_USER_MODEL = "mau_auth.MauUser"
 LOGIN_URL = reverse_lazy("mau_auth:login")
 LOGIN_REDIRECT_URL = reverse_lazy("schedule:group_schedule")
 LOGOUT_REDIRECT_URL = reverse_lazy("core:index")
-
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 8,
+        },
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
 
 # Email
 
