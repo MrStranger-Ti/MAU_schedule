@@ -1,5 +1,3 @@
-from audioop import reverse
-
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseForbidden
 from django.shortcuts import render

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from urllib.parse import urljoin
-
 from django.apps import apps
 from django.contrib import auth
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
@@ -17,7 +15,6 @@ from django.utils import timezone
 from django.conf import settings
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 
 from mau_auth.validators import validate_full_name, validate_email

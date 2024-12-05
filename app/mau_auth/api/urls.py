@@ -1,7 +1,7 @@
 from django.urls import path
 
 from mau_auth.api.views import (
-    UserDataViewSet,
+    UserViewSet,
     AdminViewSet,
     RegisterViewSet,
     ObtainAuthToken,
@@ -36,9 +36,11 @@ urlpatterns = [
     ),
     path(
         "my/",
-        UserDataViewSet.as_view(
+        UserViewSet.as_view(
             {
-                "get": "my",
+                "get": "retrieve",
+                "put": "update",
+                "patch": "partial_update",
             },
         ),
         name="my",
