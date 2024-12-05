@@ -1,27 +1,25 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
 from rest_framework import status
+from rest_framework import mixins
 
 from mau_auth.api.permissions import IsOwner
 from mau_auth.models import MauUser
 from mau_auth.api.serializers import (
-    UserSerializer,
     AuthTokenSerializer,
     AdminUserSerializer,
     PasswordResetSerializer,
     PasswordSetSerializer,
     RegisterConfirmationSerializer,
     PasswordResetConfirmationSerializer,
+    AuthenticatedUserSerializer,
 )
 
 User: type[MauUser] = get_user_model()
@@ -55,22 +53,32 @@ class AdminViewSet(ModelViewSet):
     ]
 
 
-class UserDataViewSet(GenericViewSet):
+class UserViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    GenericViewSet,
+):
+    permission_classes = [IsAuthenticated, IsOwner]
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = AuthenticatedUserSerializer
 
-    @action(detail=False, permission_classes=[IsAuthenticated, IsOwner])
-    def my(self, request: Request) -> Response:
-        serializer = self.get_serializer(instance=request.user)
-        return Response(
-            data=serializer.data,
-            status=status.HTTP_200_OK,
-        )
+    # def get(self, request: Request) -> Response:
+    #     serializer = self.get_serializer(instance=request.user)
+    #     return Response(
+    #         data=serializer.data,
+    #         status=status.HTTP_200_OK,
+    #     )
+    #
+    # def put(self, request: Request) -> Response:
+    #     serializer = self.get_serializer(instance)
+
+    def get_object(self):
+        return self.request.user
 
 
 class RegisterViewSet(ViewSet):
     def register(self, request: Request) -> Response:
-        serializer = UserSerializer(data=request.data)
+        serializer = AuthenticatedUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
@@ -104,7 +112,7 @@ class RegisterViewSet(ViewSet):
         confirm_serializer.is_valid(raise_exception=True)
         user = confirm_serializer.save()
 
-        user_serializer = UserSerializer(user)
+        user_serializer = AuthenticatedUserSerializer(user)
         return Response(
             data=user_serializer.data,
             status=status.HTTP_200_OK,

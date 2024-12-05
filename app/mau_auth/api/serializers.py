@@ -5,21 +5,74 @@ from django.contrib.auth.password_validation import validate_password
 from django.db.models import Model
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 
-from mau_auth.models import MauUser, Token
+from mau_auth.models import MauUser
 
 User: type[MauUser] = get_user_model()
 
 
-class AdminUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    REQUIRED_FIELDS = [
+        "full_name",
+        "email",
+        "password",
+        "institute",
+        "course",
+        "group",
+    ]
+
     class Meta:
         model = User
         fields = "__all__"
+        read_only_fields = [
+            "id",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].required = False
+
+    def get_required_fields_detail(self, attrs: dict) -> dict:
+        detail = {}
+        for req_field in self.REQUIRED_FIELDS:
+            if req_field not in attrs:
+                detail[req_field] = self.error_messages["required"]
+
+        return detail
+
+    def validate_required_fields(self, attrs: dict) -> None:
+        # check required fields for create and full update (put method)
+        if not self.partial:
+            for req_field in self.REQUIRED_FIELDS:
+                if req_field not in attrs or not attrs[req_field]:
+                    raise ValidationError(detail=self.get_required_fields_detail(attrs))
+
+    def validate(self, attrs: dict) -> dict:
+        self.validate_required_fields(attrs)
+        return attrs
 
 
-class UserSerializer(serializers.ModelSerializer):
+class AdminUserSerializer(UserSerializer):
+    def update(self, instance: User, validated_data: dict) -> User:
+        # just set password for any user
+        if password := validated_data.get("password"):
+            instance.set_password(password)
+
+        return super().update(instance, validated_data)
+
+
+class AuthenticatedUserSerializer(UserSerializer):
+    REQUIRED_FIELDS = [
+        "full_name",
+        "institute",
+        "course",
+        "group",
+    ]
+
     class Meta:
         model = User
         exclude = [
@@ -34,11 +87,11 @@ class UserSerializer(serializers.ModelSerializer):
             "last_login",
         ]
 
-    password = serializers.CharField(
-        required=True,
-        write_only=True,
-        validators=[validate_password],
-    )
+    # password = serializers.CharField(
+    #     required=True,
+    #     write_only=True,
+    #     validators=[validate_password],
+    # )
 
     def create(self, validated_data: dict) -> User:
         password = validated_data.get("password")
@@ -50,25 +103,19 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-    def update(self, instance: Model, validated_data: dict) -> User:
-        user = super().update(instance, validated_data)
-        # ?
-        # ?
-        # ?
-        return user
-
     def validate(self, attrs: dict) -> dict:
-        if attrs.get("password") and self.instance:
-            raise ValidationError(
-                detail={
-                    "detail": "You need to go to this url to change_password.",
-                    "help_url": reverse("api_mau_auth:password_reset"),
-                },
-            )
-        elif attrs.get("email") and self.instance:
-            raise ValidationError(
-                detail="You can not change your email.",
-            )
+        super().validate(attrs)
+        if self.instance:
+            if attrs.get("password"):
+                raise ValidationError(
+                    detail={
+                        "detail": "You need to go to password reset url to change_password.",
+                        "help_url": reverse("api_mau_auth:password_reset"),
+                    },
+                )
+
+            elif attrs.get("email"):
+                raise ValidationError(detail="You can not change your email.")
 
         return attrs
 
@@ -89,9 +136,7 @@ class EmailConfirmationSerializer(serializers.Serializer):
             token=attrs.get("token"),
         )
         if not user:
-            raise ValidationError(
-                detail="Invalid uid or token.",
-            )
+            raise ValidationError(detail="Invalid uid or token.")
 
         attrs["user"] = user
         return attrs
@@ -123,7 +168,7 @@ class AuthTokenSerializer(serializers.Serializer):
         trim_whitespace=True,
     )
 
-    def save(self, **kwargs):
+    def save(self, **kwargs) -> str:
         user = self.validated_data.get("user")
         token, _ = Token.objects.get_or_create(user=user)
         return token.key
@@ -139,13 +184,9 @@ class AuthTokenSerializer(serializers.Serializer):
                 password=password,
             )
             if not user:
-                raise serializers.ValidationError(
-                    detail="Invalid login or password.",
-                )
+                raise serializers.ValidationError(detail="Invalid login or password.")
         else:
-            raise serializers.ValidationError(
-                detail="No password or login.",
-            )
+            raise serializers.ValidationError(detail="No password or login.")
 
         attrs["user"] = user
         return attrs
@@ -157,7 +198,7 @@ class PasswordResetSerializer(serializers.Serializer):
         write_only=True,
     )
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> User:
         user = get_object_or_404(
             klass=User,
             email=validated_data.get("email"),
@@ -186,7 +227,7 @@ class PasswordSetSerializer(serializers.Serializer):
         user.save()
         return user
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict) -> dict:
         password1 = attrs.get("password1")
         password2 = attrs.get("password2")
 
