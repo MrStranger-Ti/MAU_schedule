@@ -62,16 +62,6 @@ class UserViewSet(
     queryset = User.objects.all()
     serializer_class = AuthenticatedUserSerializer
 
-    # def get(self, request: Request) -> Response:
-    #     serializer = self.get_serializer(instance=request.user)
-    #     return Response(
-    #         data=serializer.data,
-    #         status=status.HTTP_200_OK,
-    #     )
-    #
-    # def put(self, request: Request) -> Response:
-    #     serializer = self.get_serializer(instance)
-
     def get_object(self):
         return self.request.user
 

@@ -1,4 +1,5 @@
 from mailbox import NotEmptyError
+from typing import Iterable
 
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
@@ -24,13 +25,6 @@ class UserSerializer(serializers.ModelSerializer):
         "group",
     ]
 
-    class Meta:
-        model = User
-        fields = "__all__"
-        read_only_fields = [
-            "id",
-        ]
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
@@ -51,33 +45,40 @@ class UserSerializer(serializers.ModelSerializer):
                 if req_field not in attrs or not attrs[req_field]:
                     raise ValidationError(detail=self.get_required_fields_detail(attrs))
 
+    def exclude_required_fields(self, *fields_names) -> None:
+        for field_name in fields_names:
+            if field_name in self.REQUIRED_FIELDS:
+                self.REQUIRED_FIELDS.remove(field_name)
+
     def validate(self, attrs: dict) -> dict:
         self.validate_required_fields(attrs)
         return attrs
 
 
 class AdminUserSerializer(UserSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
+        read_only_fields = [
+            "id",
+        ]
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
+
     def update(self, instance: User, validated_data: dict) -> User:
         # just set password for any user
         if password := validated_data.get("password"):
+            validated_data.pop("password", None)
             instance.set_password(password)
 
         return super().update(instance, validated_data)
 
 
 class AuthenticatedUserSerializer(UserSerializer):
-    REQUIRED_FIELDS = [
-        "full_name",
-        "institute",
-        "course",
-        "group",
-    ]
-
     class Meta:
         model = User
-        exclude = [
-            "last_login",
-        ]
+        fields = "__all__"
         read_only_fields = [
             "id",
             "is_superuser",
@@ -86,12 +87,9 @@ class AuthenticatedUserSerializer(UserSerializer):
             "date_joined",
             "last_login",
         ]
-
-    # password = serializers.CharField(
-    #     required=True,
-    #     write_only=True,
-    #     validators=[validate_password],
-    # )
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
 
     def create(self, validated_data: dict) -> User:
         password = validated_data.get("password")
@@ -104,8 +102,10 @@ class AuthenticatedUserSerializer(UserSerializer):
         return user
 
     def validate(self, attrs: dict) -> dict:
-        super().validate(attrs)
+        # if update
         if self.instance:
+            self.exclude_required_fields("password", "email")
+
             if attrs.get("password"):
                 raise ValidationError(
                     detail={
@@ -117,6 +117,7 @@ class AuthenticatedUserSerializer(UserSerializer):
             elif attrs.get("email"):
                 raise ValidationError(detail="You can not change your email.")
 
+        super().validate(attrs)
         return attrs
 
 
