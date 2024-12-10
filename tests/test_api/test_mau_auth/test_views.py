@@ -5,8 +5,6 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from model_bakery import baker
 
-from tests.test_api.test_mau_auth.conftest import user_factory
-
 User = get_user_model()
 
 pytestmark = pytest.mark.django_db
@@ -58,7 +56,7 @@ class TestAdminViewSet:
     def test_update(self, admin_client, user_factory, helper):
         user = user_factory()
         fake_user = baker.prepare(User, _fill_optional=True)
-        expected_data = {
+        json_data = {
             "full_name": "Petr Petrov Petrovich",
             "email": "testuser@mauniver.ru",
             "password": fake_user.password,
@@ -66,10 +64,11 @@ class TestAdminViewSet:
             "course": fake_user.course,
             "group": fake_user.group,
         }
+        response = admin_client.put(self.get_details_url(user.pk), data=json_data)
+        assert response.status_code == status.HTTP_200_OK
 
-        response = admin_client.put(self.get_details_url(user.pk), data=expected_data)
-        assert response.status_code == status.HTTP_200_OK, json.loads(response.content)
-
+        expected_data = json_data.copy()
+        expected_data.pop("password")
         response_data = json.loads(response.content)
         helper.assert_match_data(response_data, expected_data)
 
@@ -107,3 +106,55 @@ class TestAdminViewSet:
         response = admin_client.delete(self.get_details_url(user.id))
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert not User.objects.filter(pk=user.pk).exists()
+
+
+class TestUserViewSet:
+    url = "/api/accounts/my/"
+
+    def test_retrieve(self, user_client, json_user):
+        response = user_client.get(self.url)
+        assert response.status_code == status.HTTP_200_OK
+
+        user = User.objects.all().first()
+        expected_data = json_user(user=user, exclude_fields=["password"])
+        response_data = json.loads(response.content)
+        assert response_data == expected_data
+
+    def test_update(self, user_client, json_user):
+        json_data = {
+            "full_name": "Test Test Test",
+            "institute": 3,
+            "course": 3,
+            "group": "Some Group",
+        }
+
+        response = user_client.put(self.url, data=json_data)
+        assert response.status_code == status.HTTP_200_OK
+
+        user = User.objects.all().first()
+        expected_data = json_user(user=user, exclude_fields=["password"])
+        expected_data.update(json_data)
+
+        response_data = json.loads(response.content)
+        assert response_data == expected_data
+
+    @pytest.mark.parametrize(
+        ["field_name", "value"],
+        [
+            ("full_name", "Test Test Test"),
+            ("institute", 3),
+            ("course", 3),
+            ("group", "Some Group"),
+        ],
+    )
+    def test_partial_update(self, field_name, value, user_client, json_user):
+        json_data = {field_name: value}
+
+        response = user_client.patch(self.url, data=json_data)
+        assert response.status_code == status.HTTP_200_OK
+
+        user = User.objects.all().first()
+        expected_data = json_user(user=user, exclude_fields=["password"])
+        expected_data.update(json_data)
+        response_data = json.loads(response.content)
+        assert response_data == expected_data
