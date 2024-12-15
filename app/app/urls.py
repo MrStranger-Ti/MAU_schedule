@@ -29,7 +29,8 @@ urlpatterns = [
     path("notes/", include("notes.urls")),
     # path("bookmarks/", include("bookmarks.urls")),
     # RestAPI paths
-    path("api/accounts/", include("mau_auth.api.urls")),
+    path("api/", include("mau_auth.api.urls")),
+    path("api/schedule/", include("schedule.api.urls")),
 ]
 
 if settings.DEBUG:

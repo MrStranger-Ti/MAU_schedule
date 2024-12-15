@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group, Permission
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -20,9 +22,23 @@ from mau_auth.api.serializers import (
     RegisterConfirmationSerializer,
     PasswordResetConfirmationSerializer,
     AuthenticatedUserSerializer,
+    GroupSerializer,
+    PermissionSerializer,
 )
 
 User: type[MauUser] = get_user_model()
+
+
+class GroupViewSet(ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [IsAdminUser]
+
+
+class PermissionViewSet(ModelViewSet):
+    queryset = Permission.objects.all()
+    serializer_class = PermissionSerializer
+    permission_classes = [IsAdminUser]
 
 
 class AdminViewSet(ModelViewSet):
@@ -66,58 +82,39 @@ class UserViewSet(
         return self.request.user
 
 
-class RegisterViewSet(ViewSet):
-    def register(self, request: Request) -> Response:
-        serializer = AuthenticatedUserSerializer(data=request.data)
+class RegisterAPIView(GenericAPIView):
+    serializer_class = AuthenticatedUserSerializer
+
+    def post(self, request: Request) -> Response:
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-
-        user.send_email_confirmation(
-            request=request,
-            confirmation_url_pattern="api_mau_auth:register_confirm",
-        )
-
+        serializer.save()
         return Response(
-            data={
-                "message": "Check your email to confirm register.",
-            },
+            data={"message": "Check your email to confirm register."},
             status=status.HTTP_201_CREATED,
-            headers={
-                "Location": reverse("api_mau_auth:my"),
-            },
+            headers={"Location": reverse("api_mau_auth:me")},
         )
 
-    def register_confirm(
-        self,
-        request: Request,
-        uidb64: str,
-        token: str,
-    ) -> Response:
-        confirm_serializer = RegisterConfirmationSerializer(
-            data={
-                "uidb64": uidb64,
-                "token": token,
-            },
+
+class RegisterConfirmAPIView(GenericAPIView):
+    serializer_class = RegisterConfirmationSerializer
+
+    def get(self, request: Request, uidb64: str, token: str) -> Response:
+        confirm_serializer = self.get_serializer(
+            data={"uidb64": uidb64, "token": token},
         )
         confirm_serializer.is_valid(raise_exception=True)
         user = confirm_serializer.save()
-
-        user_serializer = AuthenticatedUserSerializer(user)
-        return Response(
-            data=user_serializer.data,
-            status=status.HTTP_200_OK,
-        )
+        user_serializer = AuthenticatedUserSerializer(instance=user)
+        return Response(data=user_serializer.data, status=status.HTTP_200_OK)
 
 
-class ObtainAuthToken(APIView):
+class ObtainAuthTokenAPIView(APIView):
     def post(self, request: Request) -> Response:
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         token = serializer.save()
-        return Response(
-            data={"token": token},
-            status=status.HTTP_200_OK,
-        )
+        return Response(data={"token": token}, status=status.HTTP_200_OK)
 
 
 class PasswordResetViewSet(ViewSet):
@@ -128,12 +125,10 @@ class PasswordResetViewSet(ViewSet):
 
         user.send_email_confirmation(
             request=request,
-            confirmation_url_pattern="api_mau_auth:password_set",
+            confirmation_url_pattern="api_mau_auth:password-set",
         )
         return Response(
-            data={
-                "message": "Check your email to set the new password.",
-            },
+            data={"message": "Check your email to set the new password."},
             status=status.HTTP_200_OK,
         )
 
@@ -152,7 +147,7 @@ class PasswordResetViewSet(ViewSet):
                     "Your password was successfully changed. "
                     "You need to get a new token."
                 ),
-                "help_url": reverse("api_mau_auth:get_token"),
+                "help_url": reverse("api_mau_auth:get-token"),
             },
             status=status.HTTP_200_OK,
         )
@@ -163,10 +158,7 @@ class PasswordResetViewSet(ViewSet):
         token: str,
     ) -> User:
         serializer = PasswordResetConfirmationSerializer(
-            data={
-                "uidb64": uidb64,
-                "token": token,
-            },
+            data={"uidb64": uidb64, "token": token},
         )
         serializer.is_valid(raise_exception=True)
         return serializer.save()
