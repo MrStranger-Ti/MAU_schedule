@@ -18,6 +18,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.reverse import reverse
 
 from mau_auth.validators import validate_full_name, validate_email
+from schedule.models import MauInstitute
 
 
 class MauUserManager(BaseUserManager):
@@ -101,7 +102,7 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         verbose_name="Email",
     )
     institute = models.ForeignKey(
-        "MauInstitute",
+        MauInstitute,
         null=True,
         on_delete=models.PROTECT,
         related_name="mauusers",
@@ -158,13 +159,7 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
 
     def get_confirmation_url(self, base_url: str) -> str:
         uidb64, token = self.get_uidb64_and_token()
-        return reverse(
-            viewname=base_url,
-            kwargs={
-                "uidb64": uidb64,
-                "token": token,
-            },
-        )
+        return reverse(viewname=base_url, kwargs={"uidb64": uidb64, "token": token})
 
     def get_uidb64_and_token(self) -> tuple[str, str]:
         uid = urlsafe_base64_encode(force_bytes(self.pk))
@@ -202,15 +197,3 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
         user = cls.objects.filter(pk=uid).first()
         if user and default_token_generator.check_token(user, token):
             return user
-
-
-class MauInstitute(models.Model):
-    class Meta:
-        verbose_name = "институт"
-        verbose_name_plural = "институты"
-        ordering = ("name",)
-
-    name = models.CharField(max_length=20, verbose_name="Название")
-
-    def __str__(self):
-        return self.name

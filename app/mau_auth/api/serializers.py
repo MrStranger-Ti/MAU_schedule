@@ -1,9 +1,6 @@
-from mailbox import NotEmptyError
-from typing import Iterable
-
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.password_validation import validate_password
-from django.db.models import Model
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
@@ -15,7 +12,21 @@ from mau_auth.models import MauUser
 User: type[MauUser] = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = "__all__"
+        read_only_fields = ["id"]
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = "__all__"
+        read_only_fields = ["id"]
+
+
+class BaseUserSerializer(serializers.ModelSerializer):
     REQUIRED_FIELDS = [
         "full_name",
         "email",
@@ -54,13 +65,26 @@ class UserSerializer(serializers.ModelSerializer):
         self.validate_required_fields(attrs)
         return attrs
 
+    def create(self, validated_data: dict) -> User:
+        password = validated_data.get("password")
+        user = super().create(validated_data)
+        user.set_password(password)
+        return user
 
-class AdminUserSerializer(UserSerializer):
+    def save(self, **kwargs):
+        user = super().save(**kwargs)
+        user.save()
+        return user
+
+
+class AdminUserSerializer(BaseUserSerializer):
     class Meta:
         model = User
         fields = "__all__"
         read_only_fields = [
             "id",
+            "date_joined",
+            "last_login",
         ]
         extra_kwargs = {
             "password": {"write_only": True},
@@ -75,7 +99,7 @@ class AdminUserSerializer(UserSerializer):
         return super().update(instance, validated_data)
 
 
-class AuthenticatedUserSerializer(UserSerializer):
+class AuthenticatedUserSerializer(BaseUserSerializer):
     class Meta:
         model = User
         fields = "__all__"
@@ -92,13 +116,16 @@ class AuthenticatedUserSerializer(UserSerializer):
         }
 
     def create(self, validated_data: dict) -> User:
-        password = validated_data.get("password")
-
         user = super().create(validated_data)
-        user.set_password(password)
         user.is_active = False
-        user.save()
+        request = self.context.get("request")
+        if request is None:
+            raise ValueError("Context param 'request' not set.")
 
+        user.send_email_confirmation(
+            request=request,
+            confirmation_url_pattern="api_mau_auth:register-confirm",
+        )
         return user
 
     def validate(self, attrs: dict) -> dict:
@@ -110,7 +137,7 @@ class AuthenticatedUserSerializer(UserSerializer):
                 raise ValidationError(
                     detail={
                         "detail": "You need to go to password reset url to change_password.",
-                        "help_url": reverse("api_mau_auth:password_reset"),
+                        "help_url": reverse("api_mau_auth:password-reset"),
                     },
                 )
 
@@ -200,10 +227,7 @@ class PasswordResetSerializer(serializers.Serializer):
     )
 
     def create(self, validated_data: dict) -> User:
-        user = get_object_or_404(
-            klass=User,
-            email=validated_data.get("email"),
-        )
+        user = get_object_or_404(klass=User, email=validated_data.get("email"))
         return user
 
 

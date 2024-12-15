@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.core.exceptions import ValidationError
 
-from mau_auth.models import MauInstitute
+from schedule.models import MauInstitute
 
 User = get_user_model()
 

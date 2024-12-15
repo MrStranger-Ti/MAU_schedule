@@ -5,13 +5,15 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from model_bakery import baker
 
+from tests.test_api.test_mau_auth.test_serializers import user_serialized_data
+
 User = get_user_model()
 
 pytestmark = pytest.mark.django_db
 
 
 class TestAdminViewSet:
-    url = "/api/accounts/"
+    url = "/api/users/"
     total_instances = 5
 
     def get_details_url(self, _id: int):
@@ -46,7 +48,7 @@ class TestAdminViewSet:
         assert response.status_code == status.HTTP_201_CREATED
 
         response_data = json.loads(response.content)
-        helper.assert_match_data(response_data, expected_data)
+        assert helper.in_expected(response_data, expected_data)
 
     def test_retrieve(self, admin_client, user_factory):
         user = user_factory()
@@ -68,9 +70,13 @@ class TestAdminViewSet:
         assert response.status_code == status.HTTP_200_OK
 
         expected_data = json_data.copy()
-        expected_data.pop("password")
+        password = expected_data.pop("password", None)
+
+        user.refresh_from_db()
+        assert user.check_password(password)
+
         response_data = json.loads(response.content)
-        helper.assert_match_data(response_data, expected_data)
+        assert helper.in_expected(response_data, expected_data)
 
     @pytest.mark.parametrize(
         ["field_name", "value"],
@@ -98,7 +104,7 @@ class TestAdminViewSet:
         assert response.status_code == status.HTTP_200_OK
 
         response_data = json.loads(response.content)
-        helper.assert_match_data(response_data, expected_data)
+        assert helper.in_expected(response_data, expected_data)
 
     def test_delete(self, admin_client, user_factory):
         user = user_factory()
@@ -109,18 +115,18 @@ class TestAdminViewSet:
 
 
 class TestUserViewSet:
-    url = "/api/accounts/my/"
+    url = "/api/me/"
 
-    def test_retrieve(self, user_client, json_user):
+    def test_retrieve(self, user_client, get_serialized_data):
         response = user_client.get(self.url)
         assert response.status_code == status.HTTP_200_OK
 
         user = User.objects.all().first()
-        expected_data = json_user(user=user, exclude_fields=["password"])
+        expected_data = get_serialized_data(user=user, exclude_fields=["password"])
         response_data = json.loads(response.content)
         assert response_data == expected_data
 
-    def test_update(self, user_client, json_user):
+    def test_update(self, user_client, helper):
         json_data = {
             "full_name": "Test Test Test",
             "institute": 3,
@@ -131,30 +137,45 @@ class TestUserViewSet:
         response = user_client.put(self.url, data=json_data)
         assert response.status_code == status.HTTP_200_OK
 
-        user = User.objects.all().first()
-        expected_data = json_user(user=user, exclude_fields=["password"])
-        expected_data.update(json_data)
-
         response_data = json.loads(response.content)
-        assert response_data == expected_data
+        assert helper.in_expected(response_data, json_data)
 
     @pytest.mark.parametrize(
-        ["field_name", "value"],
+        "field",
         [
-            ("full_name", "Test Test Test"),
-            ("institute", 3),
-            ("course", 3),
-            ("group", "Some Group"),
+            {"full_name": "Test Test Test"},
+            {"institute": 3},
+            {"course": 3},
+            {"group": "Some Group"},
         ],
     )
-    def test_partial_update(self, field_name, value, user_client, json_user):
-        json_data = {field_name: value}
-
-        response = user_client.patch(self.url, data=json_data)
+    def test_partial_update(self, field, user_client, helper):
+        response = user_client.patch(self.url, data=field)
         assert response.status_code == status.HTTP_200_OK
 
-        user = User.objects.all().first()
-        expected_data = json_user(user=user, exclude_fields=["password"])
-        expected_data.update(json_data)
         response_data = json.loads(response.content)
-        assert response_data == expected_data
+        assert helper.in_expected(response_data, field)
+
+
+class TestRegisterAPIViews:
+    url = "/api/register/"
+
+    def test_success_register(self, api_client, get_confirmation_url):
+        response = api_client.post(self.url, data=user_serialized_data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+        confirmation_url = get_confirmation_url()
+        response = api_client.get(confirmation_url)
+        assert response.status_code == status.HTTP_200_OK, confirmation_url
+
+
+class TestObtainTokenAPIView:
+    url = "/api/token/"
+
+    def test_token_in_data(self, api_client, create_user_with_credentials):
+        credentials = {"password": "testuser", "email": "example@mauniver.ru"}
+        create_user_with_credentials(**credentials)
+
+        response = api_client.post(self.url, data=credentials)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data.get("token")

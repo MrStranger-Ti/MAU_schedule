@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from mau_auth.models import MauUser, MauInstitute
+from mau_auth.models import MauUser
 from mau_auth.html.forms import UserRegistrationForm
 
 
@@ -33,9 +33,3 @@ class MauUserAdmin(UserAdmin):
         ),
     )
     add_form = UserRegistrationForm
-
-
-@admin.register(MauInstitute)
-class MauInstituteAdmin(admin.ModelAdmin):
-    list_display = "pk", "name"
-    list_display_links = "pk", "name"
