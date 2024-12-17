@@ -51,26 +51,3 @@ def get_serialized_data() -> Callable:
         return json_data
 
     return wrapper
-
-
-@pytest.fixture
-def get_confirmation_url() -> Callable:
-    def wrapper() -> str:
-        message = mail.outbox[0].body
-        match = re.search(r"http.+\s?", message)
-        return match.group()
-
-    return wrapper
-
-
-@pytest.fixture
-def get_uidb64_and_token_from_last_message(get_confirmation_url) -> Callable:
-    def wrapper() -> tuple[str, str]:
-        confirmation_url = get_confirmation_url()
-        split_url = confirmation_url.split("/")
-        if split_url[-1] not in ("", "\n"):
-            return split_url[-2], split_url[-1]
-
-        return split_url[-3], split_url[-2]
-
-    return wrapper

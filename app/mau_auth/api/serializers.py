@@ -7,6 +7,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 
+from extensions.serializers.mixins import ContextMixin
 from mau_auth.models import MauUser
 
 User: type[MauUser] = get_user_model()
@@ -99,7 +100,7 @@ class AdminUserSerializer(BaseUserSerializer):
         return super().update(instance, validated_data)
 
 
-class AuthenticatedUserSerializer(BaseUserSerializer):
+class AuthenticatedUserSerializer(BaseUserSerializer, ContextMixin):
     class Meta:
         model = User
         fields = "__all__"
@@ -118,12 +119,8 @@ class AuthenticatedUserSerializer(BaseUserSerializer):
     def create(self, validated_data: dict) -> User:
         user = super().create(validated_data)
         user.is_active = False
-        request = self.context.get("request")
-        if request is None:
-            raise ValueError("Context param 'request' not set.")
-
         user.send_email_confirmation(
-            request=request,
+            request=self.get_context("request"),
             confirmation_url_pattern="api_mau_auth:register-confirm",
         )
         return user
@@ -185,7 +182,7 @@ class PasswordResetConfirmationSerializer(EmailConfirmationSerializer):
     pass
 
 
-class AuthTokenSerializer(serializers.Serializer):
+class AuthTokenSerializer(serializers.Serializer, ContextMixin):
     email = serializers.EmailField(
         required=True,
         write_only=True,
@@ -207,7 +204,7 @@ class AuthTokenSerializer(serializers.Serializer):
 
         if email and password:
             user = authenticate(
-                request=self.context.get("request"),
+                request=self.get_context("request"),
                 email=email,
                 password=password,
             )
@@ -220,7 +217,7 @@ class AuthTokenSerializer(serializers.Serializer):
         return attrs
 
 
-class PasswordResetSerializer(serializers.Serializer):
+class PasswordResetSerializer(serializers.Serializer, ContextMixin):
     email = serializers.EmailField(
         required=True,
         write_only=True,
@@ -228,10 +225,14 @@ class PasswordResetSerializer(serializers.Serializer):
 
     def create(self, validated_data: dict) -> User:
         user = get_object_or_404(klass=User, email=validated_data.get("email"))
+        user.send_email_confirmation(
+            request=self.get_context("request"),
+            confirmation_url_pattern="api_mau_auth:password-set",
+        )
         return user
 
 
-class PasswordSetSerializer(serializers.Serializer):
+class PasswordSetSerializer(serializers.Serializer, ContextMixin):
     password1 = serializers.CharField(
         required=True,
         write_only=True,
@@ -241,12 +242,9 @@ class PasswordSetSerializer(serializers.Serializer):
         write_only=True,
     )
 
-    def get_user_from_context(self) -> User:
-        return self.context.get("user")
-
     def save(self):
         password = self.validated_data.get("password1")
-        user = self.get_user_from_context()
+        user = self.get_context("user")
         user.set_password(password)
         user.auth_token.delete()
         user.save()
@@ -256,7 +254,7 @@ class PasswordSetSerializer(serializers.Serializer):
         password1 = attrs.get("password1")
         password2 = attrs.get("password2")
 
-        validate_password(password=password1, user=self.get_user_from_context())
+        validate_password(password=password1, user=self.get_context("user"))
 
         if password1 != password2:
             raise ValidationError(detail="Passwords do not match.")

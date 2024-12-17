@@ -1,68 +1,53 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from mau_auth.api.views import (
-    UserViewSet,
-    AdminViewSet,
-    ObtainAuthTokenAPIView,
-    PasswordResetViewSet,
-    GroupViewSet,
-    PermissionViewSet,
-    RegisterAPIView,
-    RegisterConfirmAPIView,
-)
+from mau_auth.api import views
 
 app_name = "api_mau_auth"
 
-auth_router = DefaultRouter()
-auth_router.register(
-    prefix="users",
-    viewset=AdminViewSet,
-    basename="user",
-)
-auth_router.register(
-    prefix="groups",
-    viewset=GroupViewSet,
-    basename="group",
-)
-auth_router.register(
-    prefix="permissions",
-    viewset=PermissionViewSet,
-    basename="permission",
+router = DefaultRouter()
+router.register(prefix="users", viewset=views.AdminViewSet, basename="user")
+router.register(prefix="groups", viewset=views.GroupViewSet, basename="group")
+router.register(
+    prefix="permissions", viewset=views.PermissionViewSet, basename="permission"
 )
 
 urlpatterns = [
-    path("", include(auth_router.urls)),
+    path("", include(router.urls)),
     path(
         "me/",
-        UserViewSet.as_view(
+        views.UserViewSet.as_view(
             {
                 "get": "retrieve",
                 "put": "update",
                 "patch": "partial_update",
-            },
+            }
         ),
-        name="me",
+        name="me-detail",
     ),
-    path("register/", RegisterAPIView.as_view(), name="register"),
+    path(
+        "register/",
+        views.RegisterAPIView.as_view(),
+        name="register",
+    ),
     path(
         "register/confirm/<uidb64>/<token>/",
-        RegisterConfirmAPIView.as_view(),
+        views.RegisterConfirmAPIView.as_view(),
         name="register-confirm",
     ),
     path(
         "token/",
-        ObtainAuthTokenAPIView.as_view(),
+        views.ObtainAuthTokenAPIView.as_view(),
         name="get-token",
     ),
     path(
-        "password-reset/",
-        PasswordResetViewSet.as_view({"post": "password_reset"}),
+        "password/reset/",
+        views.PasswordResetAPIView.as_view(),
         name="password-reset",
     ),
     path(
-        "password-reset/confirm/<uidb64>/<token>/",
-        PasswordResetViewSet.as_view({"post": "password_reset_confirm"}),
+        "password/reset/confirm/<uidb64>/<token>/",
+        views.PasswordResetConfirmAPIView.as_view(),
         name="password-set",
     ),
 ]

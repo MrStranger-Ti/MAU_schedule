@@ -92,7 +92,6 @@ class RegisterAPIView(GenericAPIView):
         return Response(
             data={"message": "Check your email to confirm register."},
             status=status.HTTP_201_CREATED,
-            headers={"Location": reverse("api_mau_auth:me")},
         )
 
 
@@ -104,35 +103,39 @@ class RegisterConfirmAPIView(GenericAPIView):
             data={"uidb64": uidb64, "token": token},
         )
         confirm_serializer.is_valid(raise_exception=True)
-        user = confirm_serializer.save()
-        user_serializer = AuthenticatedUserSerializer(instance=user)
-        return Response(data=user_serializer.data, status=status.HTTP_200_OK)
+        confirm_serializer.save()
+        return Response(
+            data={"message": "You have been successfully registered."},
+            headers={"Location": reverse("api_mau_auth:me-detail")},
+            status=status.HTTP_200_OK,
+        )
 
 
-class ObtainAuthTokenAPIView(APIView):
+class ObtainAuthTokenAPIView(GenericAPIView):
+    serializer_class = AuthTokenSerializer
+
     def post(self, request: Request) -> Response:
-        serializer = AuthTokenSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         token = serializer.save()
         return Response(data={"token": token}, status=status.HTTP_200_OK)
 
 
-class PasswordResetViewSet(ViewSet):
-    def password_reset(self, request: Request) -> Response:
-        serializer = PasswordResetSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+class PasswordResetAPIView(GenericAPIView):
+    serializer_class = PasswordResetSerializer
 
-        user.send_email_confirmation(
-            request=request,
-            confirmation_url_pattern="api_mau_auth:password-set",
-        )
+    def post(self, request: Request) -> Response:
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(
             data={"message": "Check your email to set the new password."},
             status=status.HTTP_200_OK,
         )
 
-    def password_reset_confirm(
+
+class PasswordResetConfirmAPIView(APIView):
+    def post(
         self,
         request: Request,
         uidb64: str,
@@ -140,7 +143,6 @@ class PasswordResetViewSet(ViewSet):
     ) -> Response:
         user = self.get_user_by_uidb64_and_token(uidb64=uidb64, token=token)
         self.check_password(user=user)
-
         return Response(
             data={
                 "message": (
@@ -152,11 +154,7 @@ class PasswordResetViewSet(ViewSet):
             status=status.HTTP_200_OK,
         )
 
-    def get_user_by_uidb64_and_token(
-        self,
-        uidb64: str,
-        token: str,
-    ) -> User:
+    def get_user_by_uidb64_and_token(self, uidb64: str, token: str) -> User:
         serializer = PasswordResetConfirmationSerializer(
             data={"uidb64": uidb64, "token": token},
         )

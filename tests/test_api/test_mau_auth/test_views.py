@@ -4,7 +4,10 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from model_bakery import baker
+from rest_framework.authtoken.models import Token
+from rest_framework.reverse import reverse
 
+from tests.test_api.conftest import faker
 from tests.test_api.test_mau_auth.test_serializers import user_serialized_data
 
 User = get_user_model()
@@ -13,7 +16,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestAdminViewSet:
-    url = "/api/users/"
+    url = reverse("api_mau_auth:user-list")
     total_instances = 5
 
     def get_details_url(self, _id: int):
@@ -115,7 +118,7 @@ class TestAdminViewSet:
 
 
 class TestUserViewSet:
-    url = "/api/me/"
+    url = reverse("api_mau_auth:me-detail")
 
     def test_retrieve(self, user_client, get_serialized_data):
         response = user_client.get(self.url)
@@ -158,24 +161,52 @@ class TestUserViewSet:
 
 
 class TestRegisterAPIViews:
-    url = "/api/register/"
-
-    def test_success_register(self, api_client, get_confirmation_url):
-        response = api_client.post(self.url, data=user_serialized_data)
+    def test_register(self, api_client):
+        url = reverse("api_mau_auth:register")
+        response = api_client.post(url, data=user_serialized_data)
         assert response.status_code == status.HTTP_201_CREATED
 
-        confirmation_url = get_confirmation_url()
+        users = User.objects.all()
+        assert len(users) == 1
+        assert user_serialized_data.get("email") == users.first().email
+
+    def test_register_confirm(self, user_factory, api_client):
+        user = user_factory()
+        confirmation_url = user.get_confirmation_url("api_mau_auth:register-confirm")
         response = api_client.get(confirmation_url)
         assert response.status_code == status.HTTP_200_OK, confirmation_url
 
 
 class TestObtainTokenAPIView:
-    url = "/api/token/"
+    url = reverse("api_mau_auth:get-token")
 
     def test_token_in_data(self, api_client, create_user_with_credentials):
         credentials = {"password": "testuser", "email": "example@mauniver.ru"}
         create_user_with_credentials(**credentials)
-
         response = api_client.post(self.url, data=credentials)
         assert response.status_code == status.HTTP_200_OK
         assert response.data.get("token")
+
+
+class TestPasswordResetAPIViews:
+    def test_password_reset(self, user_factory, api_client):
+        user = user_factory()
+        response = api_client.post(
+            reverse("api_mau_auth:password-reset"),
+            data={"email": user.email},
+        )
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_password_reset_confirm(self, user_factory, api_client):
+        user = user_factory()
+        Token.objects.create(user=user)
+        confirmation_url = user.get_confirmation_url("api_mau_auth:password-set")
+        new_password = faker.password()
+        response = api_client.post(
+            confirmation_url,
+            data={"password1": new_password, "password2": new_password},
+        )
+        assert response.status_code == status.HTTP_200_OK
+
+        user.refresh_from_db()
+        assert user.check_password(new_password)

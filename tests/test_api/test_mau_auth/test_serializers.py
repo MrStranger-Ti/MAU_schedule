@@ -1,6 +1,9 @@
+from collections.abc import Callable
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.core import mail
+from rest_framework.serializers import Serializer
 
 from mau_auth.api.serializers import (
     AdminUserSerializer,
@@ -40,7 +43,6 @@ user_serialized_data = {
 
 
 class TestUserSerializers:
-
     @pytest.mark.parametrize(
         "serializer_class",
         [AdminUserSerializer, AuthenticatedUserSerializer],
@@ -157,16 +159,9 @@ class TestAuthenticatedUserSerializer:
 
 
 class TestEmailConfirmationSerializer:
-    def test_deserialize(
-        self,
-        deserialize,
-        get_uidb64_and_token_from_last_message,
-    ):
-        deserialize(
-            serializer_class=AuthenticatedUserSerializer,
-            data=user_serialized_data,
-        )
-        uidb64, token = get_uidb64_and_token_from_last_message()
+    def test_deserialize(self, user_factory):
+        user = user_factory()
+        uidb64, token = user.get_uidb64_and_token()
         serializer = EmailConfirmationSerializer(
             data={"uidb64": uidb64, "token": token},
         )
@@ -175,16 +170,9 @@ class TestEmailConfirmationSerializer:
 
 
 class TestRegisterConfirmationSerializer:
-    def test_is_active_set_on_true(
-        self,
-        deserialize,
-        get_uidb64_and_token_from_last_message,
-    ):
-        deserialize(
-            serializer_class=AuthenticatedUserSerializer,
-            data=user_serialized_data,
-        )
-        uidb64, token = get_uidb64_and_token_from_last_message()
+    def test_is_active_set_on_true(self, user_factory, deserialize):
+        user = user_factory()
+        uidb64, token = user.get_uidb64_and_token()
         user = deserialize(
             serializer_class=RegisterConfirmationSerializer,
             data={"uidb64": uidb64, "token": token},
@@ -194,15 +182,26 @@ class TestRegisterConfirmationSerializer:
 
 
 class TestAuthTokenSerializer:
-    def test_deserialize(self, create_user_with_credentials):
+    @pytest.fixture()
+    def get_serializer(self, deserialize) -> Callable:
+        def wrapper(**kwargs) -> Serializer:
+            return deserialize(
+                serializer_class=AuthTokenSerializer,
+                validate=False,
+                **kwargs,
+            )
+
+        return wrapper
+
+    def test_deserialize(self, create_user_with_credentials, get_serializer):
         credentials = {
             "password": faker.password(),
             "email": faker.email(domain="mauniver.ru"),
         }
         user = create_user_with_credentials(**credentials)
 
-        serializer = AuthTokenSerializer(data=credentials)
-        assert serializer.is_valid(), credentials
+        serializer = get_serializer(data=credentials)
+        assert serializer.is_valid()
         assert not serializer.errors
 
         user.refresh_from_db()
@@ -217,14 +216,21 @@ class TestAuthTokenSerializer:
         ],
     )
     def test_deserialize_miss_credentials(
-        self, credentials, create_user_with_credentials
+        self,
+        credentials,
+        create_user_with_credentials,
+        get_serializer,
     ):
         create_user_with_credentials(**credentials)
-        serializer = AuthenticatedUserSerializer(data=credentials)
+        serializer = get_serializer(data=credentials)
         assert not serializer.is_valid()
         assert serializer.errors
 
-    def test_deserialize_invalid_credentials(self, create_user_with_credentials):
+    def test_deserialize_invalid_credentials(
+        self,
+        create_user_with_credentials,
+        get_serializer,
+    ):
         credentials = {
             "password": faker.password(),
             "email": faker.email(domain="mauniver.ru"),
@@ -234,6 +240,6 @@ class TestAuthTokenSerializer:
             {"password": "anotherpwd", "email": "wrongemail@mauniver.ru"}
         )
 
-        serializer = AuthenticatedUserSerializer(data=credentials)
+        serializer = get_serializer(data=credentials)
         assert not serializer.is_valid()
         assert serializer.errors

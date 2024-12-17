@@ -159,12 +159,12 @@ class MauUser(AbstractBaseUser, PermissionsMixin):
 
     def get_confirmation_url(self, base_url: str) -> str:
         uidb64, token = self.get_uidb64_and_token()
-        return reverse(viewname=base_url, kwargs={"uidb64": uidb64, "token": token})
+        return reverse(base_url, args=[uidb64, token])
 
     def get_uidb64_and_token(self) -> tuple[str, str]:
-        uid = urlsafe_base64_encode(force_bytes(self.pk))
+        uidb64 = urlsafe_base64_encode(force_bytes(self.pk))
         token = default_token_generator.make_token(self)
-        return uid, token
+        return uidb64, token
 
     def clean(self):
         super().clean()

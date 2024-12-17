@@ -5,6 +5,7 @@ import faker
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
+from rest_framework.authtoken.models import Token
 from rest_framework.serializers import Serializer
 from rest_framework.test import APIClient, APIRequestFactory
 from model_bakery import baker
@@ -34,7 +35,7 @@ def user_factory() -> Callable:
             _quantity=n,
             _fill_optional=True,
             full_name="Petrov Petr Petrovich",
-            institute=baker.make(MauInstitute),
+            institute=baker.make(_model=MauInstitute),
             groups=baker.make(Group, _quantity=5),
             user_permissions=baker.make(Permission, _quantity=5),
         )
@@ -43,7 +44,7 @@ def user_factory() -> Callable:
             instance.email = instance.email.split("@")[0] + "@mauniver.ru"
             instance.set_password(instance.password)
 
-        User.objects.bulk_update(test_data, ["email"])
+        User.objects.bulk_update(test_data, ["email", "password"])
 
         if n == 1:
             return test_data[0]
