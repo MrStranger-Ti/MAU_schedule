@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 
-from extensions.serializers.mixins import ContextMixin
+from extensions.mixins.serializers import ContextMixin
 from mau_auth.models import MauUser
 
 User: type[MauUser] = get_user_model()
@@ -133,13 +133,15 @@ class AuthenticatedUserSerializer(BaseUserSerializer, ContextMixin):
             if attrs.get("password"):
                 raise ValidationError(
                     detail={
-                        "detail": "You need to go to password reset url to change_password.",
+                        "password": "You need to go to password reset url to change_password.",
                         "help_url": reverse("api_mau_auth:password-reset"),
                     },
                 )
 
             elif attrs.get("email"):
-                raise ValidationError(detail="You can not change your email.")
+                raise ValidationError(
+                    detail={"email": "You can not change your email."},
+                )
 
         super().validate(attrs)
         return attrs

@@ -1,12 +1,8 @@
-import re
-from typing import Callable, Iterable
+from typing import Callable, Iterable, Any
 from zoneinfo import ZoneInfo
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.core import mail
-from django.core.handlers.wsgi import WSGIRequest
-from rest_framework.reverse import reverse
 
 from mau_auth.models import MauUser
 
@@ -14,11 +10,8 @@ User: type[MauUser] = get_user_model()
 
 
 @pytest.fixture
-def get_serialized_data() -> Callable:
-    def wrapper(
-        user: User,
-        exclude_fields: Iterable | None = None,
-    ) -> User:
+def get_user_serialized_data() -> Callable:
+    def wrapper(user: User, exclude_fields: Iterable | None = None) -> dict[str, Any]:
         date_joined = user.date_joined.astimezone(tz=ZoneInfo("Europe/Moscow"))
         last_login = user.last_login.astimezone(tz=ZoneInfo("Europe/Moscow"))
         json_data = {

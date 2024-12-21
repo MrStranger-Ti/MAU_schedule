@@ -14,6 +14,7 @@ from mau_auth.api.serializers import (
 )
 from mau_auth.models import MauUser
 from tests.test_api.conftest import faker
+from tests.test_api.test_mau_auth.factories import UserFactory
 
 User: type[MauUser] = get_user_model()
 
@@ -47,14 +48,9 @@ class TestUserSerializers:
         "serializer_class",
         [AdminUserSerializer, AuthenticatedUserSerializer],
     )
-    def test_serialize(
-        self,
-        serializer_class,
-        prepare_user_factory,
-        get_serialized_data,
-    ):
-        user = prepare_user_factory()
-        expected_data = get_serialized_data(user=user, exclude_fields=["password"])
+    def test_serialize(self, serializer_class, get_user_serialized_data):
+        user = UserFactory(prepare=True).make()
+        expected_data = get_user_serialized_data(user=user, exclude_fields=["password"])
         serializer = serializer_class(instance=user)
         assert serializer.data == expected_data
 
@@ -110,9 +106,9 @@ class TestUserSerializers:
 
 
 class TestAdminUserSerializer:
-    def test_password_update_admin(self, user_factory, deserialize):
+    def test_password_update_admin(self, deserialize):
         password_field = {"password": admin_serialized_data.get("password")}
-        user = user_factory()
+        user = UserFactory().make()
         user = deserialize(
             serializer_class=AdminUserSerializer,
             instance=user,
@@ -144,8 +140,8 @@ class TestAuthenticatedUserSerializer:
             {"email": "example@mauniver.ru"},
         ],
     )
-    def test_update_authenticated_user_fails(self, user_factory, wrong_field):
-        user = user_factory()
+    def test_update_authenticated_user_fails(self, wrong_field):
+        user = UserFactory().make()
         serialized_data = {
             "full_name": "Petrov Petr Petrovich",
             "institute": 1,
@@ -159,8 +155,8 @@ class TestAuthenticatedUserSerializer:
 
 
 class TestEmailConfirmationSerializer:
-    def test_deserialize(self, user_factory):
-        user = user_factory()
+    def test_deserialize(self):
+        user = UserFactory().make()
         uidb64, token = user.get_uidb64_and_token()
         serializer = EmailConfirmationSerializer(
             data={"uidb64": uidb64, "token": token},
@@ -170,8 +166,8 @@ class TestEmailConfirmationSerializer:
 
 
 class TestRegisterConfirmationSerializer:
-    def test_is_active_set_on_true(self, user_factory, deserialize):
-        user = user_factory()
+    def test_is_active_set_on_true(self, deserialize):
+        user = UserFactory().make()
         uidb64, token = user.get_uidb64_and_token()
         user = deserialize(
             serializer_class=RegisterConfirmationSerializer,

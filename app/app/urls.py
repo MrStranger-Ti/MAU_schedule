@@ -30,6 +30,7 @@ urlpatterns = [
     # path("bookmarks/", include("bookmarks.urls")),
     # RestAPI paths
     path("api/", include("mau_auth.api.urls")),
+    path("api/", include("notes.api.urls")),
     path("api/schedule/", include("schedule.api.urls")),
 ]
 

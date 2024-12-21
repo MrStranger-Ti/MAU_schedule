@@ -146,35 +146,35 @@ class EmailConfirmationMixin:
 
 class MauUser(AbstractBaseUser, PermissionsMixin, EmailConfirmationMixin):
     class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
+        verbose_name = "user"
+        verbose_name_plural = "users"
         ordering = "course", "full_name"
 
     full_name = models.CharField(
         max_length=50,
         validators=[validate_full_name],
-        verbose_name="ФИО",
+        verbose_name="full name",
     )
     email = models.EmailField(
         unique=True,
         validators=[validate_email],
-        verbose_name="Email",
+        verbose_name="email",
     )
     institute = models.ForeignKey(
         MauInstitute,
         null=True,
         on_delete=models.PROTECT,
         related_name="mauusers",
-        verbose_name="Институт",
+        verbose_name="institute",
     )
     course = models.PositiveSmallIntegerField(
         null=True,
-        verbose_name="Курс",
+        verbose_name="course",
     )
     group = models.CharField(
         null=True,
         max_length=20,
-        verbose_name="Группа",
+        verbose_name="group",
     )
 
     objects = MauUserManager()
@@ -184,7 +184,7 @@ class MauUser(AbstractBaseUser, PermissionsMixin, EmailConfirmationMixin):
     REQUIRED_FIELDS = ["full_name"]
 
     is_staff = models.BooleanField(
-        "staff status",
+        verbose_name="staff status",
         default=False,
         help_text="Designates whether the user can log into this admin site.",
     )

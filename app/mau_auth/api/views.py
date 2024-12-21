@@ -12,7 +12,6 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
 from rest_framework import status
 from rest_framework import mixins
 
-from mau_auth.api.permissions import IsOwner
 from mau_auth.models import MauUser
 from mau_auth.api.serializers import (
     AuthTokenSerializer,
@@ -69,12 +68,8 @@ class AdminViewSet(ModelViewSet):
     ]
 
 
-class UserViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    GenericViewSet,
-):
-    permission_classes = [IsAuthenticated, IsOwner]
+class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = AuthenticatedUserSerializer
 
