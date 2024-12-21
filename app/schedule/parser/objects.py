@@ -101,7 +101,7 @@ class TeacherLinksParser(Parser):
         params = {
             "mode2": "1",
             "pers2": "0",
-            "sstring": query.encode("cp1251"),
+            "sstring": query,
         }
         response = self.get_response(self.base_url, params=params)
 
