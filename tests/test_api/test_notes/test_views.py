@@ -1,11 +1,14 @@
 import json
+from datetime import date
 
 import pytest
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from rest_framework import status
 from rest_framework.reverse import reverse
 
 from mau_auth.models import MauUser
+from notes.models import Note
 from tests.test_api.test_mau_auth.factories import UserFactory
 from tests.test_api.test_notes.factories import NoteFactory
 
@@ -40,12 +43,7 @@ class TestNoteViewSet:
         else:
             assert len(response_data) == 5
 
-    def test_get_own_queryset(
-        self,
-        get_user_client,
-        get_fake_request,
-        get_note_serialized_data,
-    ):
+    def test_get_own_queryset(self, get_user_client, get_fake_request):
         for _ in range(3):
             NoteFactory(quantity=5).make()
 
@@ -62,36 +60,74 @@ class TestNoteViewSet:
         )
         assert notes_ids == response_notes_ids
 
-    def test_create(self, get_user_client, get_note_serialized_data, helper):
+    def test_create(self, get_user_client, helper):
         user = UserFactory().make()
-        client = get_user_client(user)
-        note = NoteFactory(prepare=True).make()
-        serialized_data = get_note_serialized_data(note)
+        note_factory = NoteFactory(prepare=True)
+        note = note_factory.make()
+        serialized_data = note_factory.serialize(note, exclude=["id"])
         serialized_data.update({"user": user.id})
 
+        client = get_user_client(user)
         response = client.post(self.url, data=serialized_data)
         assert response.status_code == status.HTTP_201_CREATED
 
         response_data = json.loads(response.content)
         assert helper.in_expected(response_data, serialized_data)
 
-    def test_retrieve(self, get_user_client, get_note_serialized_data):
+    def test_retrieve(self, get_user_client, helper):
         user = UserFactory().make()
-        client = get_user_client(user)
-        note = NoteFactory().make(user=user)
-        serialized_data = get_note_serialized_data(note)
+        note_factory = NoteFactory()
+        note = note_factory.make(user=user)
+        expected_data = note_factory.serialize(note)
 
+        client = get_user_client(user)
         response = client.get(self.get_details_url(note.id))
         assert response.status_code == status.HTTP_200_OK
 
         response_data = json.loads(response.content)
-        assert response_data == serialized_data
+        assert helper.in_expected(response_data, expected_data)
 
-    def test_update(self):
-        pass
+    def test_update(self, get_user_client, helper):
+        user = UserFactory().make()
+        note = NoteFactory().make(user=user)
 
-    def test_partial_update(self):
-        pass
+        fake_note_factory = NoteFactory(prepare=True)
+        fake_note = fake_note_factory.make()
+        serialized_data = fake_note_factory.serialize(fake_note, exclude=["id", "user"])
 
-    def test_delete(self):
-        pass
+        client = get_user_client(user)
+        response = client.put(self.get_details_url(note.id), data=serialized_data)
+        assert response.status_code == status.HTTP_200_OK
+
+        response_data = json.loads(response.content)
+        assert helper.in_expected(response_data, serialized_data)
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            {"schedule_name": settings.TEACHER_SCHEDULE_NAME},
+            {"group": "some group"},
+            {"day": date.today().isoformat()},
+            {"lesson_number": 3},
+            {"text": "some text"},
+        ],
+    )
+    def test_partial_update(self, field, get_user_client, helper):
+        user = UserFactory().make()
+        client = get_user_client(user)
+        note = NoteFactory().make(user=user)
+
+        response = client.patch(self.get_details_url(note.id), data=field)
+        assert response.status_code == status.HTTP_200_OK
+
+        response_data = json.loads(response.content)
+        assert helper.in_expected(response_data, field)
+
+    def test_delete(self, get_user_client):
+        user = UserFactory().make()
+        note = NoteFactory().make(user=user)
+
+        client = get_user_client(user)
+        response = client.delete(self.get_details_url(note.id))
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert not Note.objects.filter(id=note.id).exists()

@@ -128,12 +128,12 @@ class TestUserViewSet:
     def test_unauthenticated_user_perm(self, api_client, helper):
         assert not helper.has_permission(client=api_client, url=self.url)
 
-    def test_retrieve(self, get_user_client, get_user_serialized_data):
+    def test_retrieve(self, get_user_client):
         response = get_user_client().get(self.url)
         assert response.status_code == status.HTTP_200_OK
 
         user = User.objects.all().first()
-        expected_data = get_user_serialized_data(user=user, exclude_fields=["password"])
+        expected_data = UserFactory().serialize(user, exclude=["password"])
         response_data = json.loads(response.content)
         assert response_data == expected_data
 

@@ -1,6 +1,7 @@
 from typing import TypeVar, Any
 
 from django.db.models import Model
+from django.forms import model_to_dict
 from model_bakery import baker
 
 T = TypeVar("T", bound=Model)
@@ -11,24 +12,28 @@ class ModelFactory:
     kwargs: dict[str, Any] | None = None
 
     def __init__(self, quantity: int = 1, prepare: bool = False):
-        if self.model is None:
-            raise AttributeError("Attr 'model' must be set.")
-
         self.quantity = quantity
         self.prepare = prepare
-        self.maker = baker.prepare if prepare else baker.make
+        self._maker = baker.prepare if prepare else baker.make
 
-    def make(self, **kwargs) -> list[T] | T:
-        test_data = self._get_factory(**kwargs)
+    def make(self, **kwargs) -> list[T] | T | dict[str, Any] | list[dict[str, Any]]:
+        test_data = self._build(**kwargs)
         prepared_data = self._prepare_data(test_data)
         return prepared_data
 
-    def _get_factory(self, **extra_kwargs):
+    def _build(self, **extra_kwargs):
         kwargs = self.get_kwargs() or {}
         kwargs.update(extra_kwargs)
-        return self.maker(_model=self.model, _quantity=self.quantity, **kwargs)
 
-    def _prepare_data(self, test_data: list[T]) -> list[T] | T:
+        try:
+            return self._maker(_model=self.model, _quantity=self.quantity, **kwargs)
+        except AttributeError:
+            raise AttributeError("Attr 'model' must be set.")
+
+    def _prepare_data(
+        self,
+        test_data: list[T],
+    ) -> list[T] | T | dict[str, Any] | list[dict[str, Any]]:
         if self.prepare:
             self._change_prepared_data(test_data)
         else:
@@ -53,3 +58,24 @@ class ModelFactory:
         Change objects after prepared with baker.prepare().
         """
         pass
+
+    def to_serialize_all(self, test_data: list[T]) -> list[dict[str, Any]]:
+        serialized_data = []
+        for obj in test_data:
+            serialized_obj = self.serialize(obj)
+            serialized_data.append(serialized_obj)
+
+        return serialized_data
+
+    def serialize(self, obj: T, **kwargs) -> dict[str, Any]:
+        """
+        Convert obj to dict if 'serialize' is True.
+        """
+        json_obj = model_to_dict(obj, **kwargs)
+        # null_fields = [
+        #     field_name for field_name, value in json_obj.items() if value is None
+        # ]
+        # for field_name in null_fields:
+        #     json_obj.pop(field_name)
+
+        return json_obj

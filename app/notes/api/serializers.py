@@ -12,6 +12,20 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = "__all__"
         read_only_fields = ["id", "expired_date"]
+        extra_kwargs = {
+            "user": {
+                "required": False,
+            },
+        }
+
+    def validate(self, attrs):
+        if self.instance and attrs.get("user"):
+            raise ValidationError("You can not change user for your note.")
+
+        if not self.instance and not attrs.get("user"):
+            raise ValidationError(detail={"user": self.error_messages["required"]})
+
+        return attrs
 
     def validate_schedule_name(self, value: str) -> str:
         if value not in (
