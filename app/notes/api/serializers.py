@@ -20,7 +20,9 @@ class NoteSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if self.instance and attrs.get("user"):
-            raise ValidationError("You can not change user for your note.")
+            raise ValidationError(
+                detail={"user": "You can not change user for your note."}
+            )
 
         if not self.instance and not attrs.get("user"):
             raise ValidationError(detail={"user": self.error_messages["required"]})
