@@ -9,7 +9,7 @@ from django.conf import settings
 from schedule.parser import (
     GroupScheduleParser,
     TeacherScheduleParser,
-    TeacherLinksParser,
+    TeacherLinksMauParser,
 )
 from schedule.forms import WeeksForm
 
@@ -93,7 +93,7 @@ class AjaxTeachersListView(AjaxView):
 
     def get(self, request: HttpRequest) -> HttpResponse:
         query = self.request.GET.get("query")
-        parser = TeacherLinksParser(request.user)
+        parser = TeacherLinksMauParser(request.user)
         teachers_links = parser.get_data(query)
         return render(
             request, self.template_name, context={"teachers_links": teachers_links}
