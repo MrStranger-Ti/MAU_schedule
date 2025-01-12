@@ -1,13 +1,10 @@
-import re
 import urllib
 from datetime import date, timedelta
-from typing import Dict, List
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 
 import bs4
-from django.conf import settings
 
-from schedule.parser.base import MauParser
+from schedule.parser.base import MauParser, MauScheduleParser
 from schedule.parser.mixins import ScheduleParserMixin
 
 
@@ -26,15 +23,15 @@ class GroupParamsParser(MauParser):
         }
 
     def _parse_periods(self, form_tag: bs4.BeautifulSoup) -> list[str]:
-        periods_select = form_tag.find("select", name="pers")
+        periods_select = form_tag.find("select", {"name": "pers"})
         periods_options = periods_select.find_all(
             "option",
-            name=lambda name: int(name) > 0,
+            value=lambda name: int(name) > 0,
         )
         return [option.text for option in periods_options]
 
     def _parse_institute(self, soup: bs4.BeautifulSoup) -> str:
-        institute_select = soup.find("select", name="facs")
+        institute_select = soup.find("select", {"name": "facs"})
         institute_option = institute_select.find("option", string=self.user.group)
         return institute_option.get("value")
 
@@ -53,13 +50,16 @@ class GroupUrlParser(MauParser):
         return group_href
 
 
-class GroupScheduleParser(MauParser, ScheduleParserMixin):
+class GroupScheduleParser(MauScheduleParser):
     """
     Парсер для расписания.
     """
 
     def get_cache_key(self) -> str:
-        return f"group_schedule_data_{self.user.group}_period_{self.period}"
+        print(dir(self))
+        return (
+            f"group_schedule_data_{self.user.group}_period_{self.period_manager.period}"
+        )
 
     def _parse_data(self, soup: bs4.BeautifulSoup) -> dict[date, list[list[str]]]:
         week_monday = date.fromisoformat(self.period_manager.start)
@@ -111,7 +111,7 @@ class TeacherKeysParser(MauParser):
         return teacher_keys
 
 
-class TeacherScheduleParser(MauParser, ScheduleParserMixin):
+class TeacherScheduleParser(MauScheduleParser):
     """
     Парсер для расписания преподавателей.
     """

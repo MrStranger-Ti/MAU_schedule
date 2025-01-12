@@ -6,12 +6,10 @@ class ScheduleParserMixin:
     Миксин, который добавляет необходимый функционал для парсинга расписания.
 
     Attributes:
-        user (settings.AUTH_USER_MODEL): экземпляр модели пользователя
         period_manager (PeriodManger): менеджер периодов
     """
 
-    def __init__(self, *args, period: str = None, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, period: str = None):
         self.period_manager = PeriodManager(period=period)
         self.params.update(
             {

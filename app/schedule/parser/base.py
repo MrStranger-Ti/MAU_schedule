@@ -7,7 +7,8 @@ from fake_useragent import UserAgent
 
 from django.conf import settings
 
-from schedule.parser.extensions import CacheStorage
+from schedule.parser.extensions import CacheStorage, PeriodManager
+from schedule.parser.mixins import ScheduleParserMixin
 
 
 class WebScraper:
@@ -57,7 +58,7 @@ class WebScraper:
         return response
 
 
-class MauParser(WebScraper, abc.ABC):
+class MauParser(abc.ABC, WebScraper):
     """
     Базовый парсер.
 
@@ -123,4 +124,30 @@ class MauParser(WebScraper, abc.ABC):
         """
         Парсит и возвращает найденную информацию.
         """
+        pass
+
+
+class MauScheduleParser(abc.ABC, MauParser):
+    """
+
+    Attributes:
+        period_manager (PeriodManger): менеджер периодов
+    """
+
+    def __init__(self, *args, period: str = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.period_manager = PeriodManager(period=period)
+        self.params.update(
+            {
+                "perstart": self.period_manager.start(),
+                "perend": self.period_manager.end(),
+            },
+        )
+
+    @abc.abstractmethod
+    def get_cache_key(self) -> str:
+        pass
+
+    @abc.abstractmethod
+    def _parse_data(self, soup: bs4.BeautifulSoup):
         pass
