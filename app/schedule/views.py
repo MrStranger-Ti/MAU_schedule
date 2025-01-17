@@ -6,11 +6,6 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.conf import settings
 
-from schedule.parser import (
-    GroupScheduleParser,
-    TeacherScheduleParser,
-    TeacherLinksMauParser,
-)
 from schedule.forms import WeeksForm
 
 
@@ -51,89 +46,89 @@ class AjaxView(UserPassesTestMixin, View):
         return HttpResponseForbidden()
 
 
-class AjaxGetGroupScheduleView(AjaxView):
-    template_name = "schedule/ajax/table.html"
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        user = request.user
-        period = request.GET.get("period")
-
-        parser = GroupScheduleParser(user, period=period)
-        schedule_data = parser.get_data()
-
-        form = WeeksForm({"periods": parser.get_current_week_option()})
-        form.set_period_choices(parser.parsing_storage.get("weeks_options", []))
-
-        context = {
-            "form": form,
-            "schedule_data": schedule_data,
-            "table": settings.GROUP_SCHEDULE_NAME,
-            "original_schedule_url": settings.SCHEDULE_URL,
-        }
-
-        response = JsonResponse(
-            {
-                "html": render_to_string(
-                    self.template_name, context=context, request=request
-                ),
-                "notes": [
-                    {
-                        "location": note.location,
-                        "text": note.text,
-                    }
-                    for note in request.user.notes.defer("location")
-                ],
-            }
-        )
-        return response
-
-
-class AjaxTeachersListView(AjaxView):
-    template_name = "schedule/ajax/teachers.html"
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        query = self.request.GET.get("query")
-        parser = TeacherLinksMauParser(request.user)
-        teachers_links = parser.get_data(query)
-        return render(
-            request, self.template_name, context={"teachers_links": teachers_links}
-        )
-
-
-class AjaxGetTeacherScheduleView(AjaxView):
-    template_name = "schedule/ajax/table.html"
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        teacher_name = request.GET.get("name")
-        teacher_key = request.GET.get("key")
-        period = request.GET.get("period")
-
-        parser = TeacherScheduleParser(request.user, teacher_key, period=period)
-        schedule_data = parser.get_data()
-
-        form = WeeksForm({"periods": parser.get_current_week_option()})
-        form.set_period_choices(parser.parsing_storage.get("weeks_options", []))
-
-        context = {
-            "form": form,
-            "schedule_data": schedule_data,
-            "teacher_name": teacher_name,
-            "teacher_key": teacher_key,
-            "table": settings.TEACHER_SCHEDULE_NAME,
-            "bookmarks": self.request.user.bookmarks.all(),
-        }
-
-        return JsonResponse(
-            {
-                "html": render_to_string(
-                    self.template_name, context=context, request=request
-                ),
-                "notes": [
-                    {
-                        "location": note.location,
-                        "text": note.text,
-                    }
-                    for note in request.user.notes.defer("location")
-                ],
-            }
-        )
+# class AjaxGetGroupScheduleView(AjaxView):
+#     template_name = "schedule/ajax/table.html"
+#
+#     def get(self, request: HttpRequest) -> HttpResponse:
+#         user = request.user
+#         period = request.GET.get("period")
+#
+#         parser = GroupScheduleParser(user, period=period)
+#         schedule_data = parser.get_data()
+#
+#         form = WeeksForm({"periods": parser.get_current_week_option()})
+#         form.set_period_choices(parser.parsing_storage.get("weeks_options", []))
+#
+#         context = {
+#             "form": form,
+#             "schedule_data": schedule_data,
+#             "table": settings.GROUP_SCHEDULE_NAME,
+#             "original_schedule_url": settings.SCHEDULE_URL,
+#         }
+#
+#         response = JsonResponse(
+#             {
+#                 "html": render_to_string(
+#                     self.template_name, context=context, request=request
+#                 ),
+#                 "notes": [
+#                     {
+#                         "location": note.location,
+#                         "text": note.text,
+#                     }
+#                     for note in request.user.notes.defer("location")
+#                 ],
+#             }
+#         )
+#         return response
+#
+#
+# class AjaxTeachersListView(AjaxView):
+#     template_name = "schedule/ajax/teachers.html"
+#
+#     def get(self, request: HttpRequest) -> HttpResponse:
+#         query = self.request.GET.get("query")
+#         parser = TeacherLinksMauParser(request.user)
+#         teachers_links = parser.get_data(query)
+#         return render(
+#             request, self.template_name, context={"teachers_links": teachers_links}
+#         )
+#
+#
+# class AjaxGetTeacherScheduleView(AjaxView):
+#     template_name = "schedule/ajax/table.html"
+#
+#     def get(self, request: HttpRequest) -> HttpResponse:
+#         teacher_name = request.GET.get("name")
+#         teacher_key = request.GET.get("key")
+#         period = request.GET.get("period")
+#
+#         parser = TeacherScheduleParser(request.user, teacher_key, period=period)
+#         schedule_data = parser.get_data()
+#
+#         form = WeeksForm({"periods": parser.get_current_week_option()})
+#         form.set_period_choices(parser.parsing_storage.get("weeks_options", []))
+#
+#         context = {
+#             "form": form,
+#             "schedule_data": schedule_data,
+#             "teacher_name": teacher_name,
+#             "teacher_key": teacher_key,
+#             "table": settings.TEACHER_SCHEDULE_NAME,
+#             "bookmarks": self.request.user.bookmarks.all(),
+#         }
+#
+#         return JsonResponse(
+#             {
+#                 "html": render_to_string(
+#                     self.template_name, context=context, request=request
+#                 ),
+#                 "notes": [
+#                     {
+#                         "location": note.location,
+#                         "text": note.text,
+#                     }
+#                     for note in request.user.notes.defer("location")
+#                 ],
+#             }
+#         )

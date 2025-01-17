@@ -2,45 +2,94 @@ __all__ = [
     "get_group_schedule",
     "get_teacher_links",
     "get_teacher_schedule",
+    "Parser",
+    "CacheParser",
+    "ScheduleParser",
+    "ParserResponse",
 ]
-
-
-from datetime import date
 
 from django.conf import settings
 
-from mau_auth.models import MauUser
+from schedule.parser.ext import PeriodManager
+from schedule.parser.ext.response import ParserResponse
+from schedule.parser.base import Parser, CacheParser, ScheduleParser
 from schedule.parser.objects import (
     GroupParamsParser,
-    GroupUrlParser,
+    GroupKeyParser,
     GroupScheduleParser,
     TeacherKeysParser,
     TeacherScheduleParser,
 )
 
 
-def get_group_schedule(user: settings.AUTH_USER_MODEL) -> dict[date, list[list[str]]]:
-    group_params = GroupParamsParser(user=user, url=settings.SCHEDULE_URL).get_data()
-    group_url = GroupUrlParser(user=user, url=settings.SCHEDULE_URL).get_data()
-    schedule = GroupScheduleParser(
-        user=user,
+def get_group_schedule(
+    institute: str,
+    course: str | int,
+    group: str,
+    period: str | None = None,
+) -> ParserResponse:
+    """
+    Функция для получения расписания группы.
+
+    :param institute: институт
+    :param course: курс
+    :param group: группа
+    :param period: период расписания в формате DD.MM.YYYY-DD.MM.YYYY
+    """
+    group_url = settings.SCHEDULE_URL + "schedule.php"
+    parsing_data = {
+        "institute": institute,
+        "course": course,
+        "group": group,
+    }
+
+    response = GroupParamsParser(
+        url=settings.SCHEDULE_URL,
+        unique_key=group,
+        period=period,
+        extra_data=parsing_data,
+    ).get_data()
+    response = GroupKeyParser(
+        url=settings.SCHEDULE_URL,
+        unique_key=group,
+        params=response.data,
+        period=period,
+        extra_data=parsing_data,
+    ).get_data()
+    response = GroupScheduleParser(
         url=group_url,
-        params=group_params,
+        unique_key=group,
+        params={"key": response.data},
+        period=period,
+        extra_data=parsing_data,
     ).get_data()
-    return schedule
+    return response
 
 
-def get_teacher_links(user: settings.AUTH_USER_MODEL) -> dict[str, str]:
-    teacher_links = TeacherKeysParser(
-        user=user,
+def get_teacher_links(name: str) -> ParserResponse:
+    """
+    Функция для получения ссылок преподавателей.
+
+    :param name: имя преподавателя
+    """
+    response = TeacherKeysParser(
         url=settings.SCHEDULE_URL,
+        unique_key=name,
+        extra_data={"name": name},
     ).get_data()
-    return teacher_links
+    return response
 
 
-def get_teacher_schedule(user: settings.AUTH_USER_MODEL) -> dict[date, list[list[str]]]:
-    teacher_schedule = TeacherScheduleParser(
-        user=user,
-        url=settings.SCHEDULE_URL,
+def get_teacher_schedule(teacher_key: str) -> ParserResponse:
+    """
+    Функция для получения расписания преподавателя.
+
+    :param teacher_key: ключ преподавателя.
+    """
+    teacher_url = settings.SCHEDULE_URL + "schedule2.php"
+    response = TeacherScheduleParser(
+        url=teacher_url,
+        unique_key=teacher_key,
+        params={"key": teacher_key},
     ).get_data()
-    return teacher_schedule
+    return response

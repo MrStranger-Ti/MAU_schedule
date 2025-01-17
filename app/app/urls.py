@@ -31,7 +31,7 @@ urlpatterns = [
     # RestAPI paths
     path("api/", include("mau_auth.api.urls")),
     path("api/", include("notes.api.urls")),
-    path("api/schedule/", include("schedule.api.urls")),
+    path("api/", include("schedule.api.urls")),
 ]
 
 if settings.DEBUG:

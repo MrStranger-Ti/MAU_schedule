@@ -17,7 +17,7 @@ class PeriodManager:
     """
 
     def __init__(self, period: str | None = None):
-        self.period = period or self.get_current_period()
+        self.period: str = period or self.get_current_period()
 
     @staticmethod
     def get_current_period() -> str:
@@ -44,7 +44,7 @@ class PeriodManager:
         Первый день периода.
         """
         raw_start = self.get_limit(0)
-        return self.convert_to_iso_8601(raw_start)
+        return convert_to_iso_8601(raw_start)
 
     @property
     def end(self) -> str:
@@ -52,4 +52,4 @@ class PeriodManager:
         Последний день периода.
         """
         raw_end = self.get_limit(1)
-        return self.convert_to_iso_8601(raw_end)
+        return convert_to_iso_8601(raw_end)
