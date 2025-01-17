@@ -10,8 +10,7 @@ __all__ = [
 
 from django.conf import settings
 
-from schedule.parser.ext import PeriodManager
-from schedule.parser.ext.response import ParserResponse
+from schedule.parser.ext import PeriodManager, ParserResponse
 from schedule.parser.base import Parser, CacheParser, ScheduleParser
 from schedule.parser.objects import (
     GroupParamsParser,
@@ -53,7 +52,6 @@ def get_group_schedule(
         url=settings.SCHEDULE_URL,
         unique_key=group,
         params=response.data,
-        period=period,
         extra_data=parsing_data,
     ).get_data()
     response = GroupScheduleParser(
@@ -80,16 +78,18 @@ def get_teacher_links(name: str) -> ParserResponse:
     return response
 
 
-def get_teacher_schedule(teacher_key: str) -> ParserResponse:
+def get_teacher_schedule(teacher_key: str, period: str | None = None) -> ParserResponse:
     """
     Функция для получения расписания преподавателя.
 
     :param teacher_key: ключ преподавателя.
+    :param period: период расписания в формате DD.MM.YYYY-DD.MM.YYYY
     """
     teacher_url = settings.SCHEDULE_URL + "schedule2.php"
     response = TeacherScheduleParser(
         url=teacher_url,
         unique_key=teacher_key,
         params={"key": teacher_key},
+        period=period,
     ).get_data()
     return response

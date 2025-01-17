@@ -1,3 +1,5 @@
+import re
+
 from datetime import date, datetime
 
 
@@ -13,14 +15,24 @@ class PeriodManager:
     Класс для управления периодом расписания.
 
     Attributes:
-        period (str | None): Период в формате DD.MM.YYYY-DD.MM.YYYY
+        period (str): Период в формате DD.MM.YYYY-DD.MM.YYYY
     """
 
     def __init__(self, period: str | None = None):
-        self.period: str = period or self.get_current_period()
+        self.period: str = period
+        if not period or not self.validate(period):
+            self.period = self.__get_current_period()
 
     @staticmethod
-    def get_current_period() -> str:
+    def validate(period: str) -> bool:
+        """
+        Валидация формата переданного периода.
+        """
+        date_regex = r"[0-3][0-9]\.[01][0-2]\.\d{4}"
+        return bool(re.fullmatch(rf"{date_regex}-{date_regex}", period))
+
+    @staticmethod
+    def __get_current_period() -> str:
         """
         Возвращает текущий период.
         """

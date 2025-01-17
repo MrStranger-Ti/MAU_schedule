@@ -41,7 +41,7 @@ class GroupParamsParser(ScheduleParser):
         return institute_value
 
 
-class GroupKeyParser(ScheduleParser):
+class GroupKeyParser(CacheParser):
     """
     Парсер ключа группы.
     """
@@ -54,9 +54,7 @@ class GroupKeyParser(ScheduleParser):
             {
                 "mode": 1,
                 "courses": self.extra_data["course"],
-                "perstart": self.period_manager.start,
-                "perend": self.period_manager.end,
-            }
+            },
         )
         return params
 
@@ -77,15 +75,6 @@ class GroupScheduleParser(ScheduleParser):
 
     base_key = "group_schedule"
 
-    def _change_params(self, params: dict[str, str]) -> dict[str, str]:
-        params.update(
-            {
-                "perstart": self.period_manager.start,
-                "perend": self.period_manager.end,
-            }
-        )
-        return params
-
     def _parse_data(self, soup: bs4.BeautifulSoup) -> dict[str, list[list[str]]]:
         week_monday = date.fromisoformat(self.period_manager.start)
 
@@ -100,6 +89,35 @@ class GroupScheduleParser(ScheduleParser):
                     week_schedule[curr_date_string].append(
                         [field.text for field in row.find_all(["th", "td"])]
                     )
+
+        return week_schedule
+
+
+class TeacherScheduleParser(ScheduleParser):
+    """
+    Парсер для расписания преподавателей.
+    """
+
+    base_key = "teacher_schedule"
+
+    def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
+        week_monday = date.fromisoformat(self.period_manager.start)
+
+        week_schedule = {}
+        trs = soup.select("tr")
+
+        weekday_num = 0
+        for tr in trs:
+            tr_class = tr.get("class")
+            if tr_class and tr_class[0] == "title":
+                curr_date = week_monday + timedelta(days=weekday_num)
+                curr_date_string = curr_date.strftime("%d-%m-%Y")
+                week_schedule.setdefault(curr_date_string, [])
+                weekday_num += 1
+            else:
+                week_schedule[curr_date_string].append(
+                    [field.text for field in tr.find_all("td")]
+                )
 
         return week_schedule
 
@@ -134,32 +152,3 @@ class TeacherKeysParser(CacheParser):
             teacher_keys[link.text] = key[0]
 
         return teacher_keys
-
-
-class TeacherScheduleParser(ScheduleParser):
-    """
-    Парсер для расписания преподавателей.
-    """
-
-    base_key = "teacher_schedule"
-
-    def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
-        week_monday = date.fromisoformat(self.period_manager.start)
-
-        week_schedule = {}
-        trs = soup.select("tr")
-
-        weekday_num = 0
-        for tr in trs:
-            tr_class = tr.get("class")
-            if tr_class and tr_class[0] == "title":
-                curr_date = week_monday + timedelta(days=weekday_num)
-                curr_date_string = curr_date.strftime("%d-%m-%Y")
-                week_schedule.setdefault(curr_date_string, [])
-                weekday_num += 1
-            else:
-                week_schedule[curr_date_string].append(
-                    [field.text for field in tr.find_all("td")]
-                )
-
-        return week_schedule

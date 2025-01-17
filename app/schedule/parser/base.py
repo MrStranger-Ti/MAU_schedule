@@ -3,11 +3,12 @@ from typing import Any, Sequence
 
 import bs4
 import requests
+from django.core.cache import cache
 from fake_useragent import UserAgent
 
 from django.conf import settings
 
-from schedule.parser.ext import CacheStorage, PeriodManager
+from schedule.parser.ext import PeriodManager
 from schedule.parser.ext.response import ParserResponse
 
 
@@ -18,7 +19,7 @@ class WebScraper:
     Attributes:
         url (str): путь для запроса
         parser (str): парсер для bs4, по умолчанию lxml
-        params (dict): query параметры для запроса
+        _params (dict): query параметры для запроса
         user_agent_manager (UserAgent): менеджер для предоставления случайного значения User-Agent
     """
 
@@ -30,8 +31,12 @@ class WebScraper:
     ):
         self.url: str = url
         self.parser: str = parser
-        self.params: dict[str, str] = self._change_params(params or {})
+        self._params: dict[str, str] = params or {}
         self.user_agent_manager: UserAgent = UserAgent()
+
+    @property
+    def params(self):
+        return self._change_params(self._params)
 
     def _change_params(self, params: dict[str, str]) -> dict[str, str]:
         """
@@ -79,8 +84,8 @@ class Parser(WebScraper, abc.ABC):
     required_extra_data: Sequence[str] | None = None
 
     def __init__(self, *args, extra_data: dict[str, Any] | None = None, **kwargs):
-        self.extra_data: dict[str, Any] = extra_data or {}
         super().__init__(*args, **kwargs)
+        self.extra_data: dict[str, Any] = extra_data or {}
 
     def _validate_extra_data(self, data: dict[str, Any]) -> bool:
         """
@@ -111,7 +116,7 @@ class Parser(WebScraper, abc.ABC):
         if not response or response.status_code != 200:
             return ParserResponse(
                 response=response,
-                error=f"Invalid MAU server response.",
+                error=f"Invalid server response.",
             )
 
         soup = self.get_soup(response)
@@ -120,7 +125,7 @@ class Parser(WebScraper, abc.ABC):
         except (AttributeError, TypeError):
             return ParserResponse(
                 response=response,
-                error="Data didn't get. Please check your profile information.",
+                error="Data didn't get.",
             )
 
         return ParserResponse(response=response, data=data)
@@ -135,25 +140,30 @@ class Parser(WebScraper, abc.ABC):
 
 class CacheParser(Parser):
     """
-    Базовый парсер с встроенным хранилищем кэша.
+    Базовый парсер, который кроме парсинга данных
+    получает данные из кэша и сохраняет данные в кэш.
+
+    Основное отличие CacheParser`а от обычного в том, что он оборачивает метод get_data
+    для получения данных из базы кэша или установки кэша после получения данных из get_data.
 
     Attributes:
         base_key (str): базовый ключ, является частью итогового ключа кэша
         unique_cache_key (str): уникальный ключ кэша, который является частью итогового ключа кэша
-        cache_storage (CacheStorage): объект хранилища кэша
     """
 
     base_key: str | None = None
 
-    def __init__(self, url: str, unique_key: str, **kwargs):
+    def __init__(self, url: str, unique_key: str | None = None, **kwargs):
         super().__init__(url, **kwargs)
         if self.base_key is None:
-            raise AttributeError("Attr 'base_key' must be set.")
+            raise AttributeError("Class attr 'base_key' must be set.")
 
-        self.unique_cache_key = unique_key
-        self.cache_storage: CacheStorage = CacheStorage(self.get_cache_key())
+        self.unique_cache_key = unique_key or ""
 
     def get_cache_key(self):
+        """
+        Получение ключа кэша.
+        """
         return self.base_key + "_" + self.unique_cache_key
 
     def get_data(self) -> ParserResponse:
@@ -164,11 +174,13 @@ class CacheParser(Parser):
         Если данных нет, то запускается процесс парсинга.
         Полученные данных сохраняются в кэш.
         """
-        data = self.cache_storage.get()
+        cache_key = self.get_cache_key()
+
+        data = cache.get(cache_key)
         if data is None:
             parser_response = super().get_data()
             if parser_response.success:
-                self.cache_storage.set(parser_response.data)
+                cache.set(cache_key, parser_response.data)
 
             return parser_response
 
@@ -190,11 +202,20 @@ class ScheduleParser(CacheParser):
     """
 
     def __init__(self, *args: Any, period: str = None, **kwargs: Any):
-        self.period_manager = PeriodManager(period=period)
         super().__init__(*args, **kwargs)
+        self.period_manager = PeriodManager(period=period)
 
     def get_cache_key(self):
         return super().get_cache_key() + f"_period_{self.period_manager.period}"
+
+    def _change_params(self, params: dict[str, str]) -> dict[str, str]:
+        params.update(
+            {
+                "perstart": self.period_manager.start,
+                "perend": self.period_manager.end,
+            }
+        )
+        return params
 
     @abc.abstractmethod
     def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
