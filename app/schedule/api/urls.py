@@ -9,11 +9,13 @@ from schedule.api.views import (
 app_name = "api_schedule"
 
 urlpatterns = [
-    path("schedule/group/", GroupScheduleApiView.as_view(), name="group_schedule"),
-    path("schedule/teachers/", TeacherLinksApiView.as_view(), name="teachers"),
+    path("schedule/group/", GroupScheduleApiView.as_view(), name="group-schedule"),
     path(
-        "schedule/teacher/",
+        "schedule/teachers-keys/", TeacherLinksApiView.as_view(), name="teachers-keys"
+    ),
+    path(
+        "schedule/teacher/<str:teacher_key>/",
         TeacherScheduleApiView.as_view(),
-        name="teacher_schedule",
+        name="teacher-schedule",
     ),
 ]
