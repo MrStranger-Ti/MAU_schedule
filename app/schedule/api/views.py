@@ -3,11 +3,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from schedule.api.mixins import ScheduleViewMixin
-from schedule.parser import get_group_schedule, get_teacher_links, get_teacher_schedule
+from schedule.api.mixins import ParserResponseViewMixin
+from schedule.parser import (
+    get_group_schedule,
+    get_teacher_links,
+    get_teacher_schedule,
+    get_periods,
+)
 
 
-class GroupScheduleApiView(APIView, ScheduleViewMixin):
+class GroupParserResponseApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
@@ -21,7 +26,7 @@ class GroupScheduleApiView(APIView, ScheduleViewMixin):
         return self.get_response(parser_response)
 
 
-class TeacherLinksApiView(APIView, ScheduleViewMixin):
+class TeacherLinksApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
@@ -30,10 +35,18 @@ class TeacherLinksApiView(APIView, ScheduleViewMixin):
         return self.get_response(parser_response)
 
 
-class TeacherScheduleApiView(APIView, ScheduleViewMixin):
+class TeacherParserResponseApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, teacher_key: str) -> Response:
         period = request.query_params.get("period")
         parser_response = get_teacher_schedule(teacher_key=teacher_key, period=period)
+        return self.get_response(parser_response)
+
+
+class SchedulePeriodsApiView(APIView, ParserResponseViewMixin):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        parser_response = get_periods()
         return self.get_response(parser_response)

@@ -2,6 +2,7 @@ from datetime import date, timedelta
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
+from django.conf import settings
 import bs4
 
 from schedule.parser.base import CacheParser, ScheduleParser
@@ -12,6 +13,7 @@ class GroupParamsParser(ScheduleParser):
     Парсер query параметров для группы.
     """
 
+    url = settings.SCHEDULE_URL
     required_extra_data = ("institute",)
     base_key = "schedule_params_data"
 
@@ -25,14 +27,14 @@ class GroupParamsParser(ScheduleParser):
         periods_select = soup.find("select", {"name": "pers"})
         period_option = periods_select.find(
             "option",
-            value=lambda name: int(name) > 0,
+            value=lambda x: int(x) > 0,
             string=lambda raw_period: self.period_manager.period in raw_period,
         )
         period_value = period_option.get("value")
         return period_value
 
     def _parse_institute(self, soup: bs4.BeautifulSoup) -> str:
-        institute_select = soup.find("select", {"name": "facs"})
+        institute_select = soup.find("select", attrs={"name": "facs"})
         institute_option = institute_select.find(
             "option",
             string=self.extra_data["institute"],
@@ -46,6 +48,7 @@ class GroupKeyParser(CacheParser):
     Парсер ключа группы.
     """
 
+    url = settings.SCHEDULE_URL
     required_extra_data = ("course", "group")
     base_key = "group_key"
 
@@ -73,6 +76,7 @@ class GroupScheduleParser(ScheduleParser):
     Парсер для расписания.
     """
 
+    url = settings.SCHEDULE_URL + "schedule.php"
     base_key = "group_schedule"
 
     def _parse_data(self, soup: bs4.BeautifulSoup) -> dict[str, list[list[str]]]:
@@ -98,7 +102,8 @@ class TeacherScheduleParser(ScheduleParser):
     Парсер для расписания преподавателей.
     """
 
-    base_key = "teacher_schedule"
+    url = settings.SCHEDULE_URL
+    base_key = settings.SCHEDULE_URL + "schedule2.php"
 
     def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
         week_monday = date.fromisoformat(self.period_manager.start)
@@ -127,6 +132,7 @@ class TeacherKeysParser(CacheParser):
     Парсер для ключей преподавателей.
     """
 
+    url = settings.SCHEDULE_URL
     required_extra_data = ("name",)
     base_key = "teacher_links"
 
@@ -152,3 +158,18 @@ class TeacherKeysParser(CacheParser):
             teacher_keys[link.text] = key[0]
 
         return teacher_keys
+
+
+class PeriodsParser(CacheParser):
+    """
+    Парсер для списка периодов.
+    """
+
+    url = settings.SCHEDULE_URL
+    base_key = "periods_list"
+
+    def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
+        periods_select = soup.find("select", attrs={"name": "pers"})
+        periods_options = periods_select.find_all("option", value=lambda x: int(x) > 0)
+        periods = [option.text.split()[0] for option in periods_options]
+        return periods

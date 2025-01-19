@@ -34,7 +34,7 @@ class PeriodManager:
     @staticmethod
     def __get_current_period() -> str:
         """
-        Возвращает текущий период.
+        Получение текущего периода.
         """
         current_week = date.today().isocalendar()
         monday = date.fromisocalendar(current_week[0], current_week[1], 1)

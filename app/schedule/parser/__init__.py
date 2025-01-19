@@ -8,8 +8,6 @@ __all__ = [
     "ParserResponse",
 ]
 
-from django.conf import settings
-
 from schedule.parser.ext import PeriodManager, ParserResponse
 from schedule.parser.base import Parser, CacheParser, ScheduleParser
 from schedule.parser.objects import (
@@ -18,6 +16,7 @@ from schedule.parser.objects import (
     GroupScheduleParser,
     TeacherKeysParser,
     TeacherScheduleParser,
+    PeriodsParser,
 )
 
 
@@ -35,7 +34,6 @@ def get_group_schedule(
     :param group: группа
     :param period: период расписания в формате DD.MM.YYYY-DD.MM.YYYY
     """
-    group_url = settings.SCHEDULE_URL + "schedule.php"
     parsing_data = {
         "institute": institute,
         "course": course,
@@ -43,19 +41,16 @@ def get_group_schedule(
     }
 
     response = GroupParamsParser(
-        url=settings.SCHEDULE_URL,
         unique_key=group,
         period=period,
         extra_data=parsing_data,
     ).get_data()
     response = GroupKeyParser(
-        url=settings.SCHEDULE_URL,
         unique_key=group,
         params=response.data,
         extra_data=parsing_data,
     ).get_data()
     response = GroupScheduleParser(
-        url=group_url,
         unique_key=group,
         params={"key": response.data},
         period=period,
@@ -70,11 +65,7 @@ def get_teacher_links(name: str) -> ParserResponse:
 
     :param name: имя преподавателя
     """
-    response = TeacherKeysParser(
-        url=settings.SCHEDULE_URL,
-        unique_key=name,
-        extra_data={"name": name},
-    ).get_data()
+    response = TeacherKeysParser(unique_key=name, extra_data={"name": name}).get_data()
     return response
 
 
@@ -85,11 +76,17 @@ def get_teacher_schedule(teacher_key: str, period: str | None = None) -> ParserR
     :param teacher_key: ключ преподавателя.
     :param period: период расписания в формате DD.MM.YYYY-DD.MM.YYYY
     """
-    teacher_url = settings.SCHEDULE_URL + "schedule2.php"
     response = TeacherScheduleParser(
-        url=teacher_url,
         unique_key=teacher_key,
         params={"key": teacher_key},
         period=period,
     ).get_data()
+    return response
+
+
+def get_periods() -> ParserResponse:
+    """
+    Функция для получения списка всех периодов расписания.
+    """
+    response = PeriodsParser().get_data()
     return response

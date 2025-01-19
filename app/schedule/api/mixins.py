@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from schedule.parser import ParserResponse
 
 
-class ScheduleViewMixin:
+class ParserResponseViewMixin:
     def get_response(self, parser_response: ParserResponse) -> Response:
         if not parser_response.success:
             if not parser_response.response:

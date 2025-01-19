@@ -17,19 +17,24 @@ class WebScraper:
     Объект для получения response и soup.
 
     Attributes:
-        url (str): путь для запроса
+        url (str): путь для запроса, должен быть установлен при инициализации или на дочернем классе
         parser (str): парсер для bs4, по умолчанию lxml
         _params (dict): query параметры для запроса
         user_agent_manager (UserAgent): менеджер для предоставления случайного значения User-Agent
     """
 
+    url: str | None = None
+
     def __init__(
         self,
-        url: str,
+        url: str | None = None,
         parser: str = "lxml",
         params: dict[str, str] | None = None,
     ):
-        self.url: str = url
+        self.url: str = url or self.url
+        if self.url is None:
+            raise AttributeError("Class attr 'url' must be set.")
+
         self.parser: str = parser
         self._params: dict[str, str] = params or {}
         self.user_agent_manager: UserAgent = UserAgent()
@@ -41,6 +46,8 @@ class WebScraper:
     def _change_params(self, params: dict[str, str]) -> dict[str, str]:
         """
         Метод для кастомизации параметров запроса.
+
+        Может быть переопределен в дочерних классах.
         """
         return params
 
@@ -71,20 +78,17 @@ class WebScraper:
 
 class Parser(WebScraper, abc.ABC):
     """
-    Абстрактный парсер.
-
-    В этот объект подмешивается хранилище кэша (CacheStorage).
-    Данные parsing_data устанавливаются в атрибуты при инициализации.
+    Базовый парсер.
 
     Attributes:
         extra_data (dict[str, Any]): дополнительные данные для парсинга
-        required_extra_data (tuple[str, ...] | None): названия атрибутов из parsing_data
+        required_extra_data (tuple[str, ...] | None): названия атрибутов из extra_data
     """
 
     required_extra_data: Sequence[str] | None = None
 
-    def __init__(self, *args, extra_data: dict[str, Any] | None = None, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, extra_data: dict[str, Any] | None = None, **kwargs):
+        super().__init__(**kwargs)
         self.extra_data: dict[str, Any] = extra_data or {}
 
     def _validate_extra_data(self, data: dict[str, Any]) -> bool:
@@ -92,8 +96,8 @@ class Parser(WebScraper, abc.ABC):
         Валидатор для extra_data.
 
         Проверяется что,
-        parsing_data имеет корректные названия, такие как в extra_data_names,
-        значения parsing_data не None.
+        extra_data имеет корректные названия, такие как в extra_data_names,
+        значения extra_data не None.
         """
         extra_data_names = self.extra_data.keys()
         valid_extra_data = [
@@ -144,7 +148,7 @@ class CacheParser(Parser):
     получает данные из кэша и сохраняет данные в кэш.
 
     Основное отличие CacheParser`а от обычного в том, что он оборачивает метод get_data
-    для получения данных из базы кэша или установки кэша после получения данных из get_data.
+    для получения данных из кэша или установки кэша после получения данных из get_data.
 
     Attributes:
         base_key (str): базовый ключ, является частью итогового ключа кэша
@@ -153,8 +157,8 @@ class CacheParser(Parser):
 
     base_key: str | None = None
 
-    def __init__(self, url: str, unique_key: str | None = None, **kwargs):
-        super().__init__(url, **kwargs)
+    def __init__(self, unique_key: str | None = None, **kwargs):
+        super().__init__(**kwargs)
         if self.base_key is None:
             raise AttributeError("Class attr 'base_key' must be set.")
 
@@ -195,14 +199,15 @@ class ScheduleParser(CacheParser):
     """
     Базовый парсер для расписания.
 
-    Подгружает объект для управления периодом расписания.
+    Подгружает объект для управления периодом расписания,
+    а также добавляет период в ключ кэша и параметры периода.
 
     Attributes:
         period_manager (PeriodManger): менеджер периодов
     """
 
-    def __init__(self, *args: Any, period: str = None, **kwargs: Any):
-        super().__init__(*args, **kwargs)
+    def __init__(self, period: str = None, **kwargs: Any):
+        super().__init__(**kwargs)
         self.period_manager = PeriodManager(period=period)
 
     def get_cache_key(self):
