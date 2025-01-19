@@ -14,6 +14,10 @@ class PeriodManager:
     """
     Класс для управления периодом расписания.
 
+    Периодом считается строка в формате DD.MM.YYYY-DD.MM.YYYY.
+    Первая часть (start) - понедельник,
+    Вторая часть (end) - воскресенье.
+
     Attributes:
         period (str): Период в формате DD.MM.YYYY-DD.MM.YYYY
     """
@@ -27,6 +31,8 @@ class PeriodManager:
     def validate(period: str) -> bool:
         """
         Валидация формата переданного периода.
+
+        Если валидация не прошла, то будет установлен текущий период.
         """
         date_regex = r"[0-3][0-9]\.[01][0-2]\.\d{4}"
         return bool(re.fullmatch(rf"{date_regex}-{date_regex}", period))
@@ -35,33 +41,35 @@ class PeriodManager:
     def __get_current_period() -> str:
         """
         Получение текущего периода.
+
+        Текущим периодом будет являться промежуток времени от
+        понедельника до воскресенья текущей недели.
         """
         current_week = date.today().isocalendar()
         monday = date.fromisocalendar(current_week[0], current_week[1], 1)
         sunday = date.fromisocalendar(current_week[0], current_week[1], 7)
         return monday.strftime("%d.%m.%Y") + "-" + sunday.strftime("%d.%m.%Y")
 
-    def get_limit(self, limit: int) -> str:
+    def _get_limit(self, limit: int) -> str:
         """
         Получение первого или последнего дня периода.
         """
-        if self.period is None:
+        if limit not in range(2):
             raise ValueError("Limit must be 0 or 1.")
 
-        return self.period.split("-")[limit]
+        limit = self.period.split("-")[limit]
+        return convert_to_iso_8601(limit)
 
     @property
     def start(self) -> str:
         """
         Первый день периода.
         """
-        raw_start = self.get_limit(0)
-        return convert_to_iso_8601(raw_start)
+        return self._get_limit(0)
 
     @property
     def end(self) -> str:
         """
         Последний день периода.
         """
-        raw_end = self.get_limit(1)
-        return convert_to_iso_8601(raw_end)
+        return self._get_limit(1)
