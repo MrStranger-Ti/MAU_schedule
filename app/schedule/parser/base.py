@@ -184,7 +184,7 @@ class CacheParser(Parser):
         if data is None:
             parser_response = super().get_data()
             if parser_response.success:
-                cache.set(cache_key, parser_response.data)
+                cache.set(cache_key, parser_response.data, settings.SCHEDULE_CACHE_TIME)
 
             return parser_response
 
