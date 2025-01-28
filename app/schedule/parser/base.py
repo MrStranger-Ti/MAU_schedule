@@ -8,8 +8,12 @@ from fake_useragent import UserAgent
 
 from django.conf import settings
 
-from schedule.parser.ext import PeriodManager
-from schedule.parser.ext.response import ParserResponse
+from schedule.parser.exceptions import ParserError
+from schedule.parser.ext import (
+    PeriodManager,
+    ParserResponse,
+    ExceptionableBeautifulSoup,
+)
 
 
 class WebScraper:
@@ -55,21 +59,21 @@ class WebScraper:
         """
         Получение объекта BeautifulSoup.
         """
-        return bs4.BeautifulSoup(response.content, self.parser)
+        return ExceptionableBeautifulSoup(response.content, self.parser)
 
     def get_response(self, **kwargs) -> requests.Response | None:
         """
         Получение ответа от сервера.
         """
-        kwargs.update(
-            {
-                "headers": {"User-Agent": self.user_agent_manager.random},
-                "params": self.params,
-                "timeout": settings.REQUESTS_TIMEOUT,
-            },
-        )
+        default_kwargs = {
+            "headers": {"User-Agent": self.user_agent_manager.random},
+            "params": self.params,
+            "timeout": settings.REQUESTS_TIMEOUT,
+        }
+        default_kwargs.update(kwargs)
+
         try:
-            response = requests.get(self.url, **kwargs)
+            response = requests.get(self.url, **default_kwargs)
         except requests.exceptions.Timeout:
             return None
 
@@ -103,8 +107,8 @@ class Parser(WebScraper, abc.ABC):
         valid_extra_data = [
             name in extra_data_names for name in self.required_extra_data or tuple()
         ]
-        extra_data_values_is_true = [value is not None for value in data.values()]
-        return all(valid_extra_data + extra_data_values_is_true)
+        extra_data_values_is_not_none = [value is not None for value in data.values()]
+        return all(valid_extra_data + extra_data_values_is_not_none)
 
     def get_data(self) -> ParserResponse:
         """
@@ -126,16 +130,13 @@ class Parser(WebScraper, abc.ABC):
         soup = self.get_soup(response)
         try:
             data = self._parse_data(soup)
-        except (AttributeError, TypeError):
-            return ParserResponse(
-                response=response,
-                error="Data didn't get.",
-            )
+        except ParserError as exc:
+            return ParserResponse(response=response, error=str(exc))
 
         return ParserResponse(response=response, data=data)
 
     @abc.abstractmethod
-    def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
+    def _parse_data(self, soup: bs4.BeautifulSoup):
         """
         Парсит и возвращает найденную информацию.
         """
@@ -191,7 +192,7 @@ class CacheParser(Parser):
         return ParserResponse(data=data)
 
     @abc.abstractmethod
-    def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
+    def _parse_data(self, soup: bs4.BeautifulSoup):
         pass
 
 
@@ -223,5 +224,5 @@ class ScheduleParser(CacheParser):
         return params
 
     @abc.abstractmethod
-    def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
+    def _parse_data(self, soup: bs4.BeautifulSoup):
         pass

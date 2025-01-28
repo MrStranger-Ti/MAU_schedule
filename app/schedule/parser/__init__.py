@@ -2,10 +2,18 @@ __all__ = [
     "get_group_schedule",
     "get_teacher_links",
     "get_teacher_schedule",
+    "get_periods",
     "Parser",
     "CacheParser",
     "ScheduleParser",
     "ParserResponse",
+    "PeriodManager",
+    "GroupParamsParser",
+    "GroupKeyParser",
+    "GroupScheduleParser",
+    "TeacherKeysParser",
+    "TeacherScheduleParser",
+    "PeriodsParser",
 ]
 
 from schedule.parser.ext import PeriodManager, ParserResponse
@@ -34,7 +42,7 @@ def get_group_schedule(
     :param group: группа
     :param period: период расписания в формате DD.MM.YYYY-DD.MM.YYYY
     """
-    parsing_data = {
+    extra_data = {
         "institute": institute,
         "course": course,
         "group": group,
@@ -43,18 +51,18 @@ def get_group_schedule(
     response = GroupParamsParser(
         unique_key=group,
         period=period,
-        extra_data=parsing_data,
+        extra_data=extra_data,
     ).get_data()
     response = GroupKeyParser(
         unique_key=group,
         params=response.data,
-        extra_data=parsing_data,
+        extra_data=extra_data,
     ).get_data()
     response = GroupScheduleParser(
         unique_key=group,
         params={"key": response.data},
         period=period,
-        extra_data=parsing_data,
+        extra_data=extra_data,
     ).get_data()
     return response
 

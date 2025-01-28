@@ -1,5 +1,4 @@
 import os
-from datetime import timedelta
 from pathlib import Path
 
 from django.urls import reverse_lazy
@@ -233,6 +232,10 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": f"redis://{REDIS_HOST}:6379/0",
+    },
+    "test": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": f"redis://{REDIS_HOST}:6379/1",
     },
 }
 

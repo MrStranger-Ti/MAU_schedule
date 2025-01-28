@@ -7,7 +7,7 @@ class ParserResponse:
     """
     Ответ от парсера.
 
-    Содержит распарсенную информацию и дополнительные данных, которые получил парсер.
+    Содержит распарсенную информацию и дополнительные данные, которые получил парсер.
 
     Attributes:
         data (Any): распарсенные данные
@@ -31,7 +31,4 @@ class ParserResponse:
         if error or self.data is None:
             self.success = False
 
-        if isinstance(error, Exception):
-            self.error = str(error)
-        else:
-            self.error = error
+        self.error = str(error)
