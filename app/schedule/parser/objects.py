@@ -6,6 +6,7 @@ from django.conf import settings
 import bs4
 
 from schedule.parser.base import CacheParser, ScheduleParser
+from schedule.parser.exceptions import ParserError
 
 
 class GroupParamsParser(ScheduleParser):
@@ -61,7 +62,7 @@ class GroupKeyParser(CacheParser):
         )
         return params
 
-    def _parse_data(self, soup: bs4.BeautifulSoup):
+    def _parse_data(self, soup: bs4.BeautifulSoup) -> str:
         group_a = soup.find("a", class_="btn", string=self.extra_data["group"])
         group_href = group_a.get("href")
 
@@ -91,7 +92,7 @@ class GroupScheduleParser(ScheduleParser):
                 week_schedule.setdefault(curr_date_string, [])
                 for row in day.find_all("tr")[1:]:
                     week_schedule[curr_date_string].append(
-                        [field.text for field in row.find_all(["th", "td"])]
+                        [field.text.strip() for field in row.find_all(["th", "td"])]
                     )
 
         return week_schedule
@@ -102,8 +103,8 @@ class TeacherScheduleParser(ScheduleParser):
     Парсер для расписания преподавателей.
     """
 
-    url = settings.SCHEDULE_URL
-    base_key = settings.SCHEDULE_URL + "schedule2.php"
+    url = settings.SCHEDULE_URL + "schedule2.php"
+    base_key = "teacher_schedule"
 
     def _parse_data(self, soup: bs4.BeautifulSoup) -> Any:
         week_monday = date.fromisoformat(self.period_manager.start)
@@ -121,7 +122,7 @@ class TeacherScheduleParser(ScheduleParser):
                 weekday_num += 1
             else:
                 week_schedule[curr_date_string].append(
-                    [field.text for field in tr.find_all("td")]
+                    [field.text.strip() for field in tr.find_all("td")]
                 )
 
         return week_schedule
@@ -130,10 +131,11 @@ class TeacherScheduleParser(ScheduleParser):
 class TeacherKeysParser(CacheParser):
     """
     Парсер для ключей преподавателей.
+
+    Для поиска необходимо передать sstring в параметры запроса.
     """
 
     url = settings.SCHEDULE_URL
-    required_extra_data = ("name",)
     base_key = "teacher_links"
 
     def _change_params(self, params: dict[str, str]) -> dict[str, str]:
@@ -142,7 +144,6 @@ class TeacherKeysParser(CacheParser):
                 "mode2": "1",
                 "tab": "2",
                 "pers2": "0",
-                "sstring": self.extra_data["name"],
             }
         )
         return params

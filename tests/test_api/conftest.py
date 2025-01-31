@@ -65,7 +65,7 @@ def admin_client(api_client) -> APIClient:
     return api_client
 
 
-@pytest.fixture()
+@pytest.fixture
 def helper() -> Helper:
     return Helper()
 

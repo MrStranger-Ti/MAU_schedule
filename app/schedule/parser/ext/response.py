@@ -22,13 +22,13 @@ class ParserResponse:
         response: Response | None = None,
         error: str | Exception | None = None,
     ):
-        self.data: Any = data
+        self.data: Any = data or None
         self.response: Response | None = response
         self.success: bool = True
         self.error: str | None = None
 
         # Если передан error или data is None, то результат неуспешный
-        if error or self.data is None:
+        if error or not self.data:
             self.success = False
 
         self.error = str(error)

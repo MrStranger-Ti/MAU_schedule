@@ -73,7 +73,7 @@ def get_teacher_links(name: str) -> ParserResponse:
 
     :param name: имя преподавателя
     """
-    response = TeacherKeysParser(unique_key=name, extra_data={"name": name}).get_data()
+    response = TeacherKeysParser(unique_key=name, params={"sstring": name}).get_data()
     return response
 
 
