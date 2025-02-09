@@ -6,7 +6,6 @@ from django.conf import settings
 import bs4
 
 from schedule.parser.base import CacheParser, ScheduleParser
-from schedule.parser.exceptions import ParserError
 
 
 class GroupParamsParser(ScheduleParser):

@@ -8,11 +8,6 @@ from bs4 import BeautifulSoup
 from schedule.parser.base import WebScraper
 
 
-@pytest.fixture(scope="package")
-def _disable_cache(disable_cache):
-    pass
-
-
 def _get_test_html(html_path: str, valid: bool = True) -> str:
     curr_dir = Path(__file__).parent
     directory = "valid" if valid else "invalid"

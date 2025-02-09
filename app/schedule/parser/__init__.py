@@ -1,6 +1,6 @@
 __all__ = [
     "get_group_schedule",
-    "get_teacher_links",
+    "get_teachers_keys",
     "get_teacher_schedule",
     "get_periods",
     "Parser",
@@ -67,7 +67,7 @@ def get_group_schedule(
     return response
 
 
-def get_teacher_links(name: str) -> ParserResponse:
+def get_teachers_keys(name: str) -> ParserResponse:
     """
     Функция для получения ссылок преподавателей.
 

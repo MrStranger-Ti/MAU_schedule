@@ -1,24 +1,24 @@
 from django.urls import path
 
 from schedule.api.views import (
-    GroupParserResponseApiView,
-    TeacherLinksApiView,
-    TeacherParserResponseApiView,
+    GroupScheduleApiView,
+    TeachersKeysApiView,
+    TeacherScheduleApiView,
     SchedulePeriodsApiView,
 )
 
 app_name = "api_schedule"
 
 urlpatterns = [
+    path("schedule/group/", GroupScheduleApiView.as_view(), name="group-schedule"),
     path(
-        "schedule/group/", GroupParserResponseApiView.as_view(), name="group-schedule"
-    ),
-    path(
-        "schedule/teachers-keys/", TeacherLinksApiView.as_view(), name="teachers-keys"
+        "schedule/teachers-keys/",
+        TeachersKeysApiView.as_view(),
+        name="teachers-keys",
     ),
     path(
         "schedule/teacher/<str:teacher_key>/",
-        TeacherParserResponseApiView.as_view(),
+        TeacherScheduleApiView.as_view(),
         name="teacher-schedule",
     ),
     path("schedule/periods/", SchedulePeriodsApiView.as_view(), name="periods"),

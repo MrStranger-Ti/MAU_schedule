@@ -6,13 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from schedule.api.mixins import ParserResponseViewMixin
 from schedule.parser import (
     get_group_schedule,
-    get_teacher_links,
+    get_teachers_keys,
     get_teacher_schedule,
     get_periods,
 )
 
 
-class GroupParserResponseApiView(APIView, ParserResponseViewMixin):
+class GroupScheduleApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
@@ -26,16 +26,16 @@ class GroupParserResponseApiView(APIView, ParserResponseViewMixin):
         return self.get_response(parser_response)
 
 
-class TeacherLinksApiView(APIView, ParserResponseViewMixin):
+class TeachersKeysApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
         name = request.query_params.get("name", "")
-        parser_response = get_teacher_links(name=name)
+        parser_response = get_teachers_keys(name=name)
         return self.get_response(parser_response)
 
 
-class TeacherParserResponseApiView(APIView, ParserResponseViewMixin):
+class TeacherScheduleApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, teacher_key: str) -> Response:

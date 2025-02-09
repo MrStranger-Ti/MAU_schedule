@@ -71,11 +71,4 @@ class ModelFactory:
         """
         Convert obj to dict if 'serialize' is True.
         """
-        json_obj = model_to_dict(obj, **kwargs)
-        # null_fields = [
-        #     field_name for field_name, value in json_obj.items() if value is None
-        # ]
-        # for field_name in null_fields:
-        #     json_obj.pop(field_name)
-
-        return json_obj
+        return model_to_dict(obj, **kwargs)
