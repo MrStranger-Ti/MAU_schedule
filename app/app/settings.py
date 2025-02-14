@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     "profiles.apps.ProfilesConfig",
     "notes.apps.NotesConfig",
     "core.apps.CoreConfig",
-    "bookmarks.apps.BookmarksConfig",
+    "teacher_schedule_bookmarks.apps.BookmarksConfig",
 ]
 
 MIDDLEWARE = [

@@ -11,16 +11,14 @@ pytestmark = pytest.mark.django_db
 
 class TestNoteSerializer:
     def test_serialize(self, helper):
-        factory = NoteFactory()
-        note = factory.make()
-        expected_data = factory.serialize(note)
+        note = NoteFactory().make()
+        expected_data = helper.serialize(note)
         serializer = NoteSerializer(instance=note)
 
-        assert helper.in_expected(serializer.data, expected_data)
+        assert expected_data == serializer.data
 
     def test_deserialize(self, serialized_note):
         serializer = NoteSerializer(data=serialized_note)
-        serializer.is_valid()
 
         assert serializer.is_valid()
         assert not serializer.errors

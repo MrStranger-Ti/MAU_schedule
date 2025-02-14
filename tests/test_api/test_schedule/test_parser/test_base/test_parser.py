@@ -5,7 +5,7 @@ from schedule.parser.exceptions import ParserError
 
 
 class TestParser:
-    def test_get_data_success(self, get_parser):
+    def test_get_data_successful(self, get_parser):
         parser_response = get_parser().get_data()
         assert isinstance(parser_response, ParserResponse)
         assert parser_response.success

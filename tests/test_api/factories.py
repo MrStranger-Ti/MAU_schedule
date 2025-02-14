@@ -1,7 +1,6 @@
 from typing import TypeVar, Any
 
 from django.db.models import Model
-from django.forms import model_to_dict
 from model_bakery import baker
 
 T = TypeVar("T", bound=Model)
@@ -22,11 +21,11 @@ class ModelFactory:
         return prepared_data
 
     def _build(self, **extra_kwargs):
-        kwargs = self.get_kwargs() or {}
+        kwargs = self.get_kwargs()
         kwargs.update(extra_kwargs)
 
         try:
-            return self._maker(_model=self.model, _quantity=self.quantity, **kwargs)
+            return self._maker(**kwargs)
         except AttributeError:
             raise AttributeError("Attr 'model' must be set.")
 
@@ -44,8 +43,11 @@ class ModelFactory:
 
         return test_data
 
-    def get_kwargs(self) -> dict[str:Any] | None:
-        return self.kwargs
+    def get_kwargs(self) -> dict[str, Any] | None:
+        kwargs = self.kwargs or {}
+        kwargs["_model"] = self.model
+        kwargs["_quantity"] = self.quantity
+        return kwargs
 
     def _change_made_data(self, test_data):
         """
@@ -58,17 +60,3 @@ class ModelFactory:
         Change objects after prepared with baker.prepare().
         """
         pass
-
-    def to_serialize_all(self, test_data: list[T]) -> list[dict[str, Any]]:
-        serialized_data = []
-        for obj in test_data:
-            serialized_obj = self.serialize(obj)
-            serialized_data.append(serialized_obj)
-
-        return serialized_data
-
-    def serialize(self, obj: T, **kwargs) -> dict[str, Any]:
-        """
-        Convert obj to dict if 'serialize' is True.
-        """
-        return model_to_dict(obj, **kwargs)

@@ -16,6 +16,8 @@ class NoteViewSet(ModelViewSet):
         OrderingFilter,
     ]
     search_fields = [
+        "id",
+        "user",
         "schedule_name",
         "group",
         "day",
@@ -23,7 +25,15 @@ class NoteViewSet(ModelViewSet):
         "text",
         "expired_date",
     ]
-    filterset_fields = ["user", "group", "day", "lesson_number", "text", "expired_date"]
+    filterset_fields = [
+        "id",
+        "user",
+        "group",
+        "day",
+        "lesson_number",
+        "text",
+        "expired_date",
+    ]
     ordering_fields = [
         "pk",
         "user",

@@ -29,20 +29,6 @@ class TestNoteViewSet:
     def test_unauthenticated_user_perm(self, api_client, helper):
         assert not helper.has_permission(client=api_client, url=self.url)
 
-    def test_list(self, get_user_client):
-        user = UserFactory().make()
-        NoteFactory(quantity=5).make(user=user)
-
-        client = get_user_client(user=user)
-        response = client.get(self.url)
-        assert response.status_code == status.HTTP_200_OK
-
-        response_data = json.loads(response.content)
-        if notes := response_data.get("results"):
-            assert len(notes) == 5
-        else:
-            assert len(response_data) == 5
-
     def test_get_own_queryset(self, get_user_client, get_fake_request):
         for _ in range(3):
             NoteFactory(quantity=5).make()
@@ -60,47 +46,62 @@ class TestNoteViewSet:
         )
         assert notes_ids == response_notes_ids
 
+    def test_list(self, get_user_client):
+        user = UserFactory().make()
+        NoteFactory(quantity=5).make(user=user)
+
+        client = get_user_client(user=user)
+        response = client.get(self.url)
+        assert response.status_code == status.HTTP_200_OK
+
+        response_data = json.loads(response.content)
+        if notes := response_data.get("results"):
+            assert len(notes) == 5
+        else:
+            assert len(response_data) == 5
+
     def test_create(self, get_user_client, helper):
         user = UserFactory().make()
-        note_factory = NoteFactory(prepare=True)
-        note = note_factory.make()
-        serialized_data = note_factory.serialize(note, exclude=["id"])
-        serialized_data.update({"user": user.id})
+        prepared_note = NoteFactory(prepare=True).make(user=user)
+        serialized_data = helper.serialize(prepared_note, exclude=["id"])
 
         client = get_user_client(user)
         response = client.post(self.url, data=serialized_data)
         assert response.status_code == status.HTTP_201_CREATED
 
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, serialized_data)
+        note = Note.objects.all().first()
+        assert note
+
+        expected_data = helper.serialize(note)
+        assert helper.in_response(expected_data, response)
 
     def test_retrieve(self, get_user_client, helper):
         user = UserFactory().make()
-        note_factory = NoteFactory()
-        note = note_factory.make(user=user)
-        expected_data = note_factory.serialize(note)
+        note = NoteFactory().make(user=user)
+        expected_data = helper.serialize(note)
 
         client = get_user_client(user)
         response = client.get(self.get_details_url(note.id))
         assert response.status_code == status.HTTP_200_OK
-
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, expected_data)
+        assert helper.in_response(expected_data, response)
 
     def test_update(self, get_user_client, helper):
         user = UserFactory().make()
         note = NoteFactory().make(user=user)
 
-        fake_note_factory = NoteFactory(prepare=True)
-        fake_note = fake_note_factory.make()
-        serialized_data = fake_note_factory.serialize(fake_note, exclude=["id", "user"])
+        new_note = NoteFactory(prepare=True).make()
+        serialized_data = helper.serialize(
+            new_note,
+            exclude=["id", "user", "expired_date"],
+        )
 
         client = get_user_client(user)
         response = client.put(self.get_details_url(note.id), data=serialized_data)
         assert response.status_code == status.HTTP_200_OK
 
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, serialized_data)
+        note.refresh_from_db()
+        expected_data = helper.serialize(note)
+        assert helper.in_response(expected_data, response)
 
     @pytest.mark.parametrize(
         "field",
@@ -119,9 +120,7 @@ class TestNoteViewSet:
 
         response = client.patch(self.get_details_url(note.id), data=field)
         assert response.status_code == status.HTTP_200_OK
-
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, field)
+        assert helper.in_response(field, response)
 
     def test_delete(self, get_user_client):
         user = UserFactory().make()

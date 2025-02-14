@@ -4,6 +4,7 @@ import bs4
 import pytest
 
 from schedule.parser import Parser, CacheParser, ParserResponse, ScheduleParser
+from schedule.parser.base import WebScraper
 
 
 class ParserTest(Parser):
@@ -16,13 +17,12 @@ class ParserTest(Parser):
 @pytest.fixture
 def mock_parser(mocker) -> Callable:
     def wrapper(parser: Parser) -> Parser:
-        parser._parse_data = mocker.Mock(return_value="test data")
-        parser.get_soup = mocker.Mock(return_value="test soup")
+        mocker.patch.object(parser, "_parse_data", return_value="test data")
+        mocker.patch.object(parser, "get_soup", return_value="test soup")
 
         response_mock = mocker.Mock()
         response_mock.status_code = 200
-        parser.get_response = mocker.Mock()
-        parser.get_response.return_value = response_mock
+        mocker.patch.object(parser, "get_response", return_value=response_mock)
         return parser
 
     return wrapper
@@ -47,8 +47,7 @@ class CacheParserTest(CacheParser):
 
 @pytest.fixture
 def mock_cache_parser(mocker, mock_parser) -> Callable:
-    def wrapper(parser: CacheParserTest) -> CacheParserTest:
-        parser = mock_parser(parser)
+    def wrapper(parser: CacheParserTest) -> CacheParser:
         mocker.patch.object(
             Parser,
             "get_data",

@@ -1,13 +1,13 @@
 from django.urls import path, re_path
 from rest_framework.routers import DefaultRouter
 
-from bookmarks.views import (
+from teacher_schedule_bookmarks.views import (
     AjaxBookmarksListView,
     AjaxBookmarkDeleteView,
     AjaxBookmarkCreate,
 )
 
-from bookmarks.views import (
+from teacher_schedule_bookmarks.views import (
     BookmarkViewSet,
 )
 

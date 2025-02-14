@@ -14,12 +14,6 @@ class TeacherScheduleBookmark(models.Model):
         related_name="bookmarks",
         verbose_name="пользователь",
     )
-    teacher_name = models.CharField(
-        verbose_name="ФИО преподавателя",
-    )
-    teacher_key = models.CharField(
-        verbose_name="Ключ преподавателя",
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
+    teacher_name = models.CharField(verbose_name="ФИО преподавателя")
+    teacher_key = models.CharField(verbose_name="Ключ преподавателя")
+    created_at = models.DateTimeField(auto_now_add=True)

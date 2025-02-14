@@ -31,6 +31,7 @@ urlpatterns = [
     # RestAPI paths
     path("api/", include("mau_auth.api.urls")),
     path("api/", include("notes.api.urls")),
+    path("api/", include("teacher_schedule_bookmarks.api.urls")),
     path("api/", include("schedule.api.urls")),
 ]
 

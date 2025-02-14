@@ -58,9 +58,7 @@ class TestAdminViewSet:
 
         response = admin_client.post(self.url, data=initial_data, format="json")
         assert response.status_code == status.HTTP_201_CREATED
-
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, expected_data)
+        assert helper.in_response(expected_data, response)
 
     def test_retrieve(self, admin_client):
         user = UserFactory().make()
@@ -86,9 +84,7 @@ class TestAdminViewSet:
 
         user.refresh_from_db()
         assert user.check_password(password)
-
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, expected_data)
+        assert helper.in_response(expected_data, response)
 
     @pytest.mark.parametrize(
         ["field_name", "value"],
@@ -107,9 +103,7 @@ class TestAdminViewSet:
 
         response = admin_client.patch(self.get_details_url(user.id), data=expected_data)
         assert response.status_code == status.HTTP_200_OK
-
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, expected_data)
+        assert helper.in_response(expected_data, response)
 
     def test_delete(self, admin_client):
         user = UserFactory().make()
@@ -128,14 +122,14 @@ class TestUserViewSet:
     def test_unauthenticated_user_perm(self, api_client, helper):
         assert not helper.has_permission(client=api_client, url=self.url)
 
-    def test_retrieve(self, get_user_client):
-        response = get_user_client().get(self.url)
+    def test_retrieve(self, get_user_client, helper):
+        user = UserFactory().make()
+        client = get_user_client(user=user)
+        response = client.get(self.url)
         assert response.status_code == status.HTTP_200_OK
 
-        user = User.objects.all().first()
-        expected_data = UserFactory().serialize(user, exclude=["password"])
-        response_data = json.loads(response.content)
-        assert response_data == expected_data
+        expected_data = helper.serialize(user, exclude=["password"])
+        assert helper.equals_expected_and_response(expected_data, response)
 
     def test_update(self, get_user_client, helper):
         json_data = {
@@ -147,9 +141,7 @@ class TestUserViewSet:
 
         response = get_user_client().put(self.url, data=json_data)
         assert response.status_code == status.HTTP_200_OK
-
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, json_data)
+        assert helper.in_response(json_data, response)
 
     @pytest.mark.parametrize(
         "field",
@@ -163,9 +155,7 @@ class TestUserViewSet:
     def test_partial_update(self, field, get_user_client, helper):
         response = get_user_client().patch(self.url, data=field)
         assert response.status_code == status.HTTP_200_OK
-
-        response_data = json.loads(response.content)
-        assert helper.in_expected(response_data, field)
+        assert helper.in_response(field, response)
 
 
 class TestRegisterAPIViews:

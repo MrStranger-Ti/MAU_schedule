@@ -48,10 +48,9 @@ class TestUserSerializers:
         "serializer_class",
         [AdminUserSerializer, AuthenticatedUserSerializer],
     )
-    def test_serialize(self, serializer_class):
-        factory = UserFactory(prepare=True)
-        user = factory.make()
-        expected_data = factory.serialize(user, exclude=["password"])
+    def test_serialize(self, serializer_class, helper):
+        user = UserFactory().make()
+        expected_data = helper.serialize(user, exclude=["password"])
         serializer = serializer_class(instance=user)
         assert serializer.data == expected_data
 

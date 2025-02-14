@@ -14,4 +14,7 @@ class NoteAdmin(admin.ModelAdmin):
         "day",
         "lesson_number",
     )
-    list_display_links = "pk", "text"
+    list_display_links = (
+        "pk",
+        "text",
+    )

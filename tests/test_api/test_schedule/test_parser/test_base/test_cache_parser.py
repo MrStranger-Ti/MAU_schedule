@@ -1,7 +1,8 @@
 import pytest
+from django.conf import settings
 from django.core.cache import cache
 
-from schedule.parser import ParserResponse
+from schedule.parser import ParserResponse, Parser
 from tests.test_api.test_schedule.test_parser.test_base.conftest import (
     CacheParserTest,
 )
@@ -35,11 +36,35 @@ class TestCacheParser:
         assert parser_response.success
         assert parser_response.data == cache_data
 
-    def test_cache_set(self, conf_cache, get_cache_parser):
+    def test_cache_not_found_response_successful(self, mocker, get_cache_parser):
+        mock_get = mocker.patch("django.core.cache.cache.get", return_value=None)
+        mock_set = mocker.patch("django.core.cache.cache.set")
+
         parser = get_cache_parser()
         parser_response = parser.get_data()
         assert parser_response.success
 
-        key = parser.get_cache_key()
-        cache_data = cache.get(key)
-        assert cache_data is not None
+        cache_key = parser.get_cache_key()
+        mock_get.assert_called_with(cache_key)
+        mock_set.assert_called_with(
+            cache_key,
+            parser_response.data,
+            settings.SCHEDULE_CACHE_TIME,
+        )
+
+    def test_cache_not_found_response_unsuccessful(self, mocker, get_cache_parser):
+        parser = get_cache_parser()
+        mocker.patch.object(
+            Parser,
+            "get_data",
+            return_value=ParserResponse(error="some error"),
+        )
+        mock_get = mocker.patch("django.core.cache.cache.get", return_value=None)
+        mock_set = mocker.patch("django.core.cache.cache.set")
+
+        parser_response = parser.get_data()
+        assert not parser_response.success
+
+        cache_key = parser.get_cache_key()
+        mock_get.assert_called_with(cache_key)
+        mock_set.assert_not_called()
