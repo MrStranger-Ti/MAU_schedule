@@ -11,7 +11,7 @@ from teacher_schedule_bookmarks.views import (
     BookmarkViewSet,
 )
 
-app_name = "bookmarks"
+app_name = "api_teacher_schedule_bookmarks"
 
 router = DefaultRouter()
 router.register(

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
+    "drf_spectacular",
     "mau_auth.apps.MauAuthConfig",
     "schedule.apps.ScheduleConfig",
     "profiles.apps.ProfilesConfig",
@@ -278,5 +279,54 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "MauSchedule OpenApi documentation",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "TAGS": [
+        {
+            "name": "Auth Groups",
+            "description": "User groups of permissions",
+        },
+        {
+            "name": "Auth Permissions",
+            "description": "User permissions",
+        },
+        {
+            "name": "Auth Admin",
+            "description": "Managing users for admin",
+        },
+        {
+            "name": "Auth User",
+            "description": "Managing own user account",
+        },
+        {
+            "name": "Auth Register",
+            "description": "Registration for users",
+        },
+        {
+            "name": "Auth Token",
+            "description": "Managing user token",
+        },
+        {
+            "name": "Auth Password Reset",
+            "description": "Password Reset",
+        },
+        {
+            "name": "Notes",
+            "description": "Managing own notes",
+        },
+        {
+            "name": "Teacher Schedule Bookmarks",
+            "description": "Managing own teacher schedule bookmarks",
+        },
+        {
+            "name": "Schedule",
+            "description": "Getting schedule",
+        },
     ],
 }

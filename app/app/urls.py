@@ -19,6 +19,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,6 +31,12 @@ urlpatterns = [
     path("notes/", include("notes.urls")),
     # path("bookmarks/", include("bookmarks.urls")),
     # RestAPI paths
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/swagger/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger",
+    ),
     path("api/", include("mau_auth.api.urls")),
     path("api/", include("notes.api.urls")),
     path("api/", include("teacher_schedule_bookmarks.api.urls")),

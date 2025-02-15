@@ -1,3 +1,5 @@
+from django.conf import settings
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,11 +12,30 @@ from schedule.parser import (
     get_teacher_schedule,
     get_periods,
 )
+from utils.local import get_json
+
+a = get_json(settings.BASE_DIR / "schedule/api/swagger_examples/group_schedule.json")
 
 
 class GroupScheduleApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        tags=["Schedule"],
+        summary="Getting group schedule",
+        description="User must have institute, course and group.",
+        responses={
+            200: OpenApiResponse(
+                response="",
+                examples=[
+                    OpenApiExample(
+                        "Group schedule example",
+                        value=a,
+                    )
+                ],
+            )
+        },
+    )
     def get(self, request: Request) -> Response:
         period = request.query_params.get("period")
         parser_response = get_group_schedule(

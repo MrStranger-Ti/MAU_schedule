@@ -107,10 +107,12 @@ class AuthenticatedUserSerializer(BaseUserSerializer, ContextMixin):
         read_only_fields = [
             "id",
             "is_superuser",
-            "is_stuff",
+            "is_staff",
             "is_active",
             "date_joined",
             "last_login",
+            "groups",
+            "user_permissions",
         ]
         extra_kwargs = {
             "password": {"write_only": True},
