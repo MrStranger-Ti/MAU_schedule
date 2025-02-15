@@ -285,6 +285,10 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "MauSchedule OpenApi documentation",
+    "DESCRIPTION": (
+        "<p>This API for only frontend part of application.</p>"
+        "<p>Almost all endpoints for authenticated users.</p>"
+    ),
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "TAGS": [

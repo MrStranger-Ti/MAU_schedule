@@ -43,7 +43,7 @@ class GroupScheduleApiView(APIView, ParserResponseViewMixin):
                 ],
             ),
             400: OpenApiResponse(description="Invalid institute, course or group"),
-            503: OpenApiResponse(description="Official schedule is unavailable now"),
+            503: OpenApiResponse(description="Official schedule is unavailable"),
         },
     )
     def get(self, request: Request) -> Response:
@@ -85,7 +85,7 @@ class TeachersKeysApiView(APIView, ParserResponseViewMixin):
                     )
                 ],
             ),
-            503: OpenApiResponse(description="Official schedule is unavailable now"),
+            503: OpenApiResponse(description="Official schedule is unavailable"),
         },
     )
     def get(self, request: Request) -> Response:
@@ -123,7 +123,7 @@ class TeacherScheduleApiView(APIView, ParserResponseViewMixin):
                 ],
             ),
             400: OpenApiResponse(description="Invalid teacher key"),
-            503: OpenApiResponse(description="Official schedule is unavailable now"),
+            503: OpenApiResponse(description="Official schedule is unavailable"),
         },
     )
     def get(self, request: Request, teacher_key: str) -> Response:
@@ -143,15 +143,15 @@ class SchedulePeriodsApiView(APIView, ParserResponseViewMixin):
                 response=OpenApiTypes.OBJECT,
                 examples=[
                     OpenApiExample(
-                        "Teacher schedule example",
+                        "Schedule periods example",
                         value=get_json(
                             settings.BASE_DIR
-                            / "schedule/api/swagger_examples/teachers_keys.json",
+                            / "schedule/api/swagger_examples/periods.json",
                         ),
                     )
                 ],
             ),
-            503: OpenApiResponse(description="Official schedule is unavailable now"),
+            503: OpenApiResponse(description="Official schedule is unavailable"),
         },
     )
     def get(self, request: Request) -> Response:
