@@ -1,9 +1,9 @@
-version: '3'
-
 services:
-  app:
-    build: ./backend/docker/
-    container_name: mau_schedule
+  django:
+    build:
+      context:  ./app/backend/
+      dockerfile: Dockerfile
+    container_name: mau_schedule_backend
     env_file:
       - .env
     environment:
@@ -16,12 +16,38 @@ services:
       bash -c
       "django-admin makemigrations
       && django-admin migrate
-      && django-admin runserver 0.0.0.0:8000"
+      && django-admin runserver_plus 0.0.0.0:8000 --cert-file /usr/src/secrets/localhost.crt --key-file /usr/src/secrets/localhost.key"
     ports:
-      - '8000:8000'
+      - "8000:8000"
+    volumes:
+      - ./secrets:/usr/src/secrets
+      - ./app/backend/app:/usr/src/app
     depends_on:
       - postgres_db
       - redis
+
+  react:
+    build:
+      context: ./app/frontend/
+      dockerfile: Dockerfile
+    container_name: mau_schedule_frontend
+    env_file:
+      - .env
+    environment:
+      - HTTPS=true
+      - SSL_CRT_FILE=/usr/app/secrets/localhost.crt
+      - SSL_KEY_FILE=/usr/app/secrets/localhost.key
+      - WATCHPACK_POLLING=true
+    command: >
+      bash -c
+      "npm start"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./secrets:/usr/app/secrets
+      - ./app/frontend/src:/usr/app/src
+    depends_on:
+      - django
 
   postgres_db:
     image: postgres
@@ -30,15 +56,17 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - '5000:5432'
+      - "5000:5432"
 
   redis:
     image: redis
     ports:
-      - '6379:6379'
+      - "6379:6379"
 
   celery:
-    build: .
+    build:
+      context: ./app/backend/
+      dockerfile: Dockerfile
     env_file:
       - .env
     environment:
@@ -51,7 +79,9 @@ services:
       - redis
 
   celery-beat:
-    build: .
+    build:
+      context: ./app/backend/
+      dockerfile: Dockerfile
     env_file:
       - .env
     environment:

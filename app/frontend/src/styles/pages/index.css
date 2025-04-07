@@ -1,0 +1,31 @@
+.hero__container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding-bottom: 100px;
+}
+
+.hero__title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--dark-blue);
+}
+
+.hero__btn {
+    margin-bottom: 5px;
+}
+
+@media (width <= 1024px) {
+    .hero__title {
+        font-size: 22px;
+    }
+}
+
+@media (width <= 768px) {
+    .hero__title {
+        font-size: 18px;
+    }
+}
