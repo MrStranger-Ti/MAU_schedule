@@ -1,3 +1,5 @@
+import time
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django_filters.rest_framework import DjangoFilterBackend
@@ -324,6 +326,7 @@ class ObtainAuthTokenAPIView(GenericAPIView):
             value=token,
             httponly=True,
             secure=True,
+            samesite="None",
         )
         return response
 

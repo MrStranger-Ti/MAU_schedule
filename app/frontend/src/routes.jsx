@@ -1,11 +1,30 @@
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {BrowserRouter, Routes as R, Route} from "react-router-dom";
 import IndexPage from "./pages/IndexPage";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
+import AuthService from "./services/auth";
+import {AuthContext, LoadingContext} from "./context/auth";
 
 const Routes = () => {
+    const {isAuth, setIsAuth} = useContext(AuthContext);
+    const {isPageLoading, setIsPageLoading} = useContext(LoadingContext);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            setIsPageLoading(true);
+
+            const service = new AuthService();
+            const {success, data} = await service.isAuthenticated();
+            setIsAuth(success);
+
+            setIsPageLoading(false);
+        };
+
+        checkAuth();
+    }, []);
+
     return (
         <div>
             <BrowserRouter>

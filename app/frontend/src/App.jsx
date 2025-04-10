@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Routes from "./routes";
-import {AuthContext} from "./context/auth";
-import AuthService from "./services/auth";
-import {Navigate} from "react-router-dom";
+import {AuthContext, LoadingContext} from "./context/auth";
 
 function App() {
     const [isAuth, setIsAuth] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isPageLoading, setIsPageLoading] = useState(true);
 
     return (
-        <AuthContext.Provider value={{isAuth, setIsAuth, isLoading, setIsLoading}}>
-            <div className="App">
-                <Routes/>
-            </div>
+        <AuthContext.Provider value={{isAuth, setIsAuth}}>
+            <LoadingContext.Provider value={{isPageLoading, setIsPageLoading}}>
+                <div className="App">
+                    <Routes/>
+                </div>
+            </LoadingContext.Provider>
         </AuthContext.Provider>
     );
 }

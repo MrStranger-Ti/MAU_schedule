@@ -8,11 +8,11 @@ export default class AuthService {
             return {success: true, data: response.data}
         } catch (error) {
             console.error("Invalid request", error.message);
-            return {success: false, error: error.message}
+            return {success: false, data: error.response.data}
         }
     }
 
-    async login(email, password) {
+    async login({email, password}) {
         const data = JSON.stringify({email, password})
         return await this.#getResponse(() =>
             axios.post(`https://${main.HOST}/api/token/`, data, {

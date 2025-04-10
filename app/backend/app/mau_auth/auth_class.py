@@ -10,7 +10,6 @@ User: MauUser = get_user_model()
 
 class CookieTokenAuthentication(TokenAuthentication):
     def authenticate(self, request: HttpRequest) -> tuple[User, str] | None:
-        print(request.COOKIES)
         token = request.COOKIES.get("auth_token")
         if token is None:
             return None

@@ -1,34 +1,21 @@
 import React, {useContext, useEffect} from 'react';
-import {Navigate} from "react-router-dom";
-import {AuthContext} from "../../context/auth";
-import AuthService from "../../services/auth";
+import {useNavigate} from "react-router-dom";
+import {AuthContext, LoadingContext} from "../../context/auth";
 
 const ProtectedRoute = ({children}) => {
-    const {isAuth, setIsAuth, isLoading, setIsLoading} = useContext(AuthContext);
+    const {isAuth, setIsAuth} = useContext(AuthContext);
+    const {isPageLoading, setIsPageLoading} = useContext(LoadingContext);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const checkAuth = async () => {
-            const service = new AuthService()
-            const {success, data, error} = await service.isAuthenticated()
-            setIsAuth(success)
-            setIsLoading(false)
-        };
-
-        checkAuth();
-    }, []);
-
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
-
-    if (!isAuth) {
-        return <Navigate to="/accounts/login/"/>
-    }
+        if (!isAuth && !isPageLoading) navigate("/accounts/login/");
+    }, [isAuth, isPageLoading]);
 
     return (
-        <AuthContext.Provider value={{isAuth, setIsAuth, isLoading, setIsLoading}}>
+        <React.Fragment>
             {children}
-        </AuthContext.Provider>
+        </React.Fragment>
     );
 };
 

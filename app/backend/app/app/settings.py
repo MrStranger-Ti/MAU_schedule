@@ -39,6 +39,7 @@ SECURE_SSL_REDIRECT = True
 
 CORS_ALLOWED_ORIGINS = [
     "https://localhost:3000",
+    "https://127.0.0.1:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
