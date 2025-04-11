@@ -2,6 +2,7 @@ import json
 
 import pytest
 from django.contrib.auth import get_user_model
+from pytest_django.fixtures import client
 from rest_framework import status
 from model_bakery import baker
 from rest_framework.authtoken.models import Token
@@ -172,18 +173,32 @@ class TestRegisterAPIViews:
         user = UserFactory().make()
         confirmation_url = user.get_confirmation_url("api_mau_auth:register-confirm")
         response = api_client.get(confirmation_url)
-        assert response.status_code == status.HTTP_200_OK, confirmation_url
-
-
-class TestObtainTokenAPIView:
-    url = reverse("api_mau_auth:get-token")
-
-    def test_token_in_data(self, api_client, create_user_with_credentials):
-        credentials = {"password": "testuser", "email": "example@mauniver.ru"}
-        create_user_with_credentials(**credentials)
-        response = api_client.post(self.url, data=credentials)
         assert response.status_code == status.HTTP_200_OK
-        assert response.data.get("token")
+
+
+class TestTokenAPIViews:
+    credentials = {"password": "testuser", "email": "example@mauniver.ru"}
+
+    def test_token_set(self, api_client, create_user_with_credentials):
+        user = create_user_with_credentials(**self.credentials)
+        response = api_client.post(
+            reverse("api_mau_auth:set-token"),
+            data=self.credentials,
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert "auth_token" in api_client.cookies
+        assert user.auth_token.key == api_client.cookies["auth_token"].value
+
+    def test_token_delete(self, api_client, create_user_with_credentials):
+        create_user_with_credentials(**self.credentials)
+        api_client.post(
+            reverse("api_mau_auth:set-token"),
+            data=self.credentials,
+        )
+
+        response = api_client.post(reverse("api_mau_auth:delete-token"))
+        assert response.status_code == status.HTTP_200_OK
+        assert not api_client.cookies["auth_token"].value
 
 
 class TestPasswordResetAPIViews:

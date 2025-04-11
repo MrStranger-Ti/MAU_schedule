@@ -4,6 +4,11 @@ from django.core.cache import cache
 from django.conf import settings
 
 
+@pytest.fixture(autouse=True)
+def disable_https() -> None:
+    settings.SECURE_SSL_REDIRECT = False
+
+
 @pytest.fixture
 def conf_cache() -> None:
     default = settings.CACHES["default"]

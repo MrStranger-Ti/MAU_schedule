@@ -38,9 +38,14 @@ urlpatterns = [
         name="register-confirm",
     ),
     path(
-        "token/",
-        views.ObtainAuthTokenAPIView.as_view(),
-        name="get-token",
+        "token/set/",
+        views.SetAuthTokenAPIView.as_view(),
+        name="set-token",
+    ),
+    path(
+        "token/delete/",
+        views.DeleteTokenAPIView.as_view(),
+        name="delete-token",
     ),
     path(
         "password/reset/",

@@ -302,12 +302,12 @@ class RegisterConfirmAPIView(GenericAPIView):
         )
 
 
-class ObtainAuthTokenAPIView(GenericAPIView):
+class SetAuthTokenAPIView(GenericAPIView):
     serializer_class = AuthTokenSerializer
 
     @extend_schema(
         tags=["Auth Token"],
-        summary="Getting token by credentials",
+        summary="Setting token in httponly cookie by credentials",
         responses={
             200: OpenApiResponse(description="Success"),
             400: OpenApiResponse(description="Validation error"),
@@ -326,8 +326,27 @@ class ObtainAuthTokenAPIView(GenericAPIView):
             value=token,
             httponly=True,
             secure=True,
-            samesite="None",
+            samesite=None,
         )
+        return response
+
+
+class DeleteTokenAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        tags=["Auth Token"],
+        summary="Deleting token from httponly cookie",
+        responses={
+            200: OpenApiResponse(description="Success"),
+        },
+    )
+    def post(self, request: Request) -> Response:
+        response = Response(
+            data={"message": "Success deleted token"},
+            status=status.HTTP_200_OK,
+        )
+        response.delete_cookie(key="auth_token", samesite=None)
         return response
 
 
@@ -375,7 +394,7 @@ class PasswordResetConfirmAPIView(APIView):
                     "Your password was successfully changed. "
                     "You need to get a new token."
                 ),
-                "help_url": reverse("api_mau_auth:get-token"),
+                "help_url": reverse("api_mau_auth:set-token"),
             },
             status=status.HTTP_200_OK,
         )
