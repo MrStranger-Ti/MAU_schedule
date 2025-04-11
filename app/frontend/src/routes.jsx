@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import {BrowserRouter, Routes as R, Route} from "react-router-dom";
 import IndexPage from "./pages/IndexPage";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
@@ -16,7 +16,7 @@ const Routes = () => {
             setIsPageLoading(true);
 
             const service = new AuthService();
-            const {success, data} = await service.isAuthenticated();
+            const {success} = await service.isAuthenticated();
             setIsAuth(success);
 
             setIsPageLoading(false);

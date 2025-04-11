@@ -4,7 +4,7 @@ import {AuthContext, LoadingContext} from "../context/auth";
 import {Link, Navigate, useNavigate} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import BaseAuth from "../components/BasePages/BaseAuth";
-import Base from "../components/BasePages/Base";
+import Main from "../components/BasePages/Main";
 import Input from "../components/UI/Input";
 import Form from "../components/UI/Form"
 
@@ -19,17 +19,15 @@ const Login = () => {
     const unsuccessful = () => setFormData({...formData, password: ""});
 
     return (
-        <Base>
+        <BaseAuth>
             <Helmet>
                 <title>Вход</title>
             </Helmet>
-            <BaseAuth>
-                {
-                    isAuth
-                    ?
-                    <Navigate to="/accounts/profile/"/>
-                    :
-                    <React.Fragment>
+            {isAuth
+                ?
+                <Navigate to="/accounts/profile/"/>
+                :
+                <React.Fragment>
                     <h1 className="auth__title">Вход</h1>
                     <Form
                         request={request}
@@ -66,10 +64,9 @@ const Login = () => {
                     </Form>
                     <Link className="dark-link link" to="#">Регистрация</Link>
                     <Link className="dark-link link" to="#">Восстановить пароль</Link>
-                    </React.Fragment>
-                }
-            </BaseAuth>
-        </Base>
+                </React.Fragment>
+            }
+        </BaseAuth>
     );
 };
 

@@ -5,7 +5,7 @@ const Input = ({hasErrors, labelText, onChange, id, ...props}) => {
     const {isPageLoading, setIsPageLoading} = useContext(LoadingContext);
 
     const [hasInputError, setHasInputError] = useState(null);
-    const [classes, setClasses] = useState(["main-input", "form-control"]);
+    const [classes, setClasses] = useState(["config-input", "form-control"]);
 
     useEffect(() => {
         if (!isPageLoading) setHasInputError(hasErrors)
@@ -29,6 +29,7 @@ const Input = ({hasErrors, labelText, onChange, id, ...props}) => {
             <input
                 className={[...classes].join(" ")}
                 onChange={handleOnchange}
+                id={id}
                 {...props}
             />
             <label htmlFor={id}>{labelText}</label>

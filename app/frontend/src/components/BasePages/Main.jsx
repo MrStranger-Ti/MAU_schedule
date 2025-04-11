@@ -1,6 +1,6 @@
 import React from "react";
 
-const Base = ({children}) => {
+const Main = ({children}) => {
     return (
         <main>
             {children}
@@ -8,4 +8,4 @@ const Base = ({children}) => {
     );
 };
 
-export default Base;
+export default Main;

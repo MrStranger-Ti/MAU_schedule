@@ -1,5 +1,5 @@
 import axios from "axios";
-import main from "../config"
+import config from "../config"
 
 export default class AuthService {
     async #getResponse(callback) {
@@ -15,7 +15,7 @@ export default class AuthService {
     async login({email, password}) {
         const data = JSON.stringify({email, password})
         return await this.#getResponse(() =>
-            axios.post(`https://${main.HOST}/api/token/`, data, {
+            axios.post(`https://${config.HOST}/api/token/set/`, data, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -26,7 +26,7 @@ export default class AuthService {
 
     async logout() {
         return await this.#getResponse(() =>
-            axios.post(`https://${main.HOST}/api/logout/`, null, {
+            axios.post(`https://${config.HOST}/api/token/delete/`, null, {
                 withCredentials: true
             })
         )
@@ -34,7 +34,7 @@ export default class AuthService {
 
     async isAuthenticated() {
         return await this.#getResponse(() =>
-            axios.get(`https://${main.HOST}/api/me/`, {
+            axios.get(`https://${config.HOST}/api/me/`, {
                 withCredentials: true
             })
         )
