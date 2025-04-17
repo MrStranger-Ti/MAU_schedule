@@ -1,5 +1,3 @@
-import time
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django_filters.rest_framework import DjangoFilterBackend
@@ -7,16 +5,15 @@ from drf_spectacular.utils import (
     extend_schema,
     extend_schema_view,
     OpenApiResponse,
-    OpenApiRequest,
 )
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.reverse import reverse, reverse_lazy
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import status
 from rest_framework import mixins
 

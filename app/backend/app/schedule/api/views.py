@@ -4,15 +4,19 @@ from drf_spectacular.utils import (
     extend_schema,
     OpenApiResponse,
     OpenApiExample,
-    OpenApiRequest,
     OpenApiParameter,
+    extend_schema_view,
 )
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import mixins
+from rest_framework.viewsets import GenericViewSet
 
 from schedule.api.mixins import ParserResponseViewMixin
+from schedule.api.serializers import MauInstituteSerializer
+from schedule.models import MauInstitute
 from schedule.parser import (
     get_group_schedule,
     get_teachers_keys,
@@ -20,6 +24,27 @@ from schedule.parser import (
     get_periods,
 )
 from utils.local import get_json
+
+
+@extend_schema_view(
+    list=extend_schema(
+        tags=["Schedule"],
+        summary="Getting institutes list",
+        responses={200: OpenApiResponse(description="Institutes list")},
+    ),
+    retrieve=extend_schema(
+        tags=["Schedule"],
+        summary="Getting institute details",
+        responses={200: OpenApiResponse(description="Institute details")},
+    ),
+)
+class InstituteViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    GenericViewSet,
+):
+    queryset = MauInstitute.objects.all()
+    serializer_class = MauInstituteSerializer
 
 
 class GroupScheduleApiView(APIView, ParserResponseViewMixin):

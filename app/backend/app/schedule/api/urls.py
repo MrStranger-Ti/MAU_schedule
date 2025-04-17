@@ -5,11 +5,22 @@ from schedule.api.views import (
     TeachersKeysApiView,
     TeacherScheduleApiView,
     SchedulePeriodsApiView,
+    InstituteViewSet,
 )
 
 app_name = "api_schedule"
 
 urlpatterns = [
+    path(
+        "schedule/institutes/",
+        InstituteViewSet.as_view({"get": "list"}),
+        name="institute-list",
+    ),
+    path(
+        "schedule/institutes/<int:pk>/",
+        InstituteViewSet.as_view({"get": "retrieve"}),
+        name="institute-detail",
+    ),
     path("schedule/group/", GroupScheduleApiView.as_view(), name="group-schedule"),
     path(
         "schedule/teachers-keys/",
