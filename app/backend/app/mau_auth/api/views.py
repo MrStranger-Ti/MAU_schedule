@@ -324,6 +324,7 @@ class SetAuthTokenAPIView(GenericAPIView):
         response.set_cookie(
             key="auth_token",
             value=token,
+            max_age=60 * 60 * 24 * 7,
             httponly=True,
             secure=True,
             samesite=None,
