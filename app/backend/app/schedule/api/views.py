@@ -30,12 +30,39 @@ from utils.local import get_json
     list=extend_schema(
         tags=["Schedule"],
         summary="Getting institutes list",
-        responses={200: OpenApiResponse(description="Institutes list")},
+        responses={
+            200: OpenApiResponse(
+                description="Institutes list",
+                response=OpenApiTypes.OBJECT,
+                examples=[
+                    OpenApiExample(
+                        "Institutes list example",
+                        value=[
+                            {"id": 1, "name": "name 1"},
+                            {"id": 2, "name": "name 2"},
+                            {"id": 3, "name": "name 3"},
+                        ],
+                    ),
+                ],
+            ),
+        },
     ),
     retrieve=extend_schema(
         tags=["Schedule"],
         summary="Getting institute details",
-        responses={200: OpenApiResponse(description="Institute details")},
+        responses={
+            200: OpenApiResponse(
+                description="Institute details",
+                response=OpenApiTypes.OBJECT,
+                examples=[
+                    OpenApiExample(
+                        "Institute example",
+                        value={"id": 3, "name": "name 3"},
+                    ),
+                ],
+            ),
+            404: OpenApiResponse(description="Institute not found"),
+        },
     ),
 )
 class InstituteViewSet(
@@ -45,6 +72,7 @@ class InstituteViewSet(
 ):
     queryset = MauInstitute.objects.all()
     serializer_class = MauInstituteSerializer
+    pagination_class = None
 
 
 class GroupScheduleApiView(APIView, ParserResponseViewMixin):
@@ -64,7 +92,7 @@ class GroupScheduleApiView(APIView, ParserResponseViewMixin):
                             settings.BASE_DIR
                             / "schedule/api/swagger_examples/group_schedule.json",
                         ),
-                    )
+                    ),
                 ],
             ),
             400: OpenApiResponse(description="Invalid institute, course or group"),
@@ -95,7 +123,7 @@ class TeachersKeysApiView(APIView, ParserResponseViewMixin):
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.QUERY,
                 required=True,
-            )
+            ),
         ],
         responses={
             200: OpenApiResponse(
@@ -107,7 +135,7 @@ class TeachersKeysApiView(APIView, ParserResponseViewMixin):
                             settings.BASE_DIR
                             / "schedule/api/swagger_examples/teachers_keys.json",
                         ),
-                    )
+                    ),
                 ],
             ),
             503: OpenApiResponse(description="Official schedule is unavailable"),
@@ -144,7 +172,7 @@ class TeacherScheduleApiView(APIView, ParserResponseViewMixin):
                             settings.BASE_DIR
                             / "schedule/api/swagger_examples/teacher_schedule.json",
                         ),
-                    )
+                    ),
                 ],
             ),
             400: OpenApiResponse(description="Invalid teacher key"),
@@ -173,7 +201,7 @@ class SchedulePeriodsApiView(APIView, ParserResponseViewMixin):
                             settings.BASE_DIR
                             / "schedule/api/swagger_examples/periods.json",
                         ),
-                    )
+                    ),
                 ],
             ),
             503: OpenApiResponse(description="Official schedule is unavailable"),
