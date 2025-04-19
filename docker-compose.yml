@@ -46,6 +46,7 @@ services:
     volumes:
       - ./secrets:/usr/app/secrets
       - ./app/frontend/src:/usr/app/src
+      - ./app/frontend/public:/usr/app/public
     depends_on:
       - django
 

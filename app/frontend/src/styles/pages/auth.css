@@ -36,14 +36,14 @@
     width: 100%;
 }
 
-.auth__inputs-block {
+.auth__form .inputs-block {
     width: 100%;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.auth__error {
+.auth__form .error {
     margin-bottom: 5px;
 }
 

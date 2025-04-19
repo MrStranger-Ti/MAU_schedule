@@ -1,18 +1,16 @@
 import React, {useState} from 'react';
 import Routes from "./routes";
-import {AuthContext, LoadingContext} from "./context/auth";
+import {AuthContext} from "./context/auth";
 
 function App() {
     const [isAuth, setIsAuth] = useState(false);
-    const [isPageLoading, setIsPageLoading] = useState(true);
+    const [isCheckAuth, setIsCheckAuth] = useState(false);
 
     return (
-        <AuthContext.Provider value={{isAuth, setIsAuth}}>
-            <LoadingContext.Provider value={{isPageLoading, setIsPageLoading}}>
-                <div className="App">
-                    <Routes/>
-                </div>
-            </LoadingContext.Provider>
+        <AuthContext.Provider value={{isAuth, setIsAuth, isCheckAuth, setIsCheckAuth}}>
+            <div className="App">
+                <Routes/>
+            </div>
         </AuthContext.Provider>
     );
 }

@@ -1,50 +1,31 @@
-import React, {useContext, useEffect} from "react";
+import React from "react";
 import {BrowserRouter, Routes as R, Route} from "react-router-dom";
 import IndexPage from "./pages/IndexPage";
-import ProtectedRoute from "./components/Auth/ProtectedRoute";
-import Profile from "./pages/Profile";
-import Login from "./pages/Login";
-import AuthService from "./services/auth";
-import {AuthContext, LoadingContext} from "./context/auth";
+import AuthRoute from "./components/Routes/AuthRoute";
+import Profile from "./pages/Profile/Profile";
+import Login from "./pages/Auth/Login";
 
 const Routes = () => {
-    const {isAuth, setIsAuth} = useContext(AuthContext);
-    const {isPageLoading, setIsPageLoading} = useContext(LoadingContext);
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            setIsPageLoading(true);
-
-            const service = new AuthService();
-            const {success} = await service.isAuthenticated();
-            setIsAuth(success);
-
-            setIsPageLoading(false);
-        };
-
-        checkAuth();
-    }, []);
-
     return (
-        <div>
-            <BrowserRouter>
-                <R>
-                    <Route path="/" element={<IndexPage/>}/>
-                    <Route path="/accounts/login/" element={<Login/>}/>
-                    <Route path="/accounts/register/" element=""/>
-                    <Route
-                        path="/accounts/profile/"
-                        element={
-                            <ProtectedRoute>
-                                <Profile/>
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route path="/schedule/group/" element=""/>
-                    <Route path="/schedule/teacher-search/" element=""/>
-                </R>
-            </BrowserRouter>
-        </div>
+        <BrowserRouter>
+            <R>
+                <Route path="/" element={<IndexPage/>}/>
+                <Route path="/accounts/login/" element={
+                    <AuthRoute>
+                        <Login/>
+                    </AuthRoute>
+                }/>
+                <Route path="/accounts/register/" element=""/>
+                <Route path="/accounts/profile/" element={
+                    <AuthRoute>
+                        <Profile/>
+                    </AuthRoute>
+                }
+                />
+                <Route path="/schedule/group/" element=""/>
+                <Route path="/schedule/teacher-search/" element=""/>
+            </R>
+        </BrowserRouter>
     );
 };
 
