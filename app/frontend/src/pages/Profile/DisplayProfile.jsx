@@ -1,11 +1,15 @@
 import React, {useContext} from "react";
 import {UserContext} from "../../context/auth";
+import {Helmet} from "react-helmet";
 
 const DisplayProfile = () => {
     const {userData} = useContext(UserContext);
 
     return (
         <React.Fragment>
+            <Helmet>
+                <title>Профиль</title>
+            </Helmet>
             <div className="row justify-content-between profile__lists-block flex-wrap gap-5">
                 <div className="col profile__list-block">
                     <h2 className="profile__list-title">Личная информация</h2>

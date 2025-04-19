@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import ErrorStyles from "./ErrorStyles";
 
-const Input = ({className, onChange, name, ...props}) => {
+const Input = ({className, onChange, name, value, ...props}) => {
     const [classes, setClasses] = useState(className.split(" "));
     const [hasInputErrors, setHasInputErrors] = useState(false);
 
@@ -12,14 +12,17 @@ const Input = ({className, onChange, name, ...props}) => {
 
     return (
         <ErrorStyles
+            inputName={name}
             hasInputErrors={hasInputErrors}
             setHasInputErrors={setHasInputErrors}
-            classes={className}
+            classes={classes}
             setClasses={setClasses}
         >
             <input
                 className={[...classes].join(" ")}
                 onChange={handleOnchange}
+                name={name}
+                value={value !== null ? value : ""}
                 {...props}
             />
         </ErrorStyles>

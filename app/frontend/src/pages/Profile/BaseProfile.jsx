@@ -7,7 +7,6 @@ import {AuthContext, UserContext} from "../../context/auth";
 
 const BaseProfile = ({children, title}) => {
     const {isCheckAuth} = useContext(AuthContext);
-    const {userData} = useContext(UserContext);
 
     return (
         <main>

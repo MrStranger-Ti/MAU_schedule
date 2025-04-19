@@ -1,12 +1,20 @@
 import React, {useContext, useEffect} from "react";
 import {FormContext} from "../../../context/UI";
 
-const ErrorStyles = ({children, hasInputErrors, setHasInputErrors, classes, setClasses}) => {
+const ErrorStyles = ({
+                         children,
+                         inputName,
+                         hasInputErrors,
+                         setHasInputErrors,
+                         classes,
+                         setClasses
+                     }) => {
     const {formErrors} = useContext(FormContext);
 
     useEffect(() => {
         setHasInputErrors(
-            formErrors.hasOwnProperty(name) || formErrors.hasOwnProperty("non_field_errors")
+            formErrors.hasOwnProperty(inputName)
+            || formErrors.hasOwnProperty("non_field_errors")
         )
     }, [formErrors]);
 

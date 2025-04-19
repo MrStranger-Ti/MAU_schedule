@@ -7,6 +7,8 @@ import userService from "../../services/user";
 import {UserContext} from "../../context/auth";
 import instituteService from "../../services/institute";
 import Spinner from "../../components/Spinner/Spinner";
+import {Helmet} from "react-helmet";
+import Select from "../../components/UI/Form/Select";
 
 const ProfileForm = ({setUpdating}) => {
     const {userData} = useContext(UserContext);
@@ -21,7 +23,10 @@ const ProfileForm = ({setUpdating}) => {
             const {success, data} = await service.getAll();
 
             if (success) {
-                setInstitutes(data);
+                setInstitutes(data.map(institute => ({
+                    name: institute.name,
+                    value: institute.id
+                })));
             }
 
             setIsFormLoading(false);
@@ -35,6 +40,9 @@ const ProfileForm = ({setUpdating}) => {
 
     return (
         <React.Fragment>
+            <Helmet>
+                <title>Обновление профиля</title>
+            </Helmet>
             {isFormLoading
                 ?
                 <Spinner/>
@@ -44,10 +52,11 @@ const ProfileForm = ({setUpdating}) => {
                     formData={formData}
                     request={request}
                     successful={successful}
+                    id="profile-update"
                 >
                     <FormErrors/>
                     <div className="row row-cols-md-2 g-1 g-md-3 justify-content-between inputs-block flex-wrap">
-                        <InputErrors/>
+                        <InputErrors inputName="full_name"/>
                         <div className="col-md field-block">
                             <div className="form-floating">
                                 <Input
@@ -62,7 +71,7 @@ const ProfileForm = ({setUpdating}) => {
                                 <label htmlFor="full_name">ФИО</label>
                             </div>
                         </div>
-                        <InputErrors/>
+                        <InputErrors inputName="course"/>
                         <div className="col-md field-block">
                             <div className="form-floating">
                                 <Input
@@ -77,7 +86,7 @@ const ProfileForm = ({setUpdating}) => {
                                 <label htmlFor="course">Курс</label>
                             </div>
                         </div>
-                        <InputErrors/>
+                        <InputErrors inputName="grouop"/>
                         <div className="col-md field-block">
                             <div className="form-floating">
                                 <Input
@@ -92,10 +101,11 @@ const ProfileForm = ({setUpdating}) => {
                                 <label htmlFor="group">Группа</label>
                             </div>
                         </div>
-                        <InputErrors/>
+                        <InputErrors inputName="institute"/>
                         <div className="col-md field-block">
                             <div className="form-floating">
-                                <Input
+                                <Select
+                                    options={institutes}
                                     className="form-control"
                                     type="text"
                                     name="institute"
@@ -104,7 +114,7 @@ const ProfileForm = ({setUpdating}) => {
                                     onChange={(e) => setFormData({...formData, institute: e.target.value})}
                                     value={formData.institute}
                                 />
-                                <label htmlFor="full_name">ФИО</label>
+                                <label htmlFor="full_name">Институт</label>
                             </div>
                         </div>
                     </div>
