@@ -1,9 +1,9 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext} from "react";
 import "../../styles/pages/profile.css";
 import Spinner from "../../components/Spinner/Spinner";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import {AuthContext, UserContext} from "../../context/auth";
+import {AuthContext} from "../../context/auth";
 
 const BaseProfile = ({children, title}) => {
     const {isCheckAuth} = useContext(AuthContext);

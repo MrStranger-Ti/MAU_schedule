@@ -1,26 +1,39 @@
 import React, {useContext, useState} from "react";
-import FormErrors from "../../components/UI/Form/FormErrors";
-import Form from "../../components/UI/Form/Form";
-import Input from "../../components/UI/Form/Input";
-import AuthService from "../../services/auth";
-import {AuthContext} from "../../context/auth";
-import InputErrors from "../../components/UI/Form/InputErrors";
+import FormErrors from "../../../components/UI/Form/FormErrors";
+import Form from "../../../components/UI/Form/Form";
+import Input from "../../../components/UI/Form/Input";
+import AuthService from "../../../services/auth";
+import {AuthContext} from "../../../context/auth";
+import InputErrors from "../../../components/UI/Form/InputErrors";
+import ButtonSpinner from "../../../components/Spinner/ButtonSpinner";
 
 const LoginForm = () => {
     const {setIsAuth} = useContext(AuthContext);
     const [formData, setFormData] = useState({email: "", password: ""});
+    const [formErrors, setFormErrors] = useState({});
+    const [isBtnLoading, setIsBtnLoading] = useState(false);
 
-    const request = async ({...params}) => new AuthService().login(params);
-    const successful = () => setIsAuth(true);
-    const unsuccessful = () => setFormData({...formData, password: ""});
+    const onSubmit = async (e) => {
+        e.preventDefault();
 
+        setIsBtnLoading(true);
+
+        const {success, data} = await new AuthService().login(formData);
+        if (success) {
+            setIsAuth(true);
+        } else {
+            setFormErrors(data);
+            setFormData({...formData, password: ""});
+        }
+
+        setIsBtnLoading(false);
+    }
     return (
         <Form
             className="auth__form flex"
-            formData={formData}
-            request={request}
-            successful={successful}
-            unsuccessful={unsuccessful}
+            onSubmit={onSubmit}
+            formErrors={formErrors}
+            setFormErrors={setFormErrors}
         >
             <div className="inputs-block flex">
                 <FormErrors/>
@@ -57,7 +70,10 @@ const LoginForm = () => {
                     </div>
                 </div>
             </div>
-            <button className="btn" type="submit">Войти</button>
+            <button className="btn" type="submit" disabled={isBtnLoading && true}>
+                {isBtnLoading && <ButtonSpinner/>}
+                Войти
+            </button>
         </Form>
     );
 };

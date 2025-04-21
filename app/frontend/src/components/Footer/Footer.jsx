@@ -1,12 +1,9 @@
-import React, {useContext} from "react";
+import React from "react";
 import {Link} from "react-router-dom";
 import BearBody from  "../../assets/images/logo/bear_body.png";
 import config from "../../config";
-import {UserContext} from "../../context/auth";
 
 const Footer = () => {
-    const {userData} = useContext(UserContext);
-
     return (
         <footer className="footer">
             <div className="container footer__container flex">

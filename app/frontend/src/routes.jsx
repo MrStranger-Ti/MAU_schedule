@@ -3,7 +3,7 @@ import {BrowserRouter, Routes as R, Route} from "react-router-dom";
 import IndexPage from "./pages/IndexPage";
 import AuthRoute from "./components/Routes/AuthRoute";
 import Profile from "./pages/Profile/Profile";
-import Login from "./pages/Auth/Login";
+import Login from "./pages/Auth/Login/Login";
 
 const Routes = () => {
     return (

@@ -23,7 +23,7 @@ const Header = () => {
                 <img src={bearFace} className="header__logo" alt="Логотип лицо медведя"/>
                 <nav className="header__nav">
                     <ul className="header__nav-list flex">
-                        <li className="header__nav-item"><Link className="link header__nav-link" to="/profile/">Профиль</Link></li>
+                        <li className="header__nav-item"><Link className="link header__nav-link" to="/accounts/profile/">Профиль</Link></li>
                         <li className="header__nav-item"><Link className="link header__nav-link" to="/schedule/group/">Группа</Link></li>
                         <li className="header__nav-item"><Link className="link header__nav-link" to="/schedule/teacher-search/">Преподаватели</Link></li>
                     </ul>

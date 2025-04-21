@@ -17,6 +17,9 @@ export default class userService extends BaseService {
         const data = JSON.stringify({full_name, course, institute, group})
         return await this.getResponse(() =>
             axios.put(url, data, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 withCredentials: true
             })
         )

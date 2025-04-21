@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
-import {AuthContext} from "../../context/auth";
+import {AuthContext} from "../../../context/auth";
 import {Link, Navigate} from "react-router-dom";
 import {Helmet} from "react-helmet";
-import BaseAuth from "./BaseAuth";
+import BaseAuth from "../BaseAuth";
 import LoginForm from "./LoginForm";
 
 const Login = () => {
