@@ -20,7 +20,7 @@ const Login = () => {
                 <React.Fragment>
                     <h1 className="auth__title">Вход</h1>
                     <LoginForm/>
-                    <Link className="dark-link link" to="#">Регистрация</Link>
+                    <Link className="dark-link link" to="/accounts/register/">Регистрация</Link>
                     <Link className="dark-link link" to="#">Восстановить пароль</Link>
                 </React.Fragment>
             }

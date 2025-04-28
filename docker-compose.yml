@@ -4,6 +4,7 @@ services:
       context:  ./app/backend/
       dockerfile: Dockerfile
     container_name: mau_schedule_backend
+    restart: always
     env_file:
       - .env
     environment:
@@ -31,6 +32,7 @@ services:
       context: ./app/frontend/
       dockerfile: Dockerfile
     container_name: mau_schedule_frontend
+    restart: always
     env_file:
       - .env
     environment:
@@ -52,6 +54,7 @@ services:
 
   postgres_db:
     image: postgres
+    restart: always
     env_file:
       - .env
     volumes:
@@ -61,6 +64,7 @@ services:
 
   redis:
     image: redis
+    restart: always
     ports:
       - "6379:6379"
 
@@ -68,6 +72,7 @@ services:
     build:
       context: ./app/backend/
       dockerfile: Dockerfile
+    restart: always
     env_file:
       - .env
     environment:
@@ -83,6 +88,7 @@ services:
     build:
       context: ./app/backend/
       dockerfile: Dockerfile
+    restart: always
     env_file:
       - .env
     environment:

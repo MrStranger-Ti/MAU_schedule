@@ -125,14 +125,15 @@ const ProfileForm = ({
                     <div className="col-md field-block">
                         <div className="form-floating">
                             <Select
-                                options={institutes}
-                                className="form-control"
-                                type="text"
+                                className="form-control form-select"
+                                onChange={(e) => setFormData({...formData, institute: e.target.value})}
                                 name="institute"
+                                value={formData.institute}
+                                options={institutes}
+                                firstOption="Выберите институт"
+                                type="text"
                                 id="institute"
                                 placeholder="institute"
-                                onChange={(e) => setFormData({...formData, institute: e.target.value})}
-                                value={formData.institute}
                             />
                             <label htmlFor="full_name">Институт</label>
                         </div>

@@ -20,7 +20,6 @@ User: type[MauUser] = get_user_model()
 
 pytestmark = pytest.mark.django_db
 
-
 admin_serialized_data = {
     "full_name": "Petrov Petr Petrovich",
     "email": "testuser@mauniver.ru",

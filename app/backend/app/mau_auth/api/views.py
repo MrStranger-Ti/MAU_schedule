@@ -28,6 +28,7 @@ from mau_auth.api.serializers import (
     AuthenticatedUserSerializer,
     GroupSerializer,
     PermissionSerializer,
+    RegisterSerializer,
 )
 
 User: type[MauUser] = get_user_model()
@@ -255,7 +256,7 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericVie
 
 
 class RegisterAPIView(GenericAPIView):
-    serializer_class = AuthenticatedUserSerializer
+    serializer_class = RegisterSerializer
 
     @extend_schema(
         tags=["Auth Register"],

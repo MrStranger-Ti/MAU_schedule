@@ -22,4 +22,32 @@ export default class AuthService extends BaseService {
             })
         )
     }
+
+    async register({full_name, password, email, course, institute, group}) {
+        const registerResponse = await this.getResponse(() =>
+            axios.post(`https://${config.API_HOST}/api/register/`, {
+                user: {
+                    full_name,
+                    password,
+                    email,
+                    course,
+                    institute,
+                    group
+                },
+                options: {
+                    url: `https://${window.location.host}/accounts/register/confirm/`
+                }
+            })
+        )
+        return {
+            success: registerResponse.success,
+            data: registerResponse.data.user
+        }
+    }
+
+    async registerConfirm({uidb64, token}) {
+        return await this.getResponse(() =>
+            axios.get(`https://${config.API_HOST}/api/register/confirm/${uidb64}/${token}/`)
+        )
+    }
 }

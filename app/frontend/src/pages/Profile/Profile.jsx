@@ -13,15 +13,8 @@ const Profile = () => {
         const getInstitutes = async () => {
             setIsBtnLoading(true);
 
-            const service = new instituteService();
-            const {success, data} = await service.getAll();
-
-            if (success) {
-                setInstitutes(data.map(institute => ({
-                    name: institute.name,
-                    value: institute.id
-                })));
-            }
+            const {success, data} = await new instituteService().service.getAll();
+            if (success) setInstitutes(data);
 
             setIsBtnLoading(false);
             setIsUpdating(true);

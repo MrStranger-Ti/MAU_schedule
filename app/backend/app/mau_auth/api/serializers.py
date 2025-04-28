@@ -78,6 +78,16 @@ class BaseUserSerializer(serializers.ModelSerializer):
         return user
 
 
+class ConfirmationOptionsSerializer(serializers.Serializer):
+    url = serializers.URLField(
+        required=False,
+        help_text=(
+            "Custom url for confirmation. Format in email message: "
+            "your_url/uidb64/token/",
+        ),
+    )
+
+
 class AdminUserSerializer(BaseUserSerializer):
     class Meta:
         model = User
@@ -121,10 +131,6 @@ class AuthenticatedUserSerializer(BaseUserSerializer, ContextMixin):
     def create(self, validated_data: dict) -> User:
         user = super().create(validated_data)
         user.is_active = False
-        user.send_email_confirmation(
-            request=self.get_context("request"),
-            confirmation_url_pattern="api_mau_auth:register-confirm",
-        )
         return user
 
     def validate(self, attrs: dict) -> dict:
@@ -147,6 +153,28 @@ class AuthenticatedUserSerializer(BaseUserSerializer, ContextMixin):
 
         super().validate(attrs)
         return attrs
+
+
+class RegisterSerializer(serializers.Serializer, ContextMixin):
+    user = AuthenticatedUserSerializer(write_only=True)
+    options = ConfirmationOptionsSerializer(required=False, write_only=True)
+
+    def create(self, validated_data: dict) -> User:
+        user_data = validated_data.pop("user")
+
+        user_serializer = AuthenticatedUserSerializer()
+        user = user_serializer.create(validated_data=user_data)
+        user.save()
+
+        options = validated_data.get("options", {})
+        url = options.get("url")
+        user.send_email_confirmation(request=self.get_context("request"), url=url)
+
+        return user
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation.get("user", {})
 
 
 class EmailConfirmationSerializer(serializers.Serializer):

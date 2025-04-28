@@ -1,20 +1,21 @@
 from __future__ import annotations
 
+import urllib.parse
+
 from django.apps import apps
 from django.contrib import auth
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.db import models
-from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.conf import settings
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from rest_framework.request import Request
 from rest_framework.reverse import reverse
 
 from mau_auth.validators import validate_full_name, validate_email
@@ -91,40 +92,39 @@ class MauUserManager(BaseUserManager):
 
 
 class EmailConfirmationMixin:
-    def get_confirmation_message(
-        self,
-        request: HttpRequest,
-        confirmation_url_pattern: str,
-    ) -> str:
-        current_site = get_current_site(request)
+    def get_confirmation_message(self, request: Request, url: str | None) -> str:
         context = {
-            "domain": current_site.domain,
-            "url": self.get_confirmation_url(base_url=confirmation_url_pattern),
+            "url": self.get_confirmation_url(request=request, url=url),
         }
         return render_to_string(
             "mau_auth/registration/email_message.html",
             context=context,
         )
 
-    def get_confirmation_url(self, base_url: str) -> str:
+    def get_confirmation_url(self, request: Request, url: str) -> str:
         uidb64, token = self.get_uidb64_and_token()
-        return reverse(base_url, args=[uidb64, token])
+        if url is None:
+            return urllib.parse.urljoin(
+                f"{request.scheme}://{request.get_host()}",
+                reverse(
+                    "api_mau_auth:register-confirm",
+                    kwargs={
+                        "uidb64": uidb64,
+                        "token": token,
+                    },
+                ),
+            )
+
+        return urllib.parse.urljoin(url, uidb64 + "/" + token)
 
     def get_uidb64_and_token(self) -> tuple[str, str]:
         uidb64 = urlsafe_base64_encode(force_bytes(self.pk))
         token = default_token_generator.make_token(self)
         return uidb64, token
 
-    def send_email_confirmation(
-        self,
-        request: HttpRequest,
-        confirmation_url_pattern: str,
-    ) -> None:
+    def send_email_confirmation(self, request: Request, url: str | None = None) -> None:
         subject = "Подтвердите почту в приложении MAU schedule"
-        message = self.get_confirmation_message(
-            request=request,
-            confirmation_url_pattern=confirmation_url_pattern,
-        )
+        message = self.get_confirmation_message(request=request, url=url)
         send_mail(
             subject=subject,
             from_email=settings.DEFAULT_FROM_EMAIL,

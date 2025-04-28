@@ -7,10 +7,10 @@ const Form = ({
                   setFormErrors,
                   onSubmit,
                   ...props
-              }) => {
+              }, ref) => {
     return (
         <FormContext.Provider value={{formErrors, setFormErrors}}>
-            <form onSubmit={onSubmit} {...props}>
+            <form ref={ref} onSubmit={onSubmit} {...props}>
                 {children}
             </form>
         </FormContext.Provider>
