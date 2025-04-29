@@ -3,7 +3,7 @@ import FormErrors from "../../../components/UI/Form/FormErrors";
 import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 
-const FirstStep = React.forwardRef(({setStep, formData, setFormData}, formRef) => {
+const FirstStep = ({setStep, formData, setFormData, formRef}) => {
     const switchStep = () => {
         if (formRef.current.reportValidity()) {
             setStep(2);
@@ -74,6 +74,6 @@ const FirstStep = React.forwardRef(({setStep, formData, setFormData}, formRef) =
             </div>
         </div>
     );
-});
+};
 
 export default FirstStep;

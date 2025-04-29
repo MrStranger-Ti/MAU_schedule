@@ -76,10 +76,10 @@ const Register = () => {
                         {step === 1
                             ?
                             <FirstStep
+                                formRef={formRef}
                                 setStep={setStep}
                                 formData={formData}
                                 setFormData={setFormData}
-                                formRef={formRef}
                             />
                             :
                             <SecondStep

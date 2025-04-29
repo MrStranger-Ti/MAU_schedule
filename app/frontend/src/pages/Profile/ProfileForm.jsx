@@ -44,6 +44,7 @@ const ProfileForm = ({
         if (updateResponse.success) {
             const updatingData = {
                 full_name: updateResponse.data.full_name,
+                email: updateResponse.data.email,
                 course: updateResponse.data.course,
                 group: updateResponse.data.group,
             };

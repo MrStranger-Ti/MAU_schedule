@@ -6,6 +6,7 @@ import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import RegisterConfirm from "./pages/Auth/RegisterConfirm/RegisterConfirm";
+import LogoutRoute from "./components/Routes/LogoutRoute";
 
 const Routes = () => {
     return (
@@ -16,17 +17,25 @@ const Routes = () => {
                     element={<IndexPage/>}
                 />
                 <Route path="/accounts/login/" element={
-                    <AuthRoute>
+                    <LogoutRoute>
                         <Login/>
-                    </AuthRoute>
+                    </LogoutRoute>
                 }/>
                 <Route
                     path="/accounts/register/"
-                    element={<Register/>}
+                    element={
+                        <LogoutRoute>
+                            <Register/>
+                        </LogoutRoute>
+                    }
                 />
                 <Route
                     path="/accounts/register/confirm/:uidb64/:token/"
-                    element={<RegisterConfirm/>}
+                    element={
+                        <LogoutRoute>
+                            <RegisterConfirm/>
+                        </LogoutRoute>
+                    }
                 />
                 <Route path="/accounts/profile/" element={
                     <AuthRoute>
