@@ -4,7 +4,7 @@ import config from "../config";
 
 const url = `https://${config.API_HOST}/api/schedule/institutes/`
 
-export default class instituteService extends BaseService {
+export default class InstituteService extends BaseService {
     async getAll() {
         const response = await this.getResponse(() =>
             axios.get(url)

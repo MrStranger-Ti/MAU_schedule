@@ -5,7 +5,7 @@ import Input from "../../components/UI/Form/Input";
 import InputErrors from "../../components/UI/Form/InputErrors";
 import userService from "../../services/user";
 import {UserContext} from "../../context/auth";
-import instituteService from "../../services/institute";
+import InstituteService from "../../services/institute";
 import {Helmet} from "react-helmet";
 import Select from "../../components/UI/Form/Select";
 import ButtonSpinner from "../../components/Spinner/ButtonSpinner";
@@ -47,7 +47,7 @@ const ProfileForm = ({
                 course: updateResponse.data.course,
                 group: updateResponse.data.group,
             };
-            const service = new instituteService();
+            const service = new InstituteService();
             const instituteResponse = await service.getById(updateResponse.data.institute);
 
             if (instituteResponse.success) Object.assign(updatingData, {

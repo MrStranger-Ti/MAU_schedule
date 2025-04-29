@@ -2,32 +2,34 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {AuthContext, UserContext} from "../../context/auth";
 import userService from "../../services/user";
-import instituteService from "../../services/institute";
+import InstituteService from "../../services/institute";
+import {LoadingContext} from "../../context/base";
 
 const AuthRoute = ({children}) => {
-    const {setIsAuth, setIsCheckAuth} = useContext(AuthContext);
+    const {setIsAuth} = useContext(AuthContext);
+    const {setIsLoading} = useContext(LoadingContext);
     const [userData, setUserData] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
         const getUserData = async () => {
-            setIsCheckAuth(true);
+            setIsLoading(true);
 
             const userServ = new userService();
             const userResponse = await userServ.getUserData();
 
             if (!userResponse.success) {
-                setIsCheckAuth(false);
+                setIsLoading(false);
                 navigate("/accounts/login/");
                 return;
             }
 
-            const instituteServ = new instituteService();
+            const instituteServ = new InstituteService();
             const instituteResponse = await instituteServ.getById(userResponse.data.institute);
 
             setUserData({...userResponse.data, institute: instituteResponse.data});
             setIsAuth(userResponse.success && instituteResponse.success);
-            setIsCheckAuth(false);
+            setIsLoading(false);
 
             if (!userResponse.success && instituteResponse.success) navigate("/accounts/login/");
         };

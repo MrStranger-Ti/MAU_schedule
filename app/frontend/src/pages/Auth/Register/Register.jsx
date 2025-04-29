@@ -1,16 +1,17 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import BaseAuth from "../BaseAuth";
 import {Helmet} from "react-helmet";
 import Form from "../../../components/UI/Form/Form";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
-import instituteService from "../../../services/institute";
+import InstituteService from "../../../services/institute";
 import {Link} from "react-router-dom";
 import AuthService from "../../../services/auth";
+import {LoadingContext} from "../../../context/base";
 
 const Register = () => {
     const [isSuccessRegister, setIsSuccessRegister] = useState(false);
-    const [isFormLoading, setIsFormLoading] = useState(false);
+    const {setIsLoading} = useContext(LoadingContext);
     const baseFormData = {
         full_name: "",
         password: "",
@@ -28,11 +29,11 @@ const Register = () => {
 
     useEffect(() => {
         const getInstitutes = async () => {
-            setIsFormLoading(true);
+            setIsLoading(true);
 
-            const {success, data} = await new instituteService().getAll();
+            const {success, data} = await new InstituteService().getAll();
             if (success) setInstitutes(data);
-            setIsFormLoading(false);
+            setIsLoading(false);
         }
 
         getInstitutes();
@@ -41,7 +42,7 @@ const Register = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        setIsFormLoading(true);
+        setIsLoading(true);
 
         const {success, data} = await new AuthService().register(formData);
         if (success) {
@@ -52,11 +53,11 @@ const Register = () => {
             setStep(1);
         }
 
-        setIsFormLoading(false);
+        setIsLoading(false);
     }
 
     return (
-        <BaseAuth isLoading={isFormLoading}>
+        <BaseAuth>
             <Helmet>
                 <title>Регистрация</title>
             </Helmet>

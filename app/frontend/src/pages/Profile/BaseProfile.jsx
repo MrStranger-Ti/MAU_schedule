@@ -3,17 +3,17 @@ import "../../styles/pages/profile.css";
 import Spinner from "../../components/Spinner/Spinner";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import {AuthContext} from "../../context/auth";
+import {LoadingContext} from "../../context/base";
 
 const BaseProfile = ({children, title}) => {
-    const {isCheckAuth} = useContext(AuthContext);
+    const {isLoading} = useContext(LoadingContext);
 
     return (
         <main>
             <Header/>
             <section className="profile">
                 <div className={"profile__container container"}>
-                    {isCheckAuth
+                    {isLoading
                     ?
                     <Spinner/>
                     :

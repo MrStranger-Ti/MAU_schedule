@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import BaseProfile from "./BaseProfile";
 import ProfileForm from "./ProfileForm";
 import DisplayProfile from "./DisplayProfile";
-import instituteService from "../../services/institute";
+import InstituteService from "../../services/institute";
 
 const Profile = () => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -13,7 +13,7 @@ const Profile = () => {
         const getInstitutes = async () => {
             setIsBtnLoading(true);
 
-            const {success, data} = await new instituteService().service.getAll();
+            const {success, data} = await new InstituteService().getAll();
             if (success) setInstitutes(data);
 
             setIsBtnLoading(false);

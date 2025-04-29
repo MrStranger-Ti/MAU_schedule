@@ -2,15 +2,16 @@ import React, {useContext} from "react";
 import "../../styles/pages/auth.css";
 import Spinner from "../../components/Spinner/Spinner";
 import {AuthContext} from "../../context/auth";
+import {LoadingContext} from "../../context/base";
 
-const BaseAuth = ({children, isLoading}) => {
-    const {isCheckAuth} = useContext(AuthContext);
+const BaseAuth = ({children}) => {
+    const {isLoading} = useContext(LoadingContext);
 
     return (
         <main>
             <section className="auth">
                 <div className="container auth__container flex">
-                    {isCheckAuth || isLoading ? <Spinner/> : children}
+                    {isLoading ? <Spinner/> : children}
                 </div>
             </section>
         </main>
