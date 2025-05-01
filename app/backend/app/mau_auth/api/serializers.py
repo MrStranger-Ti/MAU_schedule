@@ -1,14 +1,13 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.password_validation import validate_password
-from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 
-from extensions.mixins.serializers import ContextMixin
-from mau_auth.models import MauUser
+from mau_auth.models import MauUser, TokenInfo
 
 User: type[MauUser] = get_user_model()
 
@@ -78,16 +77,6 @@ class BaseUserSerializer(serializers.ModelSerializer):
         return user
 
 
-class ConfirmationOptionsSerializer(serializers.Serializer):
-    url = serializers.URLField(
-        required=False,
-        help_text=(
-            "Custom url for confirmation. Format in email message: "
-            "your_url/uidb64/token/",
-        ),
-    )
-
-
 class AdminUserSerializer(BaseUserSerializer):
     class Meta:
         model = User
@@ -110,7 +99,7 @@ class AdminUserSerializer(BaseUserSerializer):
         return super().update(instance, validated_data)
 
 
-class AuthenticatedUserSerializer(BaseUserSerializer, ContextMixin):
+class AuthenticatedUserSerializer(BaseUserSerializer):
     class Meta:
         model = User
         fields = "__all__"
@@ -155,7 +144,47 @@ class AuthenticatedUserSerializer(BaseUserSerializer, ContextMixin):
         return attrs
 
 
-class RegisterSerializer(serializers.Serializer, ContextMixin):
+class ConfirmationOptionsSerializer(serializers.Serializer):
+    url = serializers.URLField(
+        required=False,
+        help_text=(
+            "Custom url for confirmation. Format in email message: "
+            "your_url/uidb64/token/",
+        ),
+    )
+
+    def create(self, validated_data: dict) -> User:
+        request = self.context.get("request")
+        user = self.context.get("user")
+        custom_template_name = self.context.get("custom_template_name")
+        local_template_name = self.context.get("local_template_name")
+
+        if url := validated_data.get("url"):
+            url = user.get_custom_confirmation_url(url=url)
+            message = render_to_string(
+                template_name=custom_template_name,
+                context={"url": url},
+            )
+        else:
+            url = user.get_local_confirmation_url(
+                request=request,
+                url_pattern="api_mau_auth:register-confirm",
+            )
+            message = render_to_string(
+                template_name=local_template_name,
+                context={
+                    "url": url,
+                    "doc_url": f"{request.scheme}://{request.get_host()}"
+                    + reverse("swagger"),
+                },
+            )
+
+        user.send_email_confirmation(message=message)
+        TokenInfo.objects.get_or_create(user=user, token_type="register")
+        return user
+
+
+class RegisterSerializer(serializers.Serializer):
     user = AuthenticatedUserSerializer(write_only=True)
     options = ConfirmationOptionsSerializer(required=False, write_only=True)
 
@@ -167,9 +196,16 @@ class RegisterSerializer(serializers.Serializer, ContextMixin):
         user.save()
 
         options = validated_data.get("options", {})
-        url = options.get("url")
-        user.send_email_confirmation(request=self.get_context("request"), url=url)
-
+        options_serializer = ConfirmationOptionsSerializer(
+            context={
+                "user": user,
+                "request": self.context.get("request"),
+                "token_type": "register",
+                "custom_template_name": "mau_auth/register/custom_register_message.html",
+                "local_template_name": "mau_auth/register/local_register_message.html",
+            }
+        )
+        user = options_serializer.create(validated_data={"url": options.get("url")})
         return user
 
     def to_representation(self, instance):
@@ -178,6 +214,8 @@ class RegisterSerializer(serializers.Serializer, ContextMixin):
 
 
 class EmailConfirmationSerializer(serializers.Serializer):
+    TOKEN_TYPE = None
+
     uidb64 = serializers.CharField(
         max_length=256,
         required=True,
@@ -192,8 +230,10 @@ class EmailConfirmationSerializer(serializers.Serializer):
             uidb64=attrs.get("uidb64"),
             token=attrs.get("token"),
         )
-        if not user:
+        if not user or not user.token_info.filter(token_type=self.TOKEN_TYPE).exists():
             raise ValidationError(detail="Invalid uid or token.")
+
+        user.token_info.filter(token_type="register").delete()
 
         attrs["user"] = user
         return attrs
@@ -203,6 +243,8 @@ class EmailConfirmationSerializer(serializers.Serializer):
 
 
 class RegisterConfirmationSerializer(EmailConfirmationSerializer):
+    TOKEN_TYPE = "register"
+
     def save(self) -> User:
         user = super().save()
         user.is_active = True
@@ -210,11 +252,7 @@ class RegisterConfirmationSerializer(EmailConfirmationSerializer):
         return user
 
 
-class PasswordResetConfirmationSerializer(EmailConfirmationSerializer):
-    pass
-
-
-class AuthTokenSerializer(serializers.Serializer, ContextMixin):
+class AuthTokenSerializer(serializers.Serializer):
     email = serializers.EmailField(
         required=True,
         write_only=True,
@@ -236,7 +274,7 @@ class AuthTokenSerializer(serializers.Serializer, ContextMixin):
 
         if email and password:
             user = authenticate(
-                request=self.get_context("request"),
+                request=self.context.get("request"),
                 email=email,
                 password=password,
             )
@@ -249,22 +287,38 @@ class AuthTokenSerializer(serializers.Serializer, ContextMixin):
         return attrs
 
 
-class PasswordResetSerializer(serializers.Serializer, ContextMixin):
-    email = serializers.EmailField(
-        required=True,
-        write_only=True,
-    )
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True, write_only=True)
+    options = ConfirmationOptionsSerializer(required=False, write_only=True)
 
-    def create(self, validated_data: dict) -> User:
-        user = get_object_or_404(klass=User, email=validated_data.get("email"))
-        user.send_email_confirmation(
-            request=self.get_context("request"),
-            confirmation_url_pattern="api_mau_auth:password-set",
+    def validate_email(self, value: str) -> str:
+        if not User.objects.filter(email=value).exists():
+            raise ValidationError(detail="Invalid email")
+
+        return value
+
+    def save(self) -> User:
+        user = User.objects.filter(email=self.validated_data.get("email")).first()
+
+        options = self.validated_data.get("options", {})
+        options_serializer = ConfirmationOptionsSerializer(
+            context={
+                "user": user,
+                "request": self.context.get("request"),
+                "token_type": "password-reset",
+                "custom_template_name": "mau_auth/password_reset/custom_password_reset_message.html",
+                "local_template_name": "mau_auth/password_reset/local_password_reset_message.html",
+            }
         )
+        user = options_serializer.create(validated_data={"url": options.get("url")})
         return user
 
 
-class PasswordSetSerializer(serializers.Serializer, ContextMixin):
+class PasswordResetConfirmationSerializer(EmailConfirmationSerializer):
+    TOKEN_TYPE = "password-reset"
+
+
+class PasswordSetSerializer(serializers.Serializer):
     password1 = serializers.CharField(
         required=True,
         write_only=True,
@@ -276,7 +330,7 @@ class PasswordSetSerializer(serializers.Serializer, ContextMixin):
 
     def save(self):
         password = self.validated_data.get("password1")
-        user = self.get_context("user")
+        user = self.context.get("user")
         user.set_password(password)
         user.auth_token.delete()
         user.save()
@@ -286,7 +340,7 @@ class PasswordSetSerializer(serializers.Serializer, ContextMixin):
         password1 = attrs.get("password1")
         password2 = attrs.get("password2")
 
-        validate_password(password=password1, user=self.get_context("user"))
+        validate_password(password=password1, user=self.context.get("user"))
 
         if password1 != password2:
             raise ValidationError(detail="Passwords do not match.")

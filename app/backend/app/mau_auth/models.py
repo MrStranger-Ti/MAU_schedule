@@ -92,39 +92,35 @@ class MauUserManager(BaseUserManager):
 
 
 class EmailConfirmationMixin:
-    def get_confirmation_message(self, request: Request, url: str | None) -> str:
-        context = {
-            "url": self.get_confirmation_url(request=request, url=url),
-        }
-        return render_to_string(
-            "mau_auth/registration/email_message.html",
-            context=context,
-        )
+    EMAIL_SUBJECT = "Подтвердите почту в приложении MAU schedule"
 
-    def get_confirmation_url(self, request: Request, url: str) -> str:
+    def get_custom_confirmation_url(self, url: str) -> str:
         uidb64, token = self.get_uidb64_and_token()
-        if url is None:
-            return urllib.parse.urljoin(
-                f"{request.scheme}://{request.get_host()}",
-                reverse(
-                    "api_mau_auth:register-confirm",
-                    kwargs={
-                        "uidb64": uidb64,
-                        "token": token,
-                    },
-                ),
-            )
-
         return urllib.parse.urljoin(url, uidb64 + "/" + token)
+
+    def get_local_confirmation_url(self, request: Request, url_pattern: str) -> str:
+        uidb64, token = self.get_uidb64_and_token()
+        return urllib.parse.urljoin(
+            f"{request.scheme}://{request.get_host()}",
+            reverse(
+                url_pattern,
+                kwargs={
+                    "uidb64": uidb64,
+                    "token": token,
+                },
+            ),
+        )
 
     def get_uidb64_and_token(self) -> tuple[str, str]:
         uidb64 = urlsafe_base64_encode(force_bytes(self.pk))
         token = default_token_generator.make_token(self)
         return uidb64, token
 
-    def send_email_confirmation(self, request: Request, url: str | None = None) -> None:
-        subject = "Подтвердите почту в приложении MAU schedule"
-        message = self.get_confirmation_message(request=request, url=url)
+    def send_email_confirmation(
+        self,
+        message: str,
+        subject: str = EMAIL_SUBJECT,
+    ) -> None:
         send_mail(
             subject=subject,
             from_email=settings.DEFAULT_FROM_EMAIL,
@@ -136,8 +132,8 @@ class EmailConfirmationMixin:
     def check_email_confirmation(cls, uidb64: str, token: str) -> MauUser | None:
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
-        except ValueError as exc:
-            return
+        except ValueError:
+            return None
 
         user = cls.objects.filter(pk=uid).first()
         if user and default_token_generator.check_token(user, token):
@@ -202,3 +198,21 @@ class MauUser(AbstractBaseUser, PermissionsMixin, EmailConfirmationMixin):
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
+
+
+class TokenInfo(models.Model):
+    user = models.ForeignKey(
+        MauUser,
+        related_name="token_info",
+        on_delete=models.CASCADE,
+    )
+    token_type = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "token_type"],
+                name="unique_user_token_type",
+            ),
+        ]
