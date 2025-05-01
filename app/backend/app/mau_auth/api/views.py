@@ -5,6 +5,7 @@ from drf_spectacular.utils import (
     extend_schema,
     extend_schema_view,
     OpenApiResponse,
+    OpenApiParameter,
 )
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView
@@ -17,6 +18,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import status
 from rest_framework import mixins
 
+from mau_auth.auth_class import CookieTokenAuthentication
 from mau_auth.models import MauUser
 from mau_auth.api.serializers import (
     AuthTokenSerializer,
@@ -85,6 +87,7 @@ User: type[MauUser] = get_user_model()
 class GroupViewSet(ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAdminUser]
 
 
@@ -139,6 +142,7 @@ class GroupViewSet(ModelViewSet):
 class PermissionViewSet(ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAdminUser]
 
 
@@ -193,6 +197,7 @@ class PermissionViewSet(ModelViewSet):
 class AdminViewSet(ModelViewSet):
     queryset = User.objects.prefetch_related("groups", "user_permissions")
     serializer_class = AdminUserSerializer
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAdminUser]
     filter_backends = [
         DjangoFilterBackend,
@@ -249,6 +254,7 @@ class AdminViewSet(ModelViewSet):
 class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = AuthenticatedUserSerializer
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
@@ -331,6 +337,7 @@ class SetAuthTokenAPIView(GenericAPIView):
 
 
 class DeleteTokenAPIView(APIView):
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
@@ -374,6 +381,21 @@ class PasswordResetConfirmAPIView(APIView):
     @extend_schema(
         tags=["Auth Password Reset"],
         summary="Changing password",
+        parameters=[
+            OpenApiParameter(
+                name="uidb64",
+                type=str,
+                required=True,
+                location=OpenApiParameter.PATH,
+            ),
+            OpenApiParameter(
+                name="token",
+                type=str,
+                required=True,
+                location=OpenApiParameter.PATH,
+            ),
+        ],
+        request=PasswordSetSerializer,
         responses={
             200: OpenApiResponse(description="Success"),
             400: OpenApiResponse(description="Validation error"),

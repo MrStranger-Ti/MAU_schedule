@@ -4,6 +4,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
+from mau_auth.auth_class import CookieTokenAuthentication
 from notes.api.serializers import NoteSerializer
 from notes.models import Note
 
@@ -58,6 +59,7 @@ from notes.models import Note
 )
 class NoteViewSet(ModelViewSet):
     serializer_class = NoteSerializer
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [
         DjangoFilterBackend,

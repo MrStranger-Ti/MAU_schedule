@@ -156,6 +156,7 @@ class ConfirmationOptionsSerializer(serializers.Serializer):
     def create(self, validated_data: dict) -> User:
         request = self.context.get("request")
         user = self.context.get("user")
+        token_type = self.context.get("token_type")
         custom_template_name = self.context.get("custom_template_name")
         local_template_name = self.context.get("local_template_name")
 
@@ -180,7 +181,7 @@ class ConfirmationOptionsSerializer(serializers.Serializer):
             )
 
         user.send_email_confirmation(message=message)
-        TokenInfo.objects.get_or_create(user=user, token_type="register")
+        TokenInfo.objects.get_or_create(user=user, token_type=token_type)
         return user
 
 

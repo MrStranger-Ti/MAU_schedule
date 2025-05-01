@@ -14,6 +14,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 
+from mau_auth.auth_class import CookieTokenAuthentication
 from schedule.api.mixins import ParserResponseViewMixin
 from schedule.api.serializers import MauInstituteSerializer
 from schedule.models import MauInstitute
@@ -72,10 +73,12 @@ class InstituteViewSet(
 ):
     queryset = MauInstitute.objects.all()
     serializer_class = MauInstituteSerializer
+    authentication_classes = [CookieTokenAuthentication]
     pagination_class = None
 
 
 class GroupScheduleApiView(APIView, ParserResponseViewMixin):
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
@@ -111,6 +114,7 @@ class GroupScheduleApiView(APIView, ParserResponseViewMixin):
 
 
 class TeachersKeysApiView(APIView, ParserResponseViewMixin):
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
@@ -148,6 +152,7 @@ class TeachersKeysApiView(APIView, ParserResponseViewMixin):
 
 
 class TeacherScheduleApiView(APIView, ParserResponseViewMixin):
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
@@ -186,6 +191,7 @@ class TeacherScheduleApiView(APIView, ParserResponseViewMixin):
 
 
 class SchedulePeriodsApiView(APIView, ParserResponseViewMixin):
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @extend_schema(

@@ -4,6 +4,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
+from mau_auth.auth_class import CookieTokenAuthentication
 from teacher_schedule_bookmarks.api.serializers import TeacherScheduleBookmarkSerializer
 from teacher_schedule_bookmarks.models import TeacherScheduleBookmark
 
@@ -58,6 +59,7 @@ from teacher_schedule_bookmarks.models import TeacherScheduleBookmark
 )
 class TeacherScheduleBookmarkViewSet(ModelViewSet):
     serializer_class = TeacherScheduleBookmarkSerializer
+    authentication_classes = [CookieTokenAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = [
