@@ -8,6 +8,7 @@ from model_bakery import baker
 from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 
+from mau_auth.models import TokenInfo
 from tests.test_api.conftest import faker
 from tests.test_api.test_mau_auth.factories import UserFactory
 from tests.test_api.test_mau_auth.test_serializers import user_serialized_data
@@ -162,18 +163,29 @@ class TestUserViewSet:
 class TestRegisterAPIViews:
     def test_register(self, api_client):
         url = reverse("api_mau_auth:register")
-        response = api_client.post(url, data=user_serialized_data)
+        data = {
+            "user": user_serialized_data,
+        }
+        response = api_client.post(url, data=data, format="json")
         assert response.status_code == status.HTTP_201_CREATED
 
         users = User.objects.all()
         assert len(users) == 1
         assert user_serialized_data.get("email") == users.first().email
 
-    def test_register_confirm(self, api_client):
+    def test_register_confirm(self, api_client, get_fake_request):
         user = UserFactory().make()
-        confirmation_url = user.get_confirmation_url("api_mau_auth:register-confirm")
+        confirmation_url = user.get_local_confirmation_url(
+            request=get_fake_request(),
+            url_pattern="api_mau_auth:register-confirm",
+        )
+        TokenInfo.objects.create(user=user, token_type="register")
+
         response = api_client.get(confirmation_url)
         assert response.status_code == status.HTTP_200_OK
+
+        user.refresh_from_db()
+        assert user.is_active
 
 
 class TestTokenAPIViews:
@@ -210,10 +222,16 @@ class TestPasswordResetAPIViews:
         )
         assert response.status_code == status.HTTP_200_OK
 
-    def test_password_reset_confirm(self, api_client):
+    def test_password_reset_confirm(self, api_client, get_fake_request):
         user = UserFactory().make()
         Token.objects.create(user=user)
-        confirmation_url = user.get_confirmation_url("api_mau_auth:password-set")
+
+        confirmation_url = user.get_local_confirmation_url(
+            request=get_fake_request(),
+            url_pattern="api_mau_auth:password-set",
+        )
+        TokenInfo.objects.create(user=user, token_type="password-reset")
+
         new_password = faker.password()
         response = api_client.post(
             confirmation_url,

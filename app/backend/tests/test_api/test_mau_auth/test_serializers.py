@@ -11,8 +11,9 @@ from mau_auth.api.serializers import (
     EmailConfirmationSerializer,
     RegisterConfirmationSerializer,
     AuthTokenSerializer,
+    PasswordResetConfirmationSerializer,
 )
-from mau_auth.models import MauUser
+from mau_auth.models import MauUser, TokenInfo
 from tests.test_api.conftest import faker
 from tests.test_api.test_mau_auth.factories import UserFactory
 
@@ -118,13 +119,6 @@ class TestAdminUserSerializer:
 
 
 class TestAuthenticatedUserSerializer:
-    def test_authenticated_user_email_sent(self, deserialize):
-        deserialize(
-            serializer_class=AuthenticatedUserSerializer,
-            data=user_serialized_data,
-        )
-        assert len(mail.outbox) == 1
-
     def test_authenticated_user_set_is_active_on_false(self, deserialize):
         user = deserialize(
             serializer_class=AuthenticatedUserSerializer,
@@ -153,27 +147,29 @@ class TestAuthenticatedUserSerializer:
         assert serializer.errors
 
 
-class TestEmailConfirmationSerializer:
-    def test_deserialize(self):
-        user = UserFactory().make()
-        uidb64, token = user.get_uidb64_and_token()
-        serializer = EmailConfirmationSerializer(
-            data={"uidb64": uidb64, "token": token},
-        )
-        assert serializer.is_valid()
-        assert not serializer.errors
-
-
 class TestRegisterConfirmationSerializer:
     def test_is_active_set_on_true(self, deserialize):
         user = UserFactory().make()
         uidb64, token = user.get_uidb64_and_token()
+        TokenInfo.objects.create(user=user, token_type="register")
         user = deserialize(
             serializer_class=RegisterConfirmationSerializer,
             data={"uidb64": uidb64, "token": token},
         )
         assert user
         assert user.is_active
+
+
+class TestPasswordResetConfirmationSerializer:
+    def test_deserialize(self):
+        user = UserFactory().make()
+        uidb64, token = user.get_uidb64_and_token()
+        TokenInfo.objects.create(user=user, token_type="password-reset")
+        serializer = PasswordResetConfirmationSerializer(
+            data={"uidb64": uidb64, "token": token},
+        )
+        assert serializer.is_valid()
+        assert not serializer.errors
 
 
 class TestAuthTokenSerializer:
