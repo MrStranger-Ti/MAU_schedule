@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import BearBody from  "../../assets/images/logo/bear_body.png";
-import config from "../../config";
+import {config, pagesPaths} from "../../config";
 
 const Footer = () => {
     return (
@@ -12,9 +12,9 @@ const Footer = () => {
                     <nav className="footer__nav">
                         <p className="footer__title">Навигация</p>
                         <ul className="footer__nav-list">
-                            <li className="footer__nav-item"><Link to="#" className="footer__link link">Профиль</Link></li>
-                            <li className="footer__nav-item"><Link to="#" className="footer__link link">Группа</Link></li>
-                            <li className="footer__nav-item"><Link to="#" className="footer__link link">Преподаватели</Link></li>
+                            <li className="footer__nav-item"><Link to={pagesPaths.accounts.profile} className="footer__link link">Профиль</Link></li>
+                            <li className="footer__nav-item"><Link to={pagesPaths.schedule.group} className="footer__link link">Группа</Link></li>
+                            <li className="footer__nav-item"><Link to={pagesPaths.schedule.teacherSearch} className="footer__link link">Преподаватели</Link></li>
                         </ul>
                     </nav>
                     <div className="footer__contacts">

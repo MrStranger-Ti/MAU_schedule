@@ -1,6 +1,6 @@
 import BaseService from "./base";
 import axios from "axios";
-import config from "../config";
+import {config} from "../config";
 
 const url = `https://${config.API_HOST}/api/schedule/institutes/`
 

@@ -4,6 +4,7 @@ import {AuthContext, UserContext} from "../../context/auth";
 import userService from "../../services/user";
 import InstituteService from "../../services/institute";
 import {LoadingContext} from "../../context/base";
+import {pagesPaths} from "../../config";
 
 const AuthRoute = ({children}) => {
     const {setIsAuth} = useContext(AuthContext);
@@ -20,7 +21,7 @@ const AuthRoute = ({children}) => {
 
             if (!userResponse.success) {
                 setIsLoading(false);
-                navigate("/accounts/login/");
+                navigate(pagesPaths.accounts.login);
                 return;
             }
 
@@ -31,7 +32,7 @@ const AuthRoute = ({children}) => {
             setIsAuth(userResponse.success && instituteResponse.success);
             setIsLoading(false);
 
-            if (!userResponse.success && instituteResponse.success) navigate("/accounts/login/");
+            if (!userResponse.success && instituteResponse.success) navigate(pagesPaths.accounts.login);
         };
 
         getUserData();

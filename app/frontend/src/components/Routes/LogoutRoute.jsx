@@ -2,10 +2,13 @@ import React, {useContext, useEffect} from "react";
 import {AuthContext} from "../../context/auth";
 import AuthService from "../../services/auth";
 import {LoadingContext} from "../../context/base";
+import {useNavigate} from "react-router-dom";
+import {pagesPaths} from "../../config";
 
 const LogoutRoute = ({children}) => {
     const {isAuth, setIsAuth} = useContext(AuthContext);
     const {setIsLoading} = useContext(LoadingContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const logout = async () => {
@@ -15,6 +18,7 @@ const LogoutRoute = ({children}) => {
             const {success} = await service.logout();
             if (success) {
                 setIsAuth(false);
+                navigate(pagesPaths.accounts.login);
             }
 
             setIsLoading(false);

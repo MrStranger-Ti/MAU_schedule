@@ -4,11 +4,11 @@ import BaseAuth from "../BaseAuth";
 import {Helmet} from "react-helmet";
 import {Link, useParams} from "react-router-dom";
 import AuthService from "../../../services/auth";
+import {pagesPaths} from "../../../config";
 
 const RegisterConfirm = () => {
     const {uidb64, token} = useParams();
 
-    const [isPageLoading, setIsPageLoading] = useState(true);
     const [successConfirm, setSuccessConfirm] = useState(false);
 
     useEffect(() => {
@@ -18,7 +18,6 @@ const RegisterConfirm = () => {
 
             if (success) {
                 setSuccessConfirm(true);
-                setIsPageLoading(false);
             }
         }
 
@@ -31,20 +30,13 @@ const RegisterConfirm = () => {
                 <title>Подтверждение почты</title>
             </Helmet>
             <h1 className="auth__title">Подтверждение почты</h1>
-            {isPageLoading
+            {successConfirm
                 ?
-                <Spinner/>
+                <p className="auth__descr">Почта успешно подтверждена!</p>
                 :
-                <React.Fragment>
-                    {successConfirm
-                        ?
-                        <p className="auth__descr">Почта успешно подтверждена!</p>
-                        :
-                        <p className="auth__descr">Не удалось подтвердить почту.</p>
-                    }
-                </React.Fragment>
+                <p className="auth__descr">Не удалось подтвердить почту.</p>
             }
-            <Link className="btn auth__btn" to="/accounts/login/">Войти</Link>
+            <Link className="btn auth__btn" to={pagesPaths.accounts.login}>Войти</Link>
         </BaseAuth>
     );
 };

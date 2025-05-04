@@ -7,22 +7,25 @@ import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import RegisterConfirm from "./pages/Auth/RegisterConfirm/RegisterConfirm";
 import LogoutRoute from "./components/Routes/LogoutRoute";
+import PasswordReset from "./pages/Auth/PasswordReset/PasswordReset";
+import {pagesPaths} from "./config";
+import PasswordResetConfirm from "./pages/Auth/PasswordResetConfirm/PasswordResetConfirm";
 
 const Routes = () => {
     return (
         <BrowserRouter>
             <R>
                 <Route
-                    path="/"
+                    path={pagesPaths.index}
                     element={<IndexPage/>}
                 />
-                <Route path="/accounts/login/" element={
+                <Route path={pagesPaths.accounts.login} element={
                     <LogoutRoute>
                         <Login/>
                     </LogoutRoute>
                 }/>
                 <Route
-                    path="/accounts/register/"
+                    path={pagesPaths.accounts.register}
                     element={
                         <LogoutRoute>
                             <Register/>
@@ -30,25 +33,45 @@ const Routes = () => {
                     }
                 />
                 <Route
-                    path="/accounts/register/confirm/:uidb64/:token/"
+                    path={pagesPaths.accounts.registerConfirm}
                     element={
                         <LogoutRoute>
                             <RegisterConfirm/>
                         </LogoutRoute>
                     }
                 />
-                <Route path="/accounts/profile/" element={
+                <Route
+                    path={pagesPaths.accounts.passwordReset}
+                    element={
+                        <LogoutRoute>
+                            <PasswordReset/>
+                        </LogoutRoute>
+                    }
+                />
+                <Route
+                    path={pagesPaths.accounts.passwordResetConfirm}
+                    element={
+                        <LogoutRoute>
+                            <PasswordResetConfirm/>
+                        </LogoutRoute>
+                    }
+                />
+                <Route path={pagesPaths.accounts.profile} element={
                     <AuthRoute>
                         <Profile/>
                     </AuthRoute>
                 }
                 />
                 <Route
-                    path="/schedule/group/"
+                    path={pagesPaths.schedule.group}
                     element=""
                 />
                 <Route
-                    path="/schedule/teacher-search/"
+                    path={pagesPaths.schedule.teacherSearch}
+                    element=""
+                />
+                <Route
+                    path={pagesPaths.schedule.teacher}
                     element=""
                 />
             </R>

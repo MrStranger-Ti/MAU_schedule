@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import bearFace from "../assets/images/logo/bear_face.png";
 import "../styles/pages/index.css";
+import {pagesPaths} from "../config";
 
 const IndexPage = () => {
     return (
@@ -9,8 +10,8 @@ const IndexPage = () => {
             <div className="container hero__container flex">
                 <img src={bearFace} className="main-logo" alt="логотип лицо медведя"/>
                 <h1 className="hero__title">Расписание доступно только для учащихся МАУ</h1>
-                <Link to="/accounts/login/" className="btn hero__btn">Войти</Link>
-                <Link to="/accounts/register/" className="link dark-link">Регистрация</Link>
+                <Link to={pagesPaths.accounts.login} className="btn hero__btn">Войти</Link>
+                <Link to={pagesPaths.accounts.register} className="link dark-link">Регистрация</Link>
             </div>
         </section>
     );

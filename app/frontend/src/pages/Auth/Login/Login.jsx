@@ -4,6 +4,7 @@ import {Link, Navigate} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import BaseAuth from "../BaseAuth";
 import LoginForm from "./LoginForm";
+import {pagesPaths} from "../../../config";
 
 const Login = () => {
     const {isAuth} = useContext(AuthContext);
@@ -15,13 +16,13 @@ const Login = () => {
             </Helmet>
             {isAuth
                 ?
-                <Navigate to="/accounts/profile/"/>
+                <Navigate to={pagesPaths.accounts.profile}/>
                 :
                 <React.Fragment>
                     <h1 className="auth__title">Вход</h1>
                     <LoginForm/>
-                    <Link className="dark-link link" to="/accounts/register/">Регистрация</Link>
-                    <Link className="dark-link link" to="#">Восстановить пароль</Link>
+                    <Link className="dark-link link" to={pagesPaths.accounts.register}>Регистрация</Link>
+                    <Link className="dark-link link" to={pagesPaths.accounts.passwordReset}>Восстановить пароль</Link>
                 </React.Fragment>
             }
         </BaseAuth>

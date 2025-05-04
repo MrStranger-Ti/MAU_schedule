@@ -8,6 +8,7 @@ import InstituteService from "../../../services/institute";
 import {Link} from "react-router-dom";
 import AuthService from "../../../services/auth";
 import {LoadingContext} from "../../../context/base";
+import {pagesPaths} from "../../../config";
 
 const Register = () => {
     const [isSuccessRegister, setIsSuccessRegister] = useState(false);
@@ -44,7 +45,8 @@ const Register = () => {
 
         setIsLoading(true);
 
-        const {success, data} = await new AuthService().register(formData);
+        const service = new AuthService();
+        const {success, data} = await service.register(formData);
         if (success) {
             setIsSuccessRegister(true);
         } else {
@@ -92,7 +94,7 @@ const Register = () => {
                         }
                     </Form>
                     <div className="auth__link-block">
-                        <Link className="dark-link link" to="/accounts/login/">Войти</Link>
+                        <Link className="dark-link link" to={pagesPaths.accounts.login}>Войти</Link>
                     </div>
                 </React.Fragment>
                 :
@@ -100,7 +102,7 @@ const Register = () => {
                     <p className="auth__descr">
                         Письмо отправлено. Перейдите по ссылке в письме, чтобы подтвердить почту.
                     </p>
-                    <Link className="btn" to="/accounts/login/">Войти</Link>
+                    <Link className="btn" to={pagesPaths.accounts.login}>Войти</Link>
                 </React.Fragment>
             }
         </BaseAuth>

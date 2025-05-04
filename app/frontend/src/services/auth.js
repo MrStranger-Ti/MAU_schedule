@@ -1,6 +1,7 @@
 import axios from "axios";
-import config from "../config"
+import {config} from "../config"
 import BaseService from "./base";
+import {pagesPaths} from "../config";
 
 export default class AuthService extends BaseService {
     async login({email, password}) {
@@ -35,7 +36,7 @@ export default class AuthService extends BaseService {
                     group
                 },
                 options: {
-                    url: `https://${window.location.host}/accounts/register/confirm/`
+                    url: `https://${window.location.host}${pagesPaths.accounts.baseRegisterConfirm}`
                 }
             })
         )
@@ -48,6 +49,26 @@ export default class AuthService extends BaseService {
     async registerConfirm({uidb64, token}) {
         return await this.getResponse(() =>
             axios.get(`https://${config.API_HOST}/api/register/confirm/${uidb64}/${token}/`)
+        )
+    }
+
+    async passwordReset({email}) {
+        return await this.getResponse(() =>
+            axios.post(`https://${config.API_HOST}/api/password/reset/`, {
+                email,
+                options: {
+                    url: `https://${window.location.host}${pagesPaths.accounts.basePasswordResetConfirm}`
+                }
+            })
+        )
+    }
+
+    async passwordResetConfirm({uidb64, token}, {password1, password2}) {
+        return await this.getResponse(() =>
+            axios.post(`https://${config.API_HOST}/api/password/reset/confirm/${uidb64}/${token}/`, {
+                password1,
+                password2
+            })
         )
     }
 }
