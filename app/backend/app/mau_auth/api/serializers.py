@@ -333,7 +333,10 @@ class PasswordSetSerializer(serializers.Serializer):
         password = self.validated_data.get("password1")
         user = self.context.get("user")
         user.set_password(password)
-        user.auth_token.delete()
+
+        if Token.objects.filter(user=user).exists():
+            user.auth_token.delete()
+
         user.save()
         return user
 
