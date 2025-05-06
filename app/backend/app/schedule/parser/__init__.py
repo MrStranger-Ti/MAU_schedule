@@ -53,11 +53,17 @@ def get_group_schedule(
         period=period,
         extra_data=extra_data,
     ).get_data()
+    if not response.success:
+        return response
+
     response = GroupKeyParser(
         unique_key=group,
         params=response.data,
         extra_data=extra_data,
     ).get_data()
+    if not response.success:
+        return response
+
     response = GroupScheduleParser(
         unique_key=group,
         params={"key": response.data},

@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import ErrorStyles from "./ErrorStyles";
 
 const Select = ({className, onChange, name, value, options, firstOption, ...props}) => {
-    const [classes, setClasses] = useState(className.split(" "));
+    const [classes, setClasses] = useState(className ? className.split(" ") : []);
     const [hasInputErrors, setHasInputErrors] = useState(false);
 
     const handleOnchange = (e) => {

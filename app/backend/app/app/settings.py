@@ -343,11 +343,11 @@ SPECTACULAR_SETTINGS = {
             "description": "Managing own notes",
         },
         {
-            "name": "Teacher Schedule Bookmarks",
+            "name": "Teacher Group Bookmarks",
             "description": "Managing own teacher schedule bookmarks",
         },
         {
-            "name": "Schedule",
+            "name": "Group",
             "description": "Getting schedule",
         },
     ],

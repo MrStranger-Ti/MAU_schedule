@@ -10,6 +10,7 @@ import LogoutRoute from "./components/Routes/LogoutRoute";
 import PasswordReset from "./pages/Auth/PasswordReset/PasswordReset";
 import {pagesPaths} from "./config";
 import PasswordResetConfirm from "./pages/Auth/PasswordResetConfirm/PasswordResetConfirm";
+import Group from "./pages/Schedule/Group/Group";
 
 const Routes = () => {
     return (
@@ -64,7 +65,11 @@ const Routes = () => {
                 />
                 <Route
                     path={pagesPaths.schedule.group}
-                    element=""
+                    element={
+                        <AuthRoute>
+                            <Group/>
+                        </AuthRoute>
+                    }
                 />
                 <Route
                     path={pagesPaths.schedule.teacherSearch}

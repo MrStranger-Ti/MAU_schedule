@@ -87,7 +87,7 @@ class GroupScheduleParser(ScheduleParser):
             title = day.find("th")
             if title and "Воскресенье" not in title.text:
                 curr_date = week_monday + timedelta(days=weekday_num)
-                curr_date_string = curr_date.strftime("%d-%m-%Y")
+                curr_date_string = curr_date.isoformat()
                 week_schedule.setdefault(curr_date_string, [])
                 for row in day.find_all("tr")[1:]:
                     week_schedule[curr_date_string].append(
@@ -116,7 +116,7 @@ class TeacherScheduleParser(ScheduleParser):
             tr_class = tr.get("class")
             if tr_class and tr_class[0] == "title":
                 curr_date = week_monday + timedelta(days=weekday_num)
-                curr_date_string = curr_date.strftime("%d-%m-%Y")
+                curr_date_string = curr_date.isoformat()
                 week_schedule.setdefault(curr_date_string, [])
                 weekday_num += 1
             else:

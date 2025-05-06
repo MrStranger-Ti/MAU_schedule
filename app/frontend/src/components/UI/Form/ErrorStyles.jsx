@@ -12,17 +12,21 @@ const ErrorStyles = ({
     const {formErrors} = useContext(FormContext);
 
     useEffect(() => {
-        setHasInputErrors(
-            formErrors.hasOwnProperty(inputName)
-            || formErrors.hasOwnProperty("non_field_errors")
-        )
+        if (formErrors) {
+            setHasInputErrors(
+                formErrors.hasOwnProperty(inputName)
+                || formErrors.hasOwnProperty("non_field_errors")
+            )
+        }
     }, [formErrors]);
 
     useEffect(() => {
-        if (hasInputErrors) {
-            setClasses([...classes, "error-input"]);
-        } else {
-            setClasses([...classes].filter((el) => el !== "error-input"));
+        if (formErrors) {
+            if (hasInputErrors) {
+                setClasses([...classes, "error-input"]);
+            } else {
+                setClasses([...classes].filter((el) => el !== "error-input"));
+            }
         }
     }, [hasInputErrors]);
 

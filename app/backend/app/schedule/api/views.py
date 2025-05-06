@@ -29,7 +29,7 @@ from utils.local import get_json
 
 @extend_schema_view(
     list=extend_schema(
-        tags=["Schedule"],
+        tags=["Group"],
         summary="Getting institutes list",
         responses={
             200: OpenApiResponse(
@@ -49,7 +49,7 @@ from utils.local import get_json
         },
     ),
     retrieve=extend_schema(
-        tags=["Schedule"],
+        tags=["Group"],
         summary="Getting institute details",
         responses={
             200: OpenApiResponse(
@@ -82,9 +82,17 @@ class GroupScheduleApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        tags=["Schedule"],
+        tags=["Group"],
         summary="Getting group schedule",
         description="User must have institute, course and group.",
+        parameters=[
+            OpenApiParameter(
+                name="period",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description="Period schedule. If not specified, current will be set.",
+            ),
+        ],
         responses={
             200: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
@@ -104,6 +112,7 @@ class GroupScheduleApiView(APIView, ParserResponseViewMixin):
     )
     def get(self, request: Request) -> Response:
         period = request.query_params.get("period")
+        print(period)
         parser_response = get_group_schedule(
             institute=request.user.institute.name,
             course=request.user.course,
@@ -118,7 +127,7 @@ class TeachersKeysApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        tags=["Schedule"],
+        tags=["Group"],
         summary="Getting teachers keys for teacher schedule",
         description="Query param 'name' is required",
         parameters=[
@@ -156,7 +165,7 @@ class TeacherScheduleApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        tags=["Schedule"],
+        tags=["Group"],
         summary="Getting teacher schedule",
         description="Need to get teacher key",
         parameters=[
@@ -165,7 +174,13 @@ class TeacherScheduleApiView(APIView, ParserResponseViewMixin):
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.PATH,
                 required=True,
-            )
+            ),
+            OpenApiParameter(
+                name="period",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description="Period schedule. If not specified, current will be set.",
+            ),
         ],
         responses={
             200: OpenApiResponse(
@@ -195,14 +210,14 @@ class SchedulePeriodsApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        tags=["Schedule"],
+        tags=["Group"],
         summary="Getting schedule periods",
         responses={
             200: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 examples=[
                     OpenApiExample(
-                        "Schedule periods example",
+                        "Group periods example",
                         value=get_json(
                             settings.BASE_DIR
                             / "schedule/api/swagger_examples/periods.json",
