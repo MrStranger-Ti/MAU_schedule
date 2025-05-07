@@ -6,24 +6,23 @@ import AuthService from "../../../services/auth";
 import {LoadingContext} from "../../../context/base";
 
 const RegisterForm = ({institutes, setIsSuccessRegister}) => {
-    const {setIsLoading} = useContext(LoadingContext);
-    const baseFormData = {
+    const [formData, setFormData] = useState({
         full_name: "",
         password: "",
         email: "",
         course: 1,
         institute: "",
         group: ""
-    }
-    const [formData, setFormData] = useState(baseFormData);
+    });
     const [formErrors, setFormErrors] = useState({});
     const [step, setStep] = useState(1);
+    const [isBtnLoading, setIsBtnLoading] = useState(false);
     const formRef = useRef(null);
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        setIsLoading(true);
+        setIsBtnLoading(true);
 
         const service = new AuthService();
         const {success, data} = await service.register(formData);
@@ -35,7 +34,7 @@ const RegisterForm = ({institutes, setIsSuccessRegister}) => {
             setStep(1);
         }
 
-        setIsLoading(false);
+        setIsBtnLoading(false);
     }
 
     return (
@@ -61,6 +60,7 @@ const RegisterForm = ({institutes, setIsSuccessRegister}) => {
                     formData={formData}
                     setFormData={setFormData}
                     institutes={institutes}
+                    isBtnLoading={isBtnLoading}
                     onSubmit={onSubmit}
                 />
             }

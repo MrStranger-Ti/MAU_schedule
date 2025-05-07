@@ -3,8 +3,9 @@ import FormErrors from "../../../components/UI/Form/FormErrors";
 import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 import Select from "../../../components/UI/Form/Select";
+import ButtonSpinner from "../../../components/Spinner/ButtonSpinner";
 
-const SecondStep = ({setStep, formData, setFormData, institutes}) => {
+const SecondStep = ({setStep, formData, setFormData, institutes, isBtnLoading}) => {
     return (
         <div className="auth__step-2 flex">
             <div className="inputs-block flex">
@@ -71,7 +72,9 @@ const SecondStep = ({setStep, formData, setFormData, institutes}) => {
                 <button
                     className="btn auth__btn"
                     type="submit"
+                    disabled={isBtnLoading && true}
                 >
+                    {isBtnLoading && <ButtonSpinner/>}
                     Зарегистрироваться
                 </button>
             </div>

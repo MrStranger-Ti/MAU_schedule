@@ -182,6 +182,13 @@ ul {
     color: var(--light-blue);
 }
 
+.btn:disabled {
+    border: none;
+    color: var(--light);
+    background-color: var(--dark-blue);
+    opacity: 0.6;
+}
+
 @media (max-width: 1024px) {
     .btn {
         padding: 6px 20px;
