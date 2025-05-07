@@ -4,7 +4,7 @@ import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 import Select from "../../../components/UI/Form/Select";
 
-const SecondStep = ({setStep, formData, setFormData, institutes, onSubmit}) => {
+const SecondStep = ({setStep, formData, setFormData, institutes}) => {
     return (
         <div className="auth__step-2 flex">
             <div className="inputs-block flex">
@@ -71,7 +71,6 @@ const SecondStep = ({setStep, formData, setFormData, institutes, onSubmit}) => {
                 <button
                     className="btn auth__btn"
                     type="submit"
-                    onSubmit={onSubmit}
                 >
                     Зарегистрироваться
                 </button>

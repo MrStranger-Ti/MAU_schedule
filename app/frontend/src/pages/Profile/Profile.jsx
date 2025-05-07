@@ -3,6 +3,7 @@ import BaseProfile from "./BaseProfile";
 import ProfileForm from "./ProfileForm";
 import DisplayProfile from "./DisplayProfile";
 import InstituteService from "../../services/institute";
+import Auth from "../../components/Auth/Auth";
 
 const Profile = () => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -24,22 +25,24 @@ const Profile = () => {
     }
 
     return (
-        <BaseProfile title={isUpdating ? "Обновление профиля" : "Профиль"}>
-            {isUpdating
-                ?
-                <ProfileForm
-                    setUpdating={setIsUpdating}
-                    isBtnLoading={isBtnLoading}
-                    setIsBtnLoading={setIsBtnLoading}
-                    institutes={institutes}
-                />
-                :
-                <DisplayProfile
-                    isBtnLoading={isBtnLoading}
-                    loadUpdate={loadUpdate}
-                />
-            }
-        </BaseProfile>
+        <Auth protect={true}>
+            <BaseProfile title={isUpdating ? "Обновление профиля" : "Профиль"}>
+                {isUpdating
+                    ?
+                    <ProfileForm
+                        setUpdating={setIsUpdating}
+                        isBtnLoading={isBtnLoading}
+                        setIsBtnLoading={setIsBtnLoading}
+                        institutes={institutes}
+                    />
+                    :
+                    <DisplayProfile
+                        isBtnLoading={isBtnLoading}
+                        loadUpdate={loadUpdate}
+                    />
+                }
+            </BaseProfile>
+        </Auth>
     );
 };
 

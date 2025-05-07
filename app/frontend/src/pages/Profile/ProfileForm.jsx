@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import Form from "../../components/UI/Form/Form";
 import FormErrors from "../../components/UI/Form/FormErrors";
 import Input from "../../components/UI/Form/Input";
@@ -29,8 +29,6 @@ const ProfileForm = ({
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        if (formData.institute === "0") return;
 
         if (formData === baseFromData) {
             setUpdating(false);
@@ -88,6 +86,7 @@ const ProfileForm = ({
                                 placeholder="full_name"
                                 onChange={(e) => setFormData({...formData, full_name: e.target.value})}
                                 value={formData.full_name}
+                                required
                             />
                             <label htmlFor="full_name">ФИО</label>
                         </div>
@@ -103,6 +102,7 @@ const ProfileForm = ({
                                 placeholder="course"
                                 onChange={(e) => setFormData({...formData, course: e.target.value})}
                                 value={formData.course}
+                                required
                             />
                             <label htmlFor="course">Курс</label>
                         </div>
@@ -118,6 +118,7 @@ const ProfileForm = ({
                                 placeholder="group"
                                 onChange={(e) => setFormData({...formData, group: e.target.value})}
                                 value={formData.group}
+                                required
                             />
                             <label htmlFor="group">Группа</label>
                         </div>
@@ -135,6 +136,7 @@ const ProfileForm = ({
                                 type="text"
                                 id="institute"
                                 placeholder="institute"
+                                required
                             />
                             <label htmlFor="full_name">Институт</label>
                         </div>

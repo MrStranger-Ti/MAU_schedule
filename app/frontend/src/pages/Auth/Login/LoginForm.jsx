@@ -1,26 +1,27 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import FormErrors from "../../../components/UI/Form/FormErrors";
-import Form from "../../../components/UI/Form/Form";
-import Input from "../../../components/UI/Form/Input";
-import AuthService from "../../../services/auth";
-import {AuthContext} from "../../../context/auth";
 import InputErrors from "../../../components/UI/Form/InputErrors";
+import Input from "../../../components/UI/Form/Input";
 import ButtonSpinner from "../../../components/Spinner/ButtonSpinner";
+import Form from "../../../components/UI/Form/Form";
+import {useNavigate} from "react-router-dom";
+import AuthService from "../../../services/auth";
+import {pagesPaths} from "../../../config";
 
 const LoginForm = () => {
-    const {setIsAuth} = useContext(AuthContext);
     const [formData, setFormData] = useState({email: "", password: ""});
     const [formErrors, setFormErrors] = useState({});
     const [isBtnLoading, setIsBtnLoading] = useState(false);
+    const navigate = useNavigate();
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
         setIsBtnLoading(true);
 
-        const {success, data} = await new AuthService().login(formData);
+        const {success, data} = await new AuthService().setToken(formData);
         if (success) {
-            setIsAuth(true);
+            navigate(pagesPaths.schedule.group);
         } else {
             setFormErrors(data);
             setFormData({...formData, password: ""});
@@ -28,6 +29,7 @@ const LoginForm = () => {
 
         setIsBtnLoading(false);
     }
+
     return (
         <Form
             className="auth__form flex"

@@ -70,6 +70,7 @@ def get_group_schedule(
         period=period,
         extra_data=extra_data,
     ).get_data()
+
     return response
 
 

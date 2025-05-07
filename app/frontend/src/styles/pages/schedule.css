@@ -30,6 +30,11 @@
     gap: 10px;
 }
 
+.schedule__form .btn {
+    display: flex;
+    align-items: center;
+}
+
 .schedule__period-form select {
     padding-left: 5px;
     padding-top: 7px;

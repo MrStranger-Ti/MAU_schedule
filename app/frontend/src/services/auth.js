@@ -4,7 +4,7 @@ import BaseService from "./base";
 import {pagesPaths} from "../config";
 
 export default class AuthService extends BaseService {
-    async login({email, password}) {
+    async setToken({email, password}) {
         const data = JSON.stringify({email, password})
         return await this.getResponse(() =>
             axios.post(`https://${config.API_HOST}/api/token/set/`, data, {
@@ -16,7 +16,7 @@ export default class AuthService extends BaseService {
         )
     }
 
-    async logout() {
+    async deleteToken() {
         return await this.getResponse(() =>
             axios.post(`https://${config.API_HOST}/api/token/delete/`, null, {
                 withCredentials: true

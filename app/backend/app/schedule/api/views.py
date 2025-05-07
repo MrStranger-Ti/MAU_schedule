@@ -112,7 +112,6 @@ class GroupScheduleApiView(APIView, ParserResponseViewMixin):
     )
     def get(self, request: Request) -> Response:
         period = request.query_params.get("period")
-        print(period)
         parser_response = get_group_schedule(
             institute=request.user.institute.name,
             course=request.user.course,

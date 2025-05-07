@@ -1,21 +1,31 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {ReactComponent as MenuSVG} from "../../assets/svgs/icons/menu.svg";
 import bearFace from "../../assets/images/logo/bear_face.png";
 import {Link, useNavigate} from "react-router-dom";
-import AuthService from "../../services/auth";
-import {AuthContext} from "../../context/auth";
 import {pagesPaths} from "../../config";
+import {LoadingContext} from "../../context/base";
+import {AuthContext} from "../../context/auth";
 
 const Header = () => {
-    const {setIsAuth} = useContext(AuthContext);
+    const {isAuth, logout} = useContext(AuthContext);
+    const {setIsLoading} = useContext(LoadingContext);
+    const [isLogoutCompleted, setIsLogoutCompleted] = useState(false);
     const navigate = useNavigate();
 
-    const logout = async (e) => {
-        const service = new AuthService();
-        const {success} = await service.logout();
-        setIsAuth(false);
-        if (success) navigate(pagesPaths.accounts.login);
+    const onClickLogout = async () => {
+        setIsLoading(true);
+
+        await logout();
+
+        setIsLogoutCompleted(true);
     }
+
+    useEffect(() => {
+        if (!isAuth && isLogoutCompleted) {
+            setIsLoading(false);
+            navigate(pagesPaths.accounts.login);
+        }
+    }, [isAuth, isLogoutCompleted]);
 
     return (
         <header className="header">
@@ -38,7 +48,7 @@ const Header = () => {
                             <li><Link className="dropdown-item link dark-link" to={pagesPaths.accounts.profile}>Профиль</Link></li>
                             <li><Link className="dropdown-item link dark-link" to={pagesPaths.schedule.group}>Группа</Link></li>
                             <li><Link className="dropdown-item link dark-link" to={pagesPaths.schedule.teacherSearch}>Преподаватели</Link></li>
-                            <li><button className="link header__form-link" onClick={logout} type="button">Выйти</button></li>
+                            <li><button className="link header__form-link" onClick={onClickLogout} type="button">Выйти</button></li>
                         </ul>
                     </div>
                 </nav>
