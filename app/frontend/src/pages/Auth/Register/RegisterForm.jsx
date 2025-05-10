@@ -1,9 +1,8 @@
-import React, {useContext, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
-import {LoadingContext} from "../../../context/base";
 
 const RegisterForm = ({institutes, setIsSuccessRegister}) => {
     const [formData, setFormData] = useState({

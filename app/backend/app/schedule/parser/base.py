@@ -130,6 +130,8 @@ class Parser(WebScraper, abc.ABC):
         soup = self.get_soup(response)
         try:
             data = self._parse_data(soup)
+            if not data:
+                raise ParserError
         except ParserError as exc:
             return ParserResponse(response=response, error=str(exc))
 

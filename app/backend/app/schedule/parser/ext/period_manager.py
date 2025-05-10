@@ -34,7 +34,7 @@ class PeriodManager:
 
         Если валидация не прошла, то будет установлен текущий период.
         """
-        date_regex = r"[0-3][0-9]\.[01][0-2]\.\d{4}"
+        date_regex = r"[0-3][0-9]\.[01][0-9]\.\d{4}"
         return bool(re.fullmatch(rf"{date_regex}-{date_regex}", period))
 
     @staticmethod

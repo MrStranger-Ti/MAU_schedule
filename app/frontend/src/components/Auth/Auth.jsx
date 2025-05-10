@@ -36,7 +36,7 @@ const Auth = ({children, stopLoading = true, protect = false, redirectAuthUser =
 
     return (
         <AuthContext.Provider value={{isAuth, login, logout}}>
-            {children}
+            {isAuth && children}
         </AuthContext.Provider>
     );
 };

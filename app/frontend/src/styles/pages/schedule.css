@@ -427,7 +427,7 @@ tr:hover {
     cursor: pointer;
 }
 
-tr td {
+.cell-tr td {
     text-align: center;
     padding: 10px;
     line-height: 150%;
@@ -436,41 +436,41 @@ tr td {
     transition: color ease-in-out 0.3s;
 }
 
-tr td:nth-child(1) {
+.cell-tr td:nth-child(1) {
     width: 2%;
 }
 
-tr td:nth-child(2) {
+.cell-tr td:nth-child(2) {
     width: 12%;
 }
 
-tr td:nth-child(3) {
+.cell-tr td:nth-child(3) {
     width: 56%;
 }
 
-tr td:nth-child(4) {
+.cell-tr td:nth-child(4) {
     width: 15%;
 }
 
-tr td:nth-child(5) {
+.cell-tr td:nth-child(5) {
     width: 15%;
 }
 
-tr:hover td {
+.cell-tr:hover td {
     color: var(--light-blue);
 }
 
-tr td:nth-child(1) {
+.cell-tr td:nth-child(1) {
     text-align: left;
     font-weight: 900;
 }
 
-tr td:not(:first-child) {
+.cell-tr td:not(:first-child) {
     font-weight: 600;
     line-height: 150%;
 }
 
-tr td:nth-child(3) {
+.cell-tr td:nth-child(3) {
     font-weight: 800;
 }
 
@@ -521,26 +521,26 @@ tr td:nth-child(3) {
         height: 30px;
     }
 
-    tr td {
+    .cell-tr td {
         display: block;
         text-align: left;
         padding: 8px;
         font-size: 16px;
     }
 
-    tr td:nth-child(n) {
+    .cell-tr td:nth-child(n) {
         width: 100%;
     }
 
-    tr:hover td {
+    .cell-tr:hover td {
         color: var(--dark-blue);
     }
 
-    tr td:empty {
+    .cell-tr td:empty {
         display: none;
     }
 
-    tr td:not(:first-child) {
+    .cell-tr td:not(:first-child) {
         border-top: none;
     }
 }
@@ -558,7 +558,7 @@ tr td:nth-child(3) {
         font-size: 16px;
     }
 
-    tr td {
+    .cell-tr td {
         padding: 6px;
         font-size: 14px;
     }

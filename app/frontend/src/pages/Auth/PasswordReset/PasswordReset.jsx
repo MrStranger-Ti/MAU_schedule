@@ -1,13 +1,8 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import BaseAuth from "../BaseAuth";
 import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
-import Form from "../../../components/UI/Form/Form";
-import InputErrors from "../../../components/UI/Form/InputErrors";
-import Input from "../../../components/UI/Form/Input";
 import {pagesPaths} from "../../../config";
-import AuthService from "../../../services/auth";
-import {LoadingContext} from "../../../context/base";
 import BearFace from "../../../assets/images/logo/bear_face.png";
 import Auth from "../../../components/Auth/Auth";
 import PasswordResetForm from "./PasswordResetForm";

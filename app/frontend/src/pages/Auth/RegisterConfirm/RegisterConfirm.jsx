@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import Spinner from "../../../components/Spinner/Spinner";
 import BaseAuth from "../BaseAuth";
 import {Helmet} from "react-helmet";
 import {Link, useParams} from "react-router-dom";
