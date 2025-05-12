@@ -4,7 +4,7 @@ import {LoadingContext} from "./context/base";
 import {UserContext} from "./context/auth";
 
 function App() {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState({});
 
     return (
