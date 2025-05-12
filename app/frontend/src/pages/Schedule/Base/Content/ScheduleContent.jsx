@@ -1,9 +1,9 @@
 import React, {useContext} from "react";
-import Form from "../../../components/UI/Form/Form";
-import Select from "../../../components/UI/Form/Select";
-import ButtonSpinner from "../../../components/Spinner/ButtonSpinner";
-import Spinner from "../../../components/Spinner/Spinner";
-import {UserContext} from "../../../context/auth";
+import Form from "../../../../components/UI/Form/Form";
+import Select from "../../../../components/UI/Form/Select";
+import ButtonSpinner from "../../../../components/Spinner/ButtonSpinner";
+import Spinner from "../../../../components/Spinner/Spinner";
+import {UserContext} from "../../../../context/auth";
 import ScheduleTables from "./ScheduleTables";
 
 const ScheduleContent = ({

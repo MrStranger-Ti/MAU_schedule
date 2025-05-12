@@ -3,22 +3,19 @@ import {Link} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import BaseAuth from "../BaseAuth";
 import {pagesPaths} from "../../../config";
-import Auth from "../../../components/Auth/Auth";
 import LoginForm from "./LoginForm";
 
 const Login = () => {
     return (
-        <Auth redirectAuthUser={true}>
-            <BaseAuth>
-                <Helmet>
-                    <title>Вход</title>
-                </Helmet>
-                <h1 className="auth__title">Вход</h1>
-                <LoginForm/>
-                <Link className="dark-link link" to={pagesPaths.accounts.register}>Регистрация</Link>
-                <Link className="dark-link link" to={pagesPaths.accounts.passwordReset}>Восстановить пароль</Link>
-            </BaseAuth>
-        </Auth>
+        <BaseAuth>
+            <Helmet>
+                <title>Вход</title>
+            </Helmet>
+            <h1 className="auth__title">Вход</h1>
+            <LoginForm/>
+            <Link className="dark-link link" to={pagesPaths.accounts.register}>Регистрация</Link>
+            <Link className="dark-link link" to={pagesPaths.accounts.passwordReset}>Восстановить пароль</Link>
+        </BaseAuth>
     );
 };
 

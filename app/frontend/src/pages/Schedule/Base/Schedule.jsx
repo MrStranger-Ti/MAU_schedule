@@ -2,10 +2,12 @@ import React, {useContext, useEffect, useState} from "react";
 import {LoadingContext} from "../../../context/base";
 import ScheduleService from "../../../services/schedule";
 import Spinner from "../../../components/Spinner/Spinner";
-import ScheduleContent from "./ScheduleContent";
+import ScheduleContent from "./Content/ScheduleContent";
 import {getFormattedDate} from "../../../utils/date";
+import {AuthContext} from "../../../context/auth";
 
 const Schedule = () => {
+    const {isAuthCompleted} = useContext(AuthContext);
     const {isLoading, setIsLoading} = useContext(LoadingContext);
     const [isScheduleLoading, setIsScheduleLoading] = useState(true);
     const [periods, setPeriods] = useState([]);
@@ -49,8 +51,9 @@ const Schedule = () => {
             }
         }
 
-        loadPeriods();
-    }, []);
+        console.log(isAuthCompleted)
+        if (isAuthCompleted) loadPeriods();
+    }, [isAuthCompleted]);
 
     // Загрузка расписания, используя текущий период
     useEffect(() => {

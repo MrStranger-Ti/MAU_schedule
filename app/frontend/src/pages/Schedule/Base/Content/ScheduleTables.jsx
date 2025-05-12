@@ -1,8 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {config} from "../../../config";
-import {getFormattedDate, getWeekday} from "../../../utils/date";
-import NoteCollapse from "./NoteCollapse";
+import {config} from "../../../../config";
+import {getFormattedDate, getWeekday} from "../../../../utils/date";
 import ScheduleRow from "./ScheduleRow";
 
 const ScheduleTables = ({schedule}) => {

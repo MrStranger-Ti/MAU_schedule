@@ -9,6 +9,7 @@ import PasswordReset from "./pages/Auth/PasswordReset/PasswordReset";
 import {pagesPaths} from "./config";
 import PasswordResetConfirm from "./pages/Auth/PasswordResetConfirm/PasswordResetConfirm";
 import Group from "./pages/Schedule/Group/Group";
+import Auth from "./components/Auth/Auth";
 
 const Routes = () => {
     return (
@@ -16,35 +17,67 @@ const Routes = () => {
             <R>
                 <Route
                     path={pagesPaths.index}
-                    element={<IndexPage/>}
+                    element={
+                        <Auth redirectAuthUser={true}>
+                            <IndexPage/>
+                        </Auth>
+                    }
                 />
                 <Route
                     path={pagesPaths.accounts.login}
-                    element={<Login/>}
+                    element={
+                        <Auth redirectAuthUser={true}>
+                            <Login/>
+                        </Auth>
+                    }
                 />
                 <Route
                     path={pagesPaths.accounts.register}
-                    element={<Register/>}
+                    element={
+                        <Auth stopLoading={false} redirectAuthUser={true}>
+                            <Register/>
+                        </Auth>
+                    }
                 />
                 <Route
                     path={pagesPaths.accounts.registerConfirm}
-                    element={<RegisterConfirm/>}
+                    element={
+                        <Auth redirectAuthUser={true}>
+                            <RegisterConfirm/>
+                        </Auth>
+                    }
                 />
                 <Route
                     path={pagesPaths.accounts.passwordReset}
-                    element={<PasswordReset/>}
+                    element={
+                        <Auth redirectAuthUser={true}>
+                            <PasswordReset/>
+                        </Auth>
+                    }
                 />
                 <Route
                     path={pagesPaths.accounts.passwordResetConfirm}
-                    element={<PasswordResetConfirm/>}
+                    element={
+                        <Auth redirectAuthUser={true}>
+                            <PasswordResetConfirm/>
+                        </Auth>
+                    }
                 />
                 <Route
                     path={pagesPaths.accounts.profile}
-                    element={<Profile/>}
+                    element={
+                        <Auth protect={true}>
+                            <Profile/>
+                        </Auth>
+                    }
                 />
                 <Route
                     path={pagesPaths.schedule.group}
-                    element={<Group/>}
+                    element={
+                        <Auth stopLoading={false} protect={true}>
+                            <Group/>
+                        </Auth>
+                    }
                 />
                 <Route
                     path={pagesPaths.schedule.teacherSearch}

@@ -11,6 +11,7 @@ const Auth = ({children, stopLoading = true, protect = false, redirectAuthUser =
     const {setIsLoading} = useContext(LoadingContext);
     const {isAuth, login, logout} = useAuth();
     const [isLogingCompleted, setIsLoginCompleted] = useState(false);
+    const [isAuthCompleted, setIsAuthCompleted] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,6 +33,7 @@ const Auth = ({children, stopLoading = true, protect = false, redirectAuthUser =
                 navigate(pagesPaths.schedule.group);
             } else {
                 if (stopLoading) setIsLoading(false);
+                setIsAuthCompleted(true);
             }
         }
     }, [isAuth, isLogingCompleted]);
@@ -39,11 +41,12 @@ const Auth = ({children, stopLoading = true, protect = false, redirectAuthUser =
     useEffect(() => {
         if (currentLocation !== location.pathname) {
             if (stopLoading) setIsLoading(false);
+            setIsAuthCompleted(true);
         }
     }, [location]);
 
     return (
-        <AuthContext.Provider value={{isAuth, login, logout}}>
+        <AuthContext.Provider value={{isAuth, isAuthCompleted, login, logout}}>
             {children}
         </AuthContext.Provider>
     );

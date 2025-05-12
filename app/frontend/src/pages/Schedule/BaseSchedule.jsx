@@ -1,4 +1,5 @@
 import React from "react";
+import "suneditor/dist/css/suneditor.min.css";
 import "../../styles/pages/schedule.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
