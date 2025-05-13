@@ -70,7 +70,7 @@ class NoteViewSet(ModelViewSet):
         "id",
         "user",
         "schedule_name",
-        "group",
+        "schedule_key",
         "day",
         "lesson_number",
         "text",
@@ -79,7 +79,7 @@ class NoteViewSet(ModelViewSet):
     filterset_fields = [
         "id",
         "user",
-        "group",
+        "schedule_key",
         "day",
         "lesson_number",
         "text",

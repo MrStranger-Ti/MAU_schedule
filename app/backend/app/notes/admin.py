@@ -10,7 +10,7 @@ class NoteAdmin(admin.ModelAdmin):
         "text",
         "user",
         "schedule_name",
-        "group",
+        "schedule_key",
         "day",
         "lesson_number",
     )

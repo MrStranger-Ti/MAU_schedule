@@ -18,7 +18,7 @@ class Note(models.Model):
         verbose_name="user",
     )
     schedule_name = models.CharField(verbose_name="schedule name")
-    group = models.CharField(verbose_name="group")
+    schedule_key = models.CharField(null=True, verbose_name="schedule key")
     day = models.DateField(verbose_name="day")
     lesson_number = models.PositiveSmallIntegerField(
         verbose_name="lesson number",
