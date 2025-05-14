@@ -4,11 +4,11 @@ import FormErrors from "../../components/UI/Form/FormErrors";
 import Input from "../../components/UI/Form/Input";
 import InputErrors from "../../components/UI/Form/InputErrors";
 import userService from "../../services/user";
-import {UserContext} from "../../context/auth";
 import InstituteService from "../../services/institute";
 import {Helmet} from "react-helmet";
 import Select from "../../components/UI/Form/Select";
 import ButtonSpinner from "../../components/Spinner/ButtonSpinner";
+import {AuthContext} from "../../context/AuthProvider";
 
 const ProfileForm = ({
                          setUpdating,
@@ -16,7 +16,7 @@ const ProfileForm = ({
                          setIsBtnLoading,
                          institutes
                      }) => {
-    const {userData, setUserData} = useContext(UserContext);
+    const {userData, setUserData} = useContext(AuthContext);
 
     const baseFromData = {
         full_name: userData.full_name,

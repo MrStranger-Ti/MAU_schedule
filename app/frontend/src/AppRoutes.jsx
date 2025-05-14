@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter, Routes as R, Route} from "react-router-dom";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import IndexPage from "./pages/IndexPage";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Auth/Login/Login";
@@ -9,75 +9,42 @@ import PasswordReset from "./pages/Auth/PasswordReset/PasswordReset";
 import {pagesPaths} from "./config";
 import PasswordResetConfirm from "./pages/Auth/PasswordResetConfirm/PasswordResetConfirm";
 import Group from "./pages/Schedule/Group/Group";
-import Auth from "./components/Auth/Auth";
 
-const Routes = () => {
+const AppRoutes = () => {
     return (
         <BrowserRouter>
-            <R>
+            <Routes>
                 <Route
                     path={pagesPaths.index}
-                    element={
-                        <Auth redirectAuthUser={true}>
-                            <IndexPage/>
-                        </Auth>
-                    }
+                    element={<IndexPage/>}
                 />
                 <Route
                     path={pagesPaths.accounts.login}
-                    element={
-                        <Auth redirectAuthUser={true}>
-                            <Login/>
-                        </Auth>
-                    }
+                    element={<Login/>}
                 />
                 <Route
                     path={pagesPaths.accounts.register}
-                    element={
-                        <Auth stopLoading={false} redirectAuthUser={true}>
-                            <Register/>
-                        </Auth>
-                    }
+                    element={<Register/>}
                 />
                 <Route
                     path={pagesPaths.accounts.registerConfirm}
-                    element={
-                        <Auth redirectAuthUser={true}>
-                            <RegisterConfirm/>
-                        </Auth>
-                    }
+                    element={<RegisterConfirm/>}
                 />
                 <Route
                     path={pagesPaths.accounts.passwordReset}
-                    element={
-                        <Auth redirectAuthUser={true}>
-                            <PasswordReset/>
-                        </Auth>
-                    }
+                    element={<PasswordReset/>}
                 />
                 <Route
                     path={pagesPaths.accounts.passwordResetConfirm}
-                    element={
-                        <Auth redirectAuthUser={true}>
-                            <PasswordResetConfirm/>
-                        </Auth>
-                    }
+                    element={<PasswordResetConfirm/>}
                 />
                 <Route
                     path={pagesPaths.accounts.profile}
-                    element={
-                        <Auth protect={true}>
-                            <Profile/>
-                        </Auth>
-                    }
+                    element={<Profile/>}
                 />
                 <Route
                     path={pagesPaths.schedule.group}
-                    element={
-                        <Auth stopLoading={false} protect={true}>
-                            <Group/>
-                        </Auth>
-                    }
+                    element={<Group/>}
                 />
                 <Route
                     path={pagesPaths.schedule.teacherSearch}
@@ -87,9 +54,9 @@ const Routes = () => {
                     path={pagesPaths.schedule.teacher}
                     element=""
                 />
-            </R>
+            </Routes>
         </BrowserRouter>
     );
 };
 
-export default Routes;
+export default AppRoutes;

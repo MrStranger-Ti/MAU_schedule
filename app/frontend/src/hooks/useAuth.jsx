@@ -1,31 +1,39 @@
-import {useContext, useState} from "react";
-import userService from "../services/user";
-import InstituteService from "../services/institute";
-import {UserContext} from "../context/auth";
-import AuthService from "../services/auth";
+import {useContext, useEffect, useState} from "react";
+import {pagesPaths} from "../config";
+import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../context/AuthProvider";
 
-export const useAuth = () => {
-    const [isAuth, setIsAuth] = useState(false);
-    const {setUserData} = useContext(UserContext);
+export const useAuth = (setIsLoading, {
+    stopLoading = true,
+    protect = false,
+    redirectAuthUser = false
+}) => {
+    const navigate = useNavigate();
+    const {isAuth, login} = useContext(AuthContext);
+    const [isLogingCompleted, setIsLoginCompleted] = useState(false);
+    const [isAuthCompleted, setIsAuthCompleted] = useState(false);
 
-    const login = async () => {
-        const userServ = new userService();
-        const userResponse = await userServ.getUserData();
+    useEffect(() => {
+        const processLogin = async () => {
+            await login();
+            setIsLoginCompleted(true);
+        }
 
-        if (!userResponse.success) return;
+        processLogin();
+    }, []);
 
-        const instituteServ = new InstituteService();
-        const instituteResponse = await instituteServ.getById(userResponse.data.institute);
+    useEffect(() => {
+        if (isLogingCompleted) {
+            if (!isAuth && protect) {
+                navigate(pagesPaths.accounts.login);
+            } else if (isAuth && redirectAuthUser) {
+                navigate(pagesPaths.schedule.group);
+            } else {
+                setIsAuthCompleted(true);
+                if (stopLoading) setIsLoading(false);
+            }
+        }
+    }, [isLogingCompleted]);
 
-        setUserData({...userResponse.data, institute: instituteResponse.data});
-        setIsAuth(instituteResponse.success);
-    }
-
-    const logout = async () => {
-        const service = new AuthService();
-        const {success} = await service.deleteToken();
-        if (success) setIsAuth(false)
-    }
-
-    return {isAuth, login, logout};
+    return {isAuthCompleted};
 }

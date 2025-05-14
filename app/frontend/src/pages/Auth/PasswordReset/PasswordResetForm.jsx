@@ -3,7 +3,7 @@ import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
-import {LoadingContext} from "../../../context/base";
+import {LoadingContext} from "../../../context/LoadingProvider";
 
 const PasswordResetForm = ({setIsSuccessEmailSent}) => {
     const {setIsLoading} = useContext(LoadingContext);

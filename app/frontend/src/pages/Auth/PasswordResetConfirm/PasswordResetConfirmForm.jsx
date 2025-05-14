@@ -4,7 +4,7 @@ import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
-import {LoadingContext} from "../../../context/base";
+import {LoadingContext} from "../../../context/LoadingProvider";
 import {useParams} from "react-router-dom";
 
 const PasswordResetConfirmForm = ({setIsSuccessPasswordChanged}) => {

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from "react";
-import {FormContext} from "../../../context/UI";
+import {FormContext} from "../../../context/FormProvider";
 
 const ErrorStyles = ({
                          children,

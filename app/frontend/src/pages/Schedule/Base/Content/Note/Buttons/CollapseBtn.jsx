@@ -1,11 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
+import {EditorContext} from "../../../../../../context/EditorProvider";
 
-const CollapseBtn = ({onClickCollapse}) => {
+const CollapseBtn = () => {
+    const {setOpen} = useContext(EditorContext);
+
     return (
         <button
             className="btn"
             type="button"
-            onClick={onClickCollapse}
+            onClick={() => setOpen(false)}
         >Свернуть</button>
     );
 };

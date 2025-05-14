@@ -1,32 +1,37 @@
-import React from "react";
+import React, {useContext} from "react";
 import CollapseBtn from "./CollapseBtn";
 import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
+import {EditorContext} from "../../../../../../context/EditorProvider";
+import {editorModes} from "../NoteEditor";
 
-const DisplayBtns = ({onClickCollapse, onClickEdit, onClickDelete}) => {
+const DisplayBtns = () => {
+    const {setEditorMode} = useContext(EditorContext);
+
     return (
         <React.Fragment>
             <div className="note-block__btns flex">
                 <div className="note-block__btns-block">
-                    <CollapseBtn onClickCollapse={onClickCollapse}/>
+                    <CollapseBtn/>
                 </div>
                 <div className="note-block__btns-block">
                     <button
                         className="btn"
                         type="button"
-                        onClick={onClickEdit}
-                    >Редактировать
+                        onClick={() => setEditorMode(editorModes.update)}
+                    >
+                        Редактировать
                     </button>
                     <button
                         className="btn"
-                        type="button"
-                        onClick={onClickDelete}
-                    >Удалить
+                        type="submit"
+                    >
+                        Удалить
                     </button>
                 </div>
             </div>
             <div className="note-block__adaptive-btns flex">
                 <div className="note-block__btns-block">
-                    <AdaptiveCollapseBtn onClickCollapse={onClickCollapse}/>
+                    <AdaptiveCollapseBtn/>
                 </div>
                 <div className="note-block__btns-adaptive-block">
                     <button className="btn" type="button">
@@ -47,7 +52,7 @@ const DisplayBtns = ({onClickCollapse, onClickEdit, onClickDelete}) => {
                             </g>
                         </svg>
                     </button>
-                    <button className="btn" type="button">
+                    <button className="btn" type="submit">
                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100.000000pt" height="100.000000pt" viewBox="0 0 100.000000 100.000000" preserveAspectRatio="xMidYMid meet">
                             <g transform="translate(0.000000,100.000000) scale(0.100000,-0.100000)">
                                 <path d="M380 980 c-11 -11 -20 -29 -20 -40 0 -19 -7 -20 -95 -20 -84 0 -96

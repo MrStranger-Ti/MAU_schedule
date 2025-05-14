@@ -3,7 +3,7 @@ import "../../styles/pages/profile.css";
 import Spinner from "../../components/Spinner/Spinner";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import {LoadingContext} from "../../context/base";
+import {LoadingContext} from "../../context/LoadingProvider";
 
 const BaseProfile = ({children, title}) => {
     const {isLoading} = useContext(LoadingContext);

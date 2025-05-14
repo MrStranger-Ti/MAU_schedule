@@ -1,25 +1,38 @@
-import React, {useContext, useEffect, useState} from "react";
-import {LoadingContext} from "../../../context/base";
+import React, {useEffect, useState} from "react";
 import ScheduleService from "../../../services/schedule";
 import Spinner from "../../../components/Spinner/Spinner";
 import ScheduleContent from "./Content/ScheduleContent";
 import {getFormattedDate} from "../../../utils/date";
-import {AuthContext} from "../../../context/auth";
+import NoteService from "../../../services/note";
+import ScheduleProvider from "../../../context/ScheduleProvider";
 
-const Schedule = () => {
-    const {isAuthCompleted} = useContext(AuthContext);
-    const {isLoading, setIsLoading} = useContext(LoadingContext);
+const Schedule = ({
+                      scheduleName,
+                      scheduleKey,
+                      isLoading,
+                      setIsLoading,
+                      isAuthCompleted
+                  }) => {
     const [isScheduleLoading, setIsScheduleLoading] = useState(true);
+    const [isLoadedData, setIsLoadedData] = useState(false);
     const [periods, setPeriods] = useState([]);
     const [currentPeriodValue, setCurrentPeriodValue] = useState("");
-    const [isPeriodsLoaded, setIsPeriodLoaded] = useState(false);
     const [schedule, setSchedule] = useState({});
-    const [isScheduleLoaded, setIsScheduleLoaded] = useState(false);
+    const [notes, setNotes] = useState([]);
 
     const fetchSchedule = async () => {
-        setIsScheduleLoading(true);
-
+        console.log("dad")
         const service = new ScheduleService();
+        let getScheduleFunc = null;
+        switch (scheduleName) {
+            case "group":
+                getScheduleFunc = service.getGroupSchedule;
+                break;
+            case "teacher":
+                getScheduleFunc = service.getTeacherSchedule;
+                break;
+        }
+
         const scheduleResponse = await service.getGroupSchedule(
             currentPeriodValue ? periods[currentPeriodValue].name : {}
         );
@@ -28,57 +41,56 @@ const Schedule = () => {
         } else {
             setSchedule({});
         }
-
-        setIsScheduleLoading(false);
     }
 
-    // Загрузка периодов расписания
     useEffect(() => {
         const loadPeriods = async () => {
+            const service = new ScheduleService();
+            const periodsResponse = await service.getPeriods();
+            if (periodsResponse.success) {
+                setPeriods(
+                    periodsResponse.data.map((period, index) =>
+                        ({name: period, value: index})
+                    )
+                );
+            }
+        }
+
+        const loadSchedule = async () => {
+            setIsScheduleLoading(true);
+            await fetchSchedule();
+            setIsScheduleLoading(false);
+        }
+
+        const loadNotes = async () => {
+            const service = new NoteService();
+            const {success, data} = await service.getAll();
+            if (success) setNotes(data.results);
+        }
+
+        const loadPage = async () => {
             setIsLoading(true);
 
-            if (periods.length === 0) {
-                const service = new ScheduleService();
-                const periodsResponse = await service.getPeriods();
-                if (periodsResponse.success) {
-                    setPeriods(
-                        periodsResponse.data.map((period, index) =>
-                            ({name: period, value: index})
-                        )
-                    );
-                    setIsPeriodLoaded(true);
-                }
-            }
+            await loadPeriods();
+            await loadSchedule();
+            await loadNotes();
+
+            setIsLoadedData(true);
         }
 
-        console.log(isAuthCompleted)
-        if (isAuthCompleted) loadPeriods();
+        if (isAuthCompleted) loadPage();
     }, [isAuthCompleted]);
 
-    // Загрузка расписания, используя текущий период
     useEffect(() => {
-        const loadSchedule = async () => {
-            if (Object.keys(schedule).length === 0) {
-                await fetchSchedule();
-                setIsScheduleLoaded(true);
-            }
-        }
-
-        if (isPeriodsLoaded) loadSchedule();
-    }, [isPeriodsLoaded]);
-
-    // Установка текущего периода в Select
-    useEffect(() => {
-        if (isPeriodsLoaded) {
-            if (Object.keys(schedule).length !== 0 && periods.length !== 0) {
+        if (isLoadedData) {
+            if (currentPeriodValue === "") {
                 const isoWeekDay = getFormattedDate(Object.keys(schedule)[0]);
                 const currentPeriodIndex = periods.findIndex(period => period.name.startsWith(isoWeekDay));
                 setCurrentPeriodValue(periods[currentPeriodIndex].value);
             }
-
             setIsLoading(false);
         }
-    }, [isScheduleLoaded]);
+    }, [isLoadedData]);
 
     return (
         <React.Fragment>
@@ -86,14 +98,21 @@ const Schedule = () => {
                 ?
                 <Spinner/>
                 :
-                <ScheduleContent
+                <ScheduleProvider
+                    scheduleName={scheduleName}
+                    scheduleKey={scheduleKey}
                     fetchSchedule={fetchSchedule}
                     isScheduleLoading={isScheduleLoading}
+                    setIsScheduleLoading={setIsScheduleLoading}
                     schedule={schedule}
                     periods={periods}
                     currentPeriodValue={currentPeriodValue}
                     setCurrentPeriodValue={setCurrentPeriodValue}
-                />
+                    notes={notes}
+                    setNotes={setNotes}
+                >
+                    <ScheduleContent/>
+                </ScheduleProvider>
             }
         </React.Fragment>
     );

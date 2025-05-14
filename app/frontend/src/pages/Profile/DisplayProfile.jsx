@@ -1,10 +1,10 @@
 import React, {useContext} from "react";
-import {UserContext} from "../../context/auth";
 import {Helmet} from "react-helmet";
 import ButtonSpinner from "../../components/Spinner/ButtonSpinner";
+import {AuthContext} from "../../context/AuthProvider";
 
 const DisplayProfile = ({isBtnLoading, loadUpdate}) => {
-    const {userData} = useContext(UserContext);
+    const {userData} = useContext(AuthContext);
 
     return (
         <React.Fragment>

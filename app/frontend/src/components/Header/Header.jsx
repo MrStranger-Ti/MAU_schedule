@@ -3,8 +3,8 @@ import {ReactComponent as MenuSVG} from "../../assets/svgs/icons/menu.svg";
 import bearFace from "../../assets/images/logo/bear_face.png";
 import {Link, useNavigate} from "react-router-dom";
 import {pagesPaths} from "../../config";
-import {LoadingContext} from "../../context/base";
-import {AuthContext} from "../../context/auth";
+import {LoadingContext} from "../../context/LoadingProvider";
+import {AuthContext} from "../../context/AuthProvider";
 
 const Header = () => {
     const {isAuth, logout} = useContext(AuthContext);
@@ -38,7 +38,7 @@ const Header = () => {
                         <li className="header__nav-item"><Link className="link header__nav-link" to={pagesPaths.schedule.teacherSearch}>Преподаватели</Link></li>
                     </ul>
                 </nav>
-                <button className="link header__form-link" onClick={logout} type="button">Выйти</button>
+                <button className="link header__form-link" onClick={onClickLogout} type="button">Выйти</button>
                 <nav className="header__menu">
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

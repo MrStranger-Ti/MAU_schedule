@@ -1,13 +1,17 @@
-import React from "react";
+import React, {useContext} from "react";
 import CollapseBtn from "./CollapseBtn";
 import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
+import {EditorContext} from "../../../../../../context/EditorProvider";
+import {editorModes} from "../NoteEditor";
 
-const UpdateBtns = ({onClickCollapse, onClickCancel}) => {
+const UpdateBtns = () => {
+    const {setEditorMode} = useContext(EditorContext);
+
     return (
         <React.Fragment>
             <div className="note-block__btns flex">
                 <div className="note-block__btns-block">
-                    <CollapseBtn onClickCollapse={onClickCollapse}/>
+                    <CollapseBtn/>
                 </div>
                 <div className="note-block__btns-block">
                     <button
@@ -15,15 +19,15 @@ const UpdateBtns = ({onClickCollapse, onClickCancel}) => {
                         type="submit"
                     >Сохранить</button>
                     <button
-                        class="btn"
+                        className="btn"
                         type="button"
-                        onClick={onClickCancel}
+                        onClick={() => setEditorMode(editorModes.display)}
                     >Отмена</button>
                 </div>
             </div>
             <div className="note-block__adaptive-btns flex">
                 <div className="note-block__btns-block">
-                    <AdaptiveCollapseBtn onClickCollapse={onClickCollapse}/>
+                    <AdaptiveCollapseBtn/>
                 </div>
                 <div className="note-block__btns-adaptive-block">
                     <button className="btn" type="submit">
@@ -47,7 +51,7 @@ const UpdateBtns = ({onClickCollapse, onClickCancel}) => {
                             </g>
                         </svg>
                     </button>
-                    <button className="btn" type="button" onClick={onClickCancel}>
+                    <button className="btn" type="button" onClick={() => setEditorMode(editorModes.display)}>
                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="64.000000pt" height="64.000000pt" viewBox="0 0 64.000000 64.000000" preserveAspectRatio="xMidYMid meet">
                             <g transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)">
                                 <path d="M143 552 c-18 -11 -83 -96 -83 -108 0 -18 80 -114 95 -114 7 0 18 7

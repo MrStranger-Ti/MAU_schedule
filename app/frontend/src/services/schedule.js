@@ -19,4 +19,8 @@ export default class ScheduleService extends BaseService {
             })
         )
     }
+
+    async getTeacherSchedule(period) {
+
+    }
 }

@@ -3,11 +3,18 @@ import BaseProfile from "./BaseProfile";
 import ProfileForm from "./ProfileForm";
 import DisplayProfile from "./DisplayProfile";
 import InstituteService from "../../services/institute";
+import {useAuth} from "../../hooks/useAuth";
+import {LoadingContext} from "../../context/LoadingProvider";
 
 const Profile = () => {
+    const [isLoading, setIsLoading] = useState(true);
     const [isUpdating, setIsUpdating] = useState(false);
     const [isBtnLoading, setIsBtnLoading] = useState(false);
     const [institutes, setInstitutes] = useState([]);
+
+    const {} = useAuth(setIsLoading, {
+        protect: true
+    });
 
     const loadUpdate = () => {
         const getInstitutes = async () => {
@@ -24,22 +31,24 @@ const Profile = () => {
     }
 
     return (
-        <BaseProfile title={isUpdating ? "Обновление профиля" : "Профиль"}>
-            {isUpdating
-                ?
-                <ProfileForm
-                    setUpdating={setIsUpdating}
-                    isBtnLoading={isBtnLoading}
-                    setIsBtnLoading={setIsBtnLoading}
-                    institutes={institutes}
-                />
-                :
-                <DisplayProfile
-                    isBtnLoading={isBtnLoading}
-                    loadUpdate={loadUpdate}
-                />
-            }
-        </BaseProfile>
+        <LoadingContext value={{isLoading, setIsLoading}}>
+            <BaseProfile title={isUpdating ? "Обновление профиля" : "Профиль"}>
+                {isUpdating
+                    ?
+                    <ProfileForm
+                        setUpdating={setIsUpdating}
+                        isBtnLoading={isBtnLoading}
+                        setIsBtnLoading={setIsBtnLoading}
+                        institutes={institutes}
+                    />
+                    :
+                    <DisplayProfile
+                        isBtnLoading={isBtnLoading}
+                        loadUpdate={loadUpdate}
+                    />
+                }
+            </BaseProfile>
+        </LoadingContext>
     );
 };
 

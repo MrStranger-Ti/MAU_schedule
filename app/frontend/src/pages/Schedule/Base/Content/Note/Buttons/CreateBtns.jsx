@@ -2,12 +2,12 @@ import React from "react";
 import CollapseBtn from "./CollapseBtn";
 import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
 
-const CreateBtns = ({onClickCollapse}) => {
+const CreateBtns = () => {
     return (
         <React.Fragment>
             <div className="note-block__btns flex">
                 <div className="note-block__btns-block">
-                    <CollapseBtn onClickCollapse={onClickCollapse}/>
+                    <CollapseBtn/>
                 </div>
                 <div className="note-block__btns-block">
                     <button
@@ -18,7 +18,7 @@ const CreateBtns = ({onClickCollapse}) => {
             </div>
             <div className="note-block__adaptive-btns flex">
                 <div className="note-block__btns-block">
-                    <AdaptiveCollapseBtn onClickCollapse={onClickCollapse}/>
+                    <AdaptiveCollapseBtn/>
                 </div>
                 <div className="note-block__btns-adaptive-block">
                     <button className="btn" type="submit">

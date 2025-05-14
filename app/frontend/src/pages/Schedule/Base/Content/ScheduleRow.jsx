@@ -1,12 +1,21 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Collapse} from "react-bootstrap";
-import Note from "./Note/Note";
+import NoteEditor, {editorModes} from "./Note/NoteEditor";
+import EditorProvider from "../../../../context/EditorProvider";
+import {ScheduleRowContext} from "../../../../context/ScheduleRowProvider";
 
-const ScheduleRow = ({row}) => {
+const ScheduleRow = () => {
+    const {row, rowNote} = useContext(ScheduleRowContext);
+    console.log(row)
+    const [editorMode, setrEditorMode] = useState(
+        rowNote ? editorModes.display : editorModes.create
+    );
     const [open, setOpen] = useState(false);
     const [showNoteBlock, setShowNoteBlock] = useState(false);
 
     const handleCollapse = () => {
+        if (row.slice(1).join("") === "") return;
+
         if (!showNoteBlock) {
             setShowNoteBlock(true);
             setTimeout(() => setOpen(true), 1);
@@ -23,8 +32,8 @@ const ScheduleRow = ({row}) => {
                 aria-expanded="false"
                 role="button"
             >
-                {row.map((cell, td_index) => (
-                    <td key={td_index}>{cell}</td>
+                {row.map((cell, tdIndex) => (
+                    <td key={tdIndex}>{cell}</td>
                 ))}
             </tr>
             {showNoteBlock &&
@@ -36,7 +45,13 @@ const ScheduleRow = ({row}) => {
                         >
                             <div>
                                 <div className="card card-body note-block__card">
-                                    <Note setOpen={setOpen}/>
+                                    <EditorProvider
+                                        setOpen={setOpen}
+                                        editorMode={editorMode}
+                                        setEditorMode={setrEditorMode}
+                                    >
+                                        <NoteEditor/>
+                                    </EditorProvider>
                                 </div>
                             </div>
                         </Collapse>
