@@ -10,6 +10,18 @@ class Note(models.Model):
         verbose_name = "note"
         verbose_name_plural = "notes"
         ordering = ("text",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "user",
+                    "schedule_name",
+                    "schedule_key",
+                    "day",
+                    "lesson_number",
+                ],
+                name="unique_note",
+            ),
+        ]
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

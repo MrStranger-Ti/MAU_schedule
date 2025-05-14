@@ -107,7 +107,7 @@ class TestNoteViewSet:
         "field",
         [
             {"schedule_name": settings.TEACHER_SCHEDULE_NAME},
-            {"group": "some group"},
+            {"schedule_key": "some key"},
             {"day": date.today().isoformat()},
             {"lesson_number": 3},
             {"text": "some text"},
