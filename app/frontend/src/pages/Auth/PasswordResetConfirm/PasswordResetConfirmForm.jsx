@@ -6,17 +6,19 @@ import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
 import {LoadingContext} from "../../../context/LoadingProvider";
 import {useParams} from "react-router-dom";
+import LoadingButton from "../../../components/UI/Button/LoadingButton";
 
 const PasswordResetConfirmForm = ({setIsSuccessPasswordChanged}) => {
     const {uidb64, token} = useParams();
     const {setIsLoading} = useContext(LoadingContext);
     const [formData, setFormData] = useState({password1: "", password2: ""});
     const [formErrors, setFormErrors] = useState({});
+    const [isBtnLoading, setIsBtnLoading] = useState(false);
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        setIsLoading(true);
+        setIsBtnLoading(true);
 
         const service = new AuthService();
         const {success, data} = await service.passwordResetConfirm({uidb64, token}, formData);
@@ -27,7 +29,7 @@ const PasswordResetConfirmForm = ({setIsSuccessPasswordChanged}) => {
             setFormData({password1: "", password2: ""})
         }
 
-        setIsLoading(false);
+        setIsBtnLoading(false);
     }
 
     return (
@@ -72,7 +74,13 @@ const PasswordResetConfirmForm = ({setIsSuccessPasswordChanged}) => {
                     </div>
                 </div>
             </div>
-            <button className="btn" type="submit">Изменить пароль</button>
+            <LoadingButton
+                isLoading={isBtnLoading}
+                className="btn"
+                type="submit"
+            >
+                Изменить пароль
+            </LoadingButton>
         </Form>
     );
 };

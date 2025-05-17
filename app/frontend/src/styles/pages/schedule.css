@@ -210,6 +210,10 @@
     background-color: transparent;
 }
 
+.note-block__form .note-block__adaptive-btns .btn-spinner {
+    color: var(--dark-blue);
+}
+
 .note-block__form .note-block__adaptive-btns button:hover {
     background-color: transparent;
 }

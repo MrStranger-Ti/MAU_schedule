@@ -1,19 +1,19 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
-import {LoadingContext} from "../../../context/LoadingProvider";
+import LoadingButton from "../../../components/UI/Button/LoadingButton";
 
 const PasswordResetForm = ({setIsSuccessEmailSent}) => {
-    const {setIsLoading} = useContext(LoadingContext);
     const [formData, setFormData] = useState({email: ""});
     const [formErrors, setFormErrors] = useState({});
+    const [isBtnLoading, setIsBtnLoading] = useState(false);
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        setIsLoading(true);
+        setIsBtnLoading(true);
 
         const service = new AuthService();
         const {success, data} = await service.passwordReset(formData);
@@ -23,7 +23,7 @@ const PasswordResetForm = ({setIsSuccessEmailSent}) => {
             setFormErrors(data);
         }
 
-        setIsLoading(false);
+        setIsBtnLoading(false);
     }
 
     return (
@@ -51,7 +51,12 @@ const PasswordResetForm = ({setIsSuccessEmailSent}) => {
                     </div>
                 </div>
             </div>
-            <button className="btn auth__btn" type="submit">Отправить</button>
+            <LoadingButton
+                isLoading={isBtnLoading}
+                className="btn auth__btn"
+                type="submit"
+            >
+                Отправить</LoadingButton>
         </Form>
     );
 };

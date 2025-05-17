@@ -2,11 +2,11 @@ import React, {useState} from "react";
 import FormErrors from "../../../components/UI/Form/FormErrors";
 import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
-import ButtonSpinner from "../../../components/Spinner/ButtonSpinner";
 import Form from "../../../components/UI/Form/Form";
 import {useNavigate} from "react-router-dom";
 import AuthService from "../../../services/auth";
 import {pagesPaths} from "../../../config";
+import LoadingButton from "../../../components/UI/Button/LoadingButton";
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({email: "", password: ""});
@@ -72,10 +72,13 @@ const LoginForm = () => {
                     </div>
                 </div>
             </div>
-            <button className="btn" type="submit" disabled={isBtnLoading && true}>
-                {isBtnLoading && <ButtonSpinner/>}
+            <LoadingButton
+                isLoading={isBtnLoading}
+                className="btn"
+                type="submit"
+            >
                 Войти
-            </button>
+            </LoadingButton>
         </Form>
     );
 };

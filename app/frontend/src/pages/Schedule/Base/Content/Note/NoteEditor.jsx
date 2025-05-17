@@ -39,6 +39,7 @@ const NoteEditor = () => {
     const {day, lessonNumber, rowNote, setRowNote} = useContext(ScheduleRowContext);
     const {editorMode, setEditorMode} = useContext(EditorContext);
     const [ButtonsComponent, setButtonsComponent] = useState(null);
+    const [isBtnLoading, setIsBtnLoading] = useState(false);
 
     const editorRef = useRef(null);
 
@@ -47,14 +48,14 @@ const NoteEditor = () => {
     }
 
     const ButtonsGroups = {
-        display: <DisplayBtns/>,
-        create: <CreateBtns/>,
-        update: <UpdateBtns/>
+        display: <DisplayBtns isBtnLoading={isBtnLoading}/>,
+        create: <CreateBtns isBtnLoading={isBtnLoading}/>,
+        update: <UpdateBtns isBtnLoading={isBtnLoading}/>
     };
 
     useEffect(() => {
         setButtonsComponent(ButtonsGroups[editorMode]);
-    }, [editorMode]);
+    }, [editorMode, isBtnLoading]);
 
     const createNote = async () => {
         const editorText = editorRef.current.getText();
@@ -105,7 +106,7 @@ const NoteEditor = () => {
         }
     }
 
-    let onSubmitFunc = null
+    let onSubmitFunc = null;
     if (editorMode === editorModes.display) {
         onSubmitFunc = () => deleteNote();
     } else if (editorMode === editorModes.create) {
@@ -114,9 +115,16 @@ const NoteEditor = () => {
         onSubmitFunc = () => updateNote();
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
-        if (typeof onSubmitFunc === "function") onSubmitFunc();
+
+        if (typeof onSubmitFunc === "function") {
+            setIsBtnLoading(true);
+
+            await onSubmitFunc();
+
+            setIsBtnLoading(false);
+        }
     }
 
     return (
@@ -126,7 +134,7 @@ const NoteEditor = () => {
                 lang="ru"
                 setOptions={editorOptions}
                 setContents={rowNote ? rowNote.text : ""}
-                disable={editorMode === editorModes.display}
+                disable={isBtnLoading || editorMode === editorModes.display}
                 hideToolbar={editorMode === editorModes.display}
             />
             {ButtonsComponent}

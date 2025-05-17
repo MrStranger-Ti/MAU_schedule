@@ -3,7 +3,7 @@ import FormErrors from "../../../components/UI/Form/FormErrors";
 import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 import Select from "../../../components/UI/Form/Select";
-import ButtonSpinner from "../../../components/Spinner/ButtonSpinner";
+import LoadingButton from "../../../components/UI/Button/LoadingButton";
 
 const SecondStep = ({setStep, formData, setFormData, institutes, isBtnLoading}) => {
     return (
@@ -69,14 +69,13 @@ const SecondStep = ({setStep, formData, setFormData, institutes, isBtnLoading}) 
                 >
                     Предыдущий шаг
                 </button>
-                <button
+                <LoadingButton
+                    isLoading={isBtnLoading}
                     className="btn auth__btn"
                     type="submit"
-                    disabled={isBtnLoading && true}
                 >
-                    {isBtnLoading && <ButtonSpinner/>}
                     Зарегистрироваться
-                </button>
+                </LoadingButton>
             </div>
         </div>
     );

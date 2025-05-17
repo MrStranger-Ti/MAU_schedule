@@ -3,8 +3,9 @@ import CollapseBtn from "./CollapseBtn";
 import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
 import {EditorContext} from "../../../../../../context/EditorProvider";
 import {editorModes} from "../NoteEditor";
+import LoadingButton from "../../../../../../components/UI/Button/LoadingButton";
 
-const DisplayBtns = () => {
+const DisplayBtns = ({isBtnLoading}) => {
     const {setEditorMode} = useContext(EditorContext);
 
     return (
@@ -21,12 +22,13 @@ const DisplayBtns = () => {
                     >
                         Редактировать
                     </button>
-                    <button
+                    <LoadingButton
+                        isLoading={isBtnLoading}
                         className="btn"
                         type="submit"
                     >
                         Удалить
-                    </button>
+                    </LoadingButton>
                 </div>
             </div>
             <div className="note-block__adaptive-btns flex">
@@ -34,7 +36,11 @@ const DisplayBtns = () => {
                     <AdaptiveCollapseBtn/>
                 </div>
                 <div className="note-block__btns-adaptive-block">
-                    <button className="btn" type="button">
+                    <button
+                        className="btn"
+                        type="button"
+                        onClick={() => setEditorMode(editorModes.update)}
+                    >
                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="64.000000pt" height="64.000000pt" viewBox="0 0 64.000000 64.000000" preserveAspectRatio="xMidYMid meet">
                             <g transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)">
                                 <path d="M525 630 c-11 -5 -86 -75 -167 -157 -146 -146 -148 -149 -167 -218
@@ -52,7 +58,12 @@ const DisplayBtns = () => {
                             </g>
                         </svg>
                     </button>
-                    <button className="btn" type="submit">
+                    <LoadingButton
+                        isLoading={isBtnLoading}
+                        showChildrenOnLoad={false}
+                        className="btn"
+                        type="submit"
+                    >
                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100.000000pt" height="100.000000pt" viewBox="0 0 100.000000 100.000000" preserveAspectRatio="xMidYMid meet">
                             <g transform="translate(0.000000,100.000000) scale(0.100000,-0.100000)">
                                 <path d="M380 980 c-11 -11 -20 -29 -20 -40 0 -19 -7 -20 -95 -20 -84 0 -96
@@ -76,7 +87,7 @@ const DisplayBtns = () => {
           248 31 258 0 17 -25 24 -33 10z"/>
                             </g>
                         </svg>
-                    </button>
+                    </LoadingButton>
                 </div>
             </div>
         </React.Fragment>

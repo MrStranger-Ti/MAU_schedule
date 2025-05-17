@@ -3,8 +3,9 @@ import CollapseBtn from "./CollapseBtn";
 import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
 import {EditorContext} from "../../../../../../context/EditorProvider";
 import {editorModes} from "../NoteEditor";
+import LoadingButton from "../../../../../../components/UI/Button/LoadingButton";
 
-const UpdateBtns = () => {
+const UpdateBtns = ({isBtnLoading}) => {
     const {setEditorMode} = useContext(EditorContext);
 
     return (
@@ -14,15 +15,21 @@ const UpdateBtns = () => {
                     <CollapseBtn/>
                 </div>
                 <div className="note-block__btns-block">
-                    <button
+                    <LoadingButton
+                        isLoading={isBtnLoading}
+                        showChildrenOnLoad={false}
                         className="btn"
                         type="submit"
-                    >Сохранить</button>
+                    >
+                        Сохранить
+                    </LoadingButton>
                     <button
                         className="btn"
                         type="button"
                         onClick={() => setEditorMode(editorModes.display)}
-                    >Отмена</button>
+                    >
+                        Отмена
+                    </button>
                 </div>
             </div>
             <div className="note-block__adaptive-btns flex">
@@ -30,7 +37,11 @@ const UpdateBtns = () => {
                     <AdaptiveCollapseBtn/>
                 </div>
                 <div className="note-block__btns-adaptive-block">
-                    <button className="btn" type="submit">
+                    <LoadingButton
+                        isLoading={isBtnLoading}
+                        className="btn"
+                        type="submit"
+                    >
                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100.000000pt" height="100.000000pt" viewBox="0 0 100.000000 100.000000" preserveAspectRatio="xMidYMid meet">
                             <g transform="translate(0.000000,100.000000) scale(0.100000,-0.100000)">
                                 <path d="M100 900 c-19 -19 -20 -33 -20 -400 0 -367 1 -381 20 -400 19 -19 33
@@ -50,7 +61,7 @@ const UpdateBtns = () => {
           28 5 50 10 50 6 0 10 -22 10 -50z"/>
                             </g>
                         </svg>
-                    </button>
+                    </LoadingButton>
                     <button className="btn" type="button" onClick={() => setEditorMode(editorModes.display)}>
                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="64.000000pt" height="64.000000pt" viewBox="0 0 64.000000 64.000000" preserveAspectRatio="xMidYMid meet">
                             <g transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)">

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import {Collapse} from "react-bootstrap";
 import NoteEditor, {editorModes} from "./Note/NoteEditor";
 import EditorProvider from "../../../../context/EditorProvider";
@@ -6,7 +6,6 @@ import {ScheduleRowContext} from "../../../../context/ScheduleRowProvider";
 
 const ScheduleRow = () => {
     const {row, rowNote} = useContext(ScheduleRowContext);
-    console.log(row)
     const [editorMode, setrEditorMode] = useState(
         rowNote ? editorModes.display : editorModes.create
     );

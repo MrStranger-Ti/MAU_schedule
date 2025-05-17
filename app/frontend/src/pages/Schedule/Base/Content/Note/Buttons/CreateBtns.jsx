@@ -1,8 +1,9 @@
 import React from "react";
 import CollapseBtn from "./CollapseBtn";
 import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
+import LoadingButton from "../../../../../../components/UI/Button/LoadingButton";
 
-const CreateBtns = () => {
+const CreateBtns = ({isBtnLoading}) => {
     return (
         <React.Fragment>
             <div className="note-block__btns flex">
@@ -10,10 +11,13 @@ const CreateBtns = () => {
                     <CollapseBtn/>
                 </div>
                 <div className="note-block__btns-block">
-                    <button
+                    <LoadingButton
+                        isLoading={isBtnLoading}
                         className="btn"
                         type="submit"
-                    >Сохранить</button>
+                    >
+                        Сохранить
+                    </LoadingButton>
                 </div>
             </div>
             <div className="note-block__adaptive-btns flex">
@@ -21,7 +25,12 @@ const CreateBtns = () => {
                     <AdaptiveCollapseBtn/>
                 </div>
                 <div className="note-block__btns-adaptive-block">
-                    <button className="btn" type="submit">
+                    <LoadingButton
+                        isLoading={isBtnLoading}
+                        showChildrenOnLoad={false}
+                        className="btn"
+                        type="submit"
+                    >
                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100.000000pt" height="100.000000pt" viewBox="0 0 100.000000 100.000000" preserveAspectRatio="xMidYMid meet">
                             <g transform="translate(0.000000,100.000000) scale(0.100000,-0.100000)">
                                 <path d="M100 900 c-19 -19 -20 -33 -20 -400 0 -367 1 -381 20 -400 19 -19 33
@@ -41,7 +50,7 @@ const CreateBtns = () => {
                                          28 5 50 10 50 6 0 10 -22 10 -50z"/>
                             </g>
                         </svg>
-                    </button>
+                    </LoadingButton>
                 </div>
             </div>
         </React.Fragment>

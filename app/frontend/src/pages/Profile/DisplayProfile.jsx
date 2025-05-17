@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import {Helmet} from "react-helmet";
-import ButtonSpinner from "../../components/Spinner/ButtonSpinner";
 import {AuthContext} from "../../context/AuthProvider";
+import LoadingButton from "../../components/UI/Button/LoadingButton";
 
 const DisplayProfile = ({isBtnLoading, loadUpdate}) => {
     const {userData} = useContext(AuthContext);
@@ -29,15 +29,14 @@ const DisplayProfile = ({isBtnLoading, loadUpdate}) => {
                 </div>
             </div>
             <div className="profile__btn-block">
-                <button
+                <LoadingButton
+                    isLoading={isBtnLoading}
                     className="btn"
                     type="button"
                     onClick={loadUpdate}
-                    disabled={isBtnLoading && true}
                 >
-                    {isBtnLoading && <ButtonSpinner/>}
                     Редактировать
-                </button>
+                </LoadingButton>
             </div>
         </React.Fragment>
     );

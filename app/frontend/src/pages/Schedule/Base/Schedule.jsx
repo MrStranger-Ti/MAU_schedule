@@ -21,7 +21,6 @@ const Schedule = ({
     const [notes, setNotes] = useState([]);
 
     const fetchSchedule = async () => {
-        console.log("dad")
         const service = new ScheduleService();
         let getScheduleFunc = null;
         switch (scheduleName) {

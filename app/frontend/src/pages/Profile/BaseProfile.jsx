@@ -12,7 +12,7 @@ const BaseProfile = ({children, title}) => {
         <main>
             <Header/>
             <section className="profile">
-                <div className={"profile__container container"}>
+                <div className="profile__container container">
                     {isLoading
                     ?
                     <Spinner/>

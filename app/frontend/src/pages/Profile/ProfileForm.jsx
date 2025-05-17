@@ -7,8 +7,8 @@ import userService from "../../services/user";
 import InstituteService from "../../services/institute";
 import {Helmet} from "react-helmet";
 import Select from "../../components/UI/Form/Select";
-import ButtonSpinner from "../../components/Spinner/ButtonSpinner";
 import {AuthContext} from "../../context/AuthProvider";
+import LoadingButton from "../../components/UI/Button/LoadingButton";
 
 const ProfileForm = ({
                          setUpdating,
@@ -144,15 +144,14 @@ const ProfileForm = ({
                 </div>
             </Form>
             <div className="profile__btn-block">
-                <button
+                <LoadingButton
+                    isLoading={isBtnLoading}
                     className="btn"
                     type="submit"
                     form="profile-update"
-                    disabled={isBtnLoading && true}
                 >
-                    {isBtnLoading && <ButtonSpinner/>}
                     Обновить
-                </button>
+                </LoadingButton>
             </div>
         </React.Fragment>
     );

@@ -6,6 +6,7 @@ import Spinner from "../../../../components/Spinner/Spinner";
 import ScheduleTables from "./ScheduleTables";
 import {AuthContext} from "../../../../context/AuthProvider";
 import {ScheduleContext} from "../../../../context/ScheduleProvider";
+import LoadingButton from "../../../../components/UI/Button/LoadingButton";
 
 const ScheduleContent = () => {
     const {
@@ -44,10 +45,13 @@ const ScheduleContent = () => {
                         firstOption="Выберите период"
                         required
                     />
-                    <button className="btn" type="submit" disabled={isScheduleLoading && true}>
-                        {isScheduleLoading && <ButtonSpinner/>}
+                    <LoadingButton
+                        isLoading={isScheduleLoading}
+                        className="btn"
+                        type="submit"
+                    >
                         Найти
-                    </button>
+                    </LoadingButton>
                 </Form>
             </div>
             {isScheduleLoading
