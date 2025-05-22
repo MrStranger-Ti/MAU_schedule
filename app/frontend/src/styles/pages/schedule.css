@@ -468,7 +468,7 @@
 }
 
 .cells-tr td:nth-child(1) {
-    text-align: left;
+    padding-right: 0;
     font-weight: 900;
 }
 
@@ -540,6 +540,10 @@
 
     .cells-tr td:nth-child(n) {
         width: 100%;
+    }
+
+    .cells-tr td:nth-child(1) {
+        padding-right: 10px;
     }
 
     .cells-tr:hover td {
