@@ -10,6 +10,7 @@ export const ScheduleRowProvider = ({
                                         note
                                     }) => {
     const [rowNote, setRowNote] = useState(note);
+
     return (
         <ScheduleRowContext.Provider value={{row, day, lessonNumber, rowNote, setRowNote}}>
             {children}

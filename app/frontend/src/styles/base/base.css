@@ -320,6 +320,7 @@ main-select > .error-input,
 /* Notification */
 
 .notification {
+    pointer-events: none;
     position: fixed;
     flex-direction: column;
     right: 2%;
@@ -331,6 +332,7 @@ main-select > .error-input,
 }
 
 .notification__block {
+    pointer-events: auto;
     align-items: center;
     padding: 15px;
     gap: 12px;

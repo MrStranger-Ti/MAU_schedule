@@ -26,7 +26,7 @@ const ScheduleRow = () => {
     return (
         <React.Fragment>
             <tr
-                className="cells-tr"
+                className={rowNote ? "cells-tr existing-note-tr" : "cells-tr"}
                 onClick={handleCollapse}
                 aria-expanded="false"
                 role="button"

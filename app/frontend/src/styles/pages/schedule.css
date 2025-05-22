@@ -481,11 +481,11 @@
     font-weight: 800;
 }
 
-.schedule__existing-note-tr > td:first-child {
+.existing-note-tr > td:first-child {
     position: relative;
 }
 
-.schedule__existing-note-tr > td:first-child::before {
+.existing-note-tr > td:first-child::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -521,7 +521,7 @@
         font-size: 18px;
     }
 
-    .schedule__existing-note-tr > td:first-child::before {
+    .existing-note-tr > td:first-child::before {
         left: auto;
         right: 0;
         width: 30px;
