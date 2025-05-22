@@ -4,16 +4,18 @@ import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
-import {LoadingContext} from "../../../context/LoadingProvider";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import LoadingButton from "../../../components/UI/Button/LoadingButton";
+import {NotificationContext} from "../../../context/NotificationProvider";
+import {pagesPaths} from "../../../config";
 
-const PasswordResetConfirmForm = ({setIsSuccessPasswordChanged}) => {
+const PasswordResetConfirmForm = () => {
+    const {showNotification} = useContext(NotificationContext);
     const {uidb64, token} = useParams();
-    const {setIsLoading} = useContext(LoadingContext);
     const [formData, setFormData] = useState({password1: "", password2: ""});
     const [formErrors, setFormErrors] = useState({});
     const [isBtnLoading, setIsBtnLoading] = useState(false);
+    const navigate = useNavigate();
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -23,13 +25,18 @@ const PasswordResetConfirmForm = ({setIsSuccessPasswordChanged}) => {
         const service = new AuthService();
         const {success, data} = await service.passwordResetConfirm({uidb64, token}, formData);
         if (success) {
-            setIsSuccessPasswordChanged(true);
+            showNotification("Пароль успешно изменен");
+            navigate(pagesPaths.accounts.login);
         } else {
-            setFormErrors(data);
-            setFormData({password1: "", password2: ""})
+            if (typeof data === "object" && Object.keys(data).length > 0) {
+                setFormErrors(data);
+                setFormData({password1: "", password2: ""});
+                setIsBtnLoading(false);
+            } else {
+                showNotification("Не удалось изменить пароль");
+                navigate(pagesPaths.accounts.login)
+            }
         }
-
-        setIsBtnLoading(false);
     }
 
     return (

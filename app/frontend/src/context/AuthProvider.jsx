@@ -21,12 +21,13 @@ const AuthProvider = ({children}) => {
         const instituteServ = new InstituteService();
         const instituteResponse = await instituteServ.getById(userResponse.data.institute);
 
-        setUserData({...userResponse.data, institute: instituteResponse.data});
-        setIsAuth(instituteResponse.success);
+        if (instituteResponse.success) {
+            setUserData({...userResponse.data, institute: instituteResponse.data});
+            setIsAuth(true);
+        }
     }
 
     const logout = async () => {
-        console.log("logout")
         const service = new AuthService();
         const {success} = await service.deleteToken();
         if (success) setIsAuth(false);

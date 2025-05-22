@@ -10,7 +10,6 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.db import models
-from django.template.loader import render_to_string
 from django.utils import timezone
 from django.conf import settings
 from django.utils.encoding import force_bytes
@@ -177,7 +176,12 @@ class MauUser(AbstractBaseUser, PermissionsMixin, EmailConfirmationMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["full_name"]
+    REQUIRED_FIELDS = [
+        "full_name",
+        "institute",
+        "course",
+        "group",
+    ]
 
     is_staff = models.BooleanField(
         verbose_name="staff status",

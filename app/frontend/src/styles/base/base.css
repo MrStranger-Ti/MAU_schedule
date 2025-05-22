@@ -325,20 +325,24 @@ main-select > .error-input,
     right: 2%;
     bottom: 2%;
     z-index: 99;
-    max-width: 400px;
+    max-width: 500px;
     min-height: 70px;
     gap: 30px;
 }
 
 .notification__block {
     align-items: center;
-    padding: 18px 25px;
-    gap: 20px;
+    padding: 15px;
+    gap: 12px;
     background-color: #fff;
     box-shadow: 0 0 10px black;
     border-radius: 10px;
     opacity: 0;
     transition: opacity 0.3s linear;
+}
+
+.notification__descr {
+    font-size: 22px;
 }
 
 .notification__icon-ok,

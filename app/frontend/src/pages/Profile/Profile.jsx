@@ -1,12 +1,14 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import BaseProfile from "./BaseProfile";
 import ProfileForm from "./ProfileForm";
 import DisplayProfile from "./DisplayProfile";
 import InstituteService from "../../services/institute";
 import {useAuth} from "../../hooks/useAuth";
 import {LoadingContext} from "../../context/LoadingProvider";
+import {NotificationContext} from "../../context/NotificationProvider";
 
 const Profile = () => {
+    const {showNotification} = useContext(NotificationContext);
     const [isLoading, setIsLoading] = useState(true);
     const [isUpdating, setIsUpdating] = useState(false);
     const [isBtnLoading, setIsBtnLoading] = useState(false);
@@ -21,7 +23,11 @@ const Profile = () => {
             setIsBtnLoading(true);
 
             const {success, data} = await new InstituteService().getAll();
-            if (success) setInstitutes(data);
+            if (success) {
+                setInstitutes(data);
+            } else {
+                showNotification(data.detail, {error: true});
+            }
 
             setIsBtnLoading(false);
             setIsUpdating(true);

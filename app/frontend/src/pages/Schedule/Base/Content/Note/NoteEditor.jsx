@@ -9,6 +9,7 @@ import NoteService from "../../../../../services/note";
 import {ScheduleContext} from "../../../../../context/ScheduleProvider";
 import {ScheduleRowContext} from "../../../../../context/ScheduleRowProvider";
 import {AuthContext} from "../../../../../context/AuthProvider";
+import {NotificationContext} from "../../../../../context/NotificationProvider";
 
 export const editorModes = {
     display: "display",
@@ -38,6 +39,7 @@ const NoteEditor = () => {
     const {scheduleName, scheduleKey, notes, setNotes} = useContext(ScheduleContext);
     const {day, lessonNumber, rowNote, setRowNote} = useContext(ScheduleRowContext);
     const {editorMode, setEditorMode} = useContext(EditorContext);
+    const {showNotification} = useContext(NotificationContext);
     const [ButtonsComponent, setButtonsComponent] = useState(null);
     const [isBtnLoading, setIsBtnLoading] = useState(false);
 
@@ -75,6 +77,9 @@ const NoteEditor = () => {
             setNotes([...notes, data]);
             setRowNote(data);
             setEditorMode(editorModes.display);
+            showNotification("Заметка успешно создана!");
+        } else {
+            showNotification(data, {error: true});
         }
     }
 
@@ -93,16 +98,22 @@ const NoteEditor = () => {
             setNotes([...notes, data]);
             setRowNote(data);
             setEditorMode(editorModes.display);
+            showNotification("Заметка успешно обновлена!");
+        } else {
+            showNotification(data, {error: true});
         }
     }
 
     const deleteNote = async () => {
         const service = new NoteService();
-        const {success} = await service.delete(rowNote.id)
+        const {success, data} = await service.delete(rowNote.id)
         if (success) {
             setNotes(notes.filter((iterNote) => iterNote.id !== rowNote.id));
             setRowNote(null);
             setEditorMode(editorModes.create);
+            showNotification("Заметка успешно удалена!");
+        } else {
+            showNotification(data, {error: true});
         }
     }
 

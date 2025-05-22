@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import ScheduleService from "../../../services/schedule";
 import Spinner from "../../../components/Spinner/Spinner";
 import ScheduleContent from "./Content/ScheduleContent";
 import {getFormattedDate} from "../../../utils/date";
 import NoteService from "../../../services/note";
 import ScheduleProvider from "../../../context/ScheduleProvider";
+import {NotificationContext} from "../../../context/NotificationProvider";
 
 const Schedule = ({
                       scheduleName,
@@ -13,6 +14,7 @@ const Schedule = ({
                       setIsLoading,
                       isAuthCompleted
                   }) => {
+    const {showNotification} = useContext(NotificationContext);
     const [isScheduleLoading, setIsScheduleLoading] = useState(true);
     const [isLoadedData, setIsLoadedData] = useState(false);
     const [periods, setPeriods] = useState([]);
@@ -25,33 +27,42 @@ const Schedule = ({
         let getScheduleFunc = null;
         switch (scheduleName) {
             case "group":
-                getScheduleFunc = service.getGroupSchedule;
+                getScheduleFunc = service.getGroupSchedule.bind(service);
                 break;
             case "teacher":
-                getScheduleFunc = service.getTeacherSchedule;
+                getScheduleFunc = service.getTeacherSchedule.bind(service);
+                break;
+            default:
                 break;
         }
 
-        const scheduleResponse = await service.getGroupSchedule(
-            currentPeriodValue ? periods[currentPeriodValue].name : {}
-        );
-        if (scheduleResponse.success) {
-            setSchedule(scheduleResponse.data);
+        if (typeof getScheduleFunc === "function") {
+            const {success, data} = await getScheduleFunc(
+                currentPeriodValue ? periods[currentPeriodValue].name : {}
+            );
+            if (success) {
+                setSchedule(data);
+            } else {
+                setSchedule({});
+                showNotification(data.detail, {error: true});
+            }
         } else {
-            setSchedule({});
+            throw new Error(`Invalid scheduleName ${scheduleName}`);
         }
     }
 
     useEffect(() => {
         const loadPeriods = async () => {
             const service = new ScheduleService();
-            const periodsResponse = await service.getPeriods();
-            if (periodsResponse.success) {
+            const {success, data} = await service.getPeriods();
+            if (success) {
                 setPeriods(
-                    periodsResponse.data.map((period, index) =>
+                    data.map((period, index) =>
                         ({name: period, value: index})
                     )
                 );
+            } else {
+                showNotification(data.detail, {error: true});
             }
         }
 
@@ -64,7 +75,11 @@ const Schedule = ({
         const loadNotes = async () => {
             const service = new NoteService();
             const {success, data} = await service.getAll();
-            if (success) setNotes(data.results);
+            if (success) {
+                setNotes(data.results);
+            } else {
+                showNotification(data.detail, {error: true});
+            }
         }
 
         const loadPage = async () => {
@@ -82,7 +97,11 @@ const Schedule = ({
 
     useEffect(() => {
         if (isLoadedData) {
-            if (currentPeriodValue === "") {
+            if (
+                currentPeriodValue === ""
+                && Object.keys(schedule).length > 0
+                && Object.keys(periods).length > 0
+            ) {
                 const isoWeekDay = getFormattedDate(Object.keys(schedule)[0]);
                 const currentPeriodIndex = periods.findIndex(period => period.name.startsWith(isoWeekDay));
                 setCurrentPeriodValue(periods[currentPeriodIndex].value);

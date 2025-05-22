@@ -9,6 +9,7 @@ import {Helmet} from "react-helmet";
 import Select from "../../components/UI/Form/Select";
 import {AuthContext} from "../../context/AuthProvider";
 import LoadingButton from "../../components/UI/Button/LoadingButton";
+import {NotificationContext} from "../../context/NotificationProvider";
 
 const ProfileForm = ({
                          setUpdating,
@@ -17,6 +18,7 @@ const ProfileForm = ({
                          institutes
                      }) => {
     const {userData, setUserData} = useContext(AuthContext);
+    const {showNotification} = useContext(NotificationContext);
 
     const baseFromData = {
         full_name: userData.full_name,
@@ -32,31 +34,35 @@ const ProfileForm = ({
 
         if (formData === baseFromData) {
             setUpdating(false);
+            showNotification("Профиль успешно изменен!");
             return;
         }
 
         setIsBtnLoading(true);
 
-        const updateResponse = await new userService().updateData(formData);
+        const {success, data} = await new userService().updateData(formData);
 
-        if (updateResponse.success) {
+        if (success) {
             const updatingData = {
-                full_name: updateResponse.data.full_name,
-                email: updateResponse.data.email,
-                course: updateResponse.data.course,
-                group: updateResponse.data.group,
+                full_name: data.full_name,
+                email: data.email,
+                course: data.course,
+                group: data.group,
             };
             const service = new InstituteService();
-            const instituteResponse = await service.getById(updateResponse.data.institute);
+            const instituteResponse = await service.getById(data.institute);
 
-            if (instituteResponse.success) Object.assign(updatingData, {
-                institute: instituteResponse.data,
-            });
+            if (instituteResponse.success) {
+                Object.assign(updatingData, {
+                    institute: instituteResponse.data,
+                });
+            }
 
             setUserData(updatingData);
             setUpdating(false);
+            showNotification("Профиль успешно изменен!");
         } else {
-            setFormErrors(updateResponse.data);
+            setFormErrors(data);
         }
 
         setIsBtnLoading(false);

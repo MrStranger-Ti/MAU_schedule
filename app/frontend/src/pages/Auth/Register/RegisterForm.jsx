@@ -1,10 +1,14 @@
-import React, {useRef, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
+import {NotificationContext} from "../../../context/NotificationProvider";
+import {useNavigate} from "react-router-dom";
+import {pagesPaths} from "../../../config";
 
-const RegisterForm = ({institutes, setIsSuccessRegister}) => {
+const RegisterForm = ({institutes}) => {
+    const {showNotification} = useContext(NotificationContext);
     const [formData, setFormData] = useState({
         full_name: "",
         password: "",
@@ -16,6 +20,7 @@ const RegisterForm = ({institutes, setIsSuccessRegister}) => {
     const [formErrors, setFormErrors] = useState({});
     const [step, setStep] = useState(1);
     const [isBtnLoading, setIsBtnLoading] = useState(false);
+    const navigate = useNavigate();
     const formRef = useRef(null);
 
     const onSubmit = async (e) => {
@@ -26,14 +31,14 @@ const RegisterForm = ({institutes, setIsSuccessRegister}) => {
         const service = new AuthService();
         const {success, data} = await service.register(formData);
         if (success) {
-            setIsSuccessRegister(true);
+            showNotification(`Письмо с подтверждением отправлено на ${formData.email}`);
+            navigate(pagesPaths.accounts.login);
         } else {
             setFormErrors(data);
             setFormData({...formData, password: ""});
             setStep(1);
+            setIsBtnLoading(false);
         }
-
-        setIsBtnLoading(false);
     }
 
     return (

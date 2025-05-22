@@ -1,14 +1,19 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
 import LoadingButton from "../../../components/UI/Button/LoadingButton";
+import {NotificationContext} from "../../../context/NotificationProvider";
+import {useNavigate} from "react-router-dom";
+import {pagesPaths} from "../../../config";
 
-const PasswordResetForm = ({setIsSuccessEmailSent}) => {
+const PasswordResetForm = () => {
+    const {showNotification} = useContext(NotificationContext);
     const [formData, setFormData] = useState({email: ""});
     const [formErrors, setFormErrors] = useState({});
     const [isBtnLoading, setIsBtnLoading] = useState(false);
+    const navigate = useNavigate();
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -18,12 +23,12 @@ const PasswordResetForm = ({setIsSuccessEmailSent}) => {
         const service = new AuthService();
         const {success, data} = await service.passwordReset(formData);
         if (success) {
-            setIsSuccessEmailSent(true);
+            showNotification(`Письмо с подтверждение отправлено на ${formData.email}`);
+            navigate(pagesPaths.accounts.login);
         } else {
             setFormErrors(data);
+            setIsBtnLoading(false);
         }
-
-        setIsBtnLoading(false);
     }
 
     return (
