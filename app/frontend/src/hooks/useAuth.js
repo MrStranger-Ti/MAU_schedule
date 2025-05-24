@@ -9,9 +9,8 @@ export const useAuth = (setIsLoading, {
     redirectAuthUser = false
 }) => {
     const navigate = useNavigate();
-    const {isAuth, login} = useContext(AuthContext);
+    const {isAuth, isAuthCompleted, setIsAuthCompleted, login} = useContext(AuthContext);
     const [isLogingCompleted, setIsLoginCompleted] = useState(false);
-    const [isAuthCompleted, setIsAuthCompleted] = useState(false);
 
     useEffect(() => {
         const processLogin = async () => {
@@ -34,6 +33,4 @@ export const useAuth = (setIsLoading, {
             }
         }
     }, [isLogingCompleted]);
-
-    return {isAuthCompleted};
 }
