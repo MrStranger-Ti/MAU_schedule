@@ -1,0 +1,24 @@
+import React, {useContext} from "react";
+import {ScheduleRowContext} from "../../../../../context/schedule/ScheduleRowProvider";
+
+const AdaptiveCollapseBtn = () => {
+    const {handleCollapse} = useContext(ScheduleRowContext);
+
+    return (
+        <button
+            className="btn"
+            type="button"
+            onClick={handleCollapse}
+        >
+            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="96.000000pt" height="96.000000pt" viewBox="0 0 96.000000 96.000000" preserveAspectRatio="xMidYMid meet">
+                <g transform="translate(0.000000,96.000000) scale(0.100000,-0.100000)">
+                    <path d="M297 502 c-167 -167 -190 -201 -150 -217 14 -5 54 32 175 157 l157
+                                         163 158 -163 c122 -126 162 -162 176 -157 39 16 16 49 -150 217 -92 92 -174
+                                         168 -183 168 -8 0 -91 -75 -183 -168z"/>
+                </g>
+            </svg>
+        </button>
+    );
+};
+
+export default AdaptiveCollapseBtn;

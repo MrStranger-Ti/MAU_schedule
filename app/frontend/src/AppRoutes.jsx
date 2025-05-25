@@ -9,6 +9,7 @@ import PasswordReset from "./pages/Auth/PasswordReset/PasswordReset";
 import {pagesPaths} from "./config";
 import PasswordResetConfirm from "./pages/Auth/PasswordResetConfirm/PasswordResetConfirm";
 import Group from "./pages/Schedule/Group/Group";
+import TeacherSearch from "./pages/Schedule/TeacherSearch/TeacherSearch";
 
 const AppRoutes = () => {
     return (
@@ -48,7 +49,7 @@ const AppRoutes = () => {
                 />
                 <Route
                     path={pagesPaths.schedule.teacherSearch}
-                    element=""
+                    element={<TeacherSearch/>}
                 />
                 <Route
                     path={pagesPaths.schedule.teacher}

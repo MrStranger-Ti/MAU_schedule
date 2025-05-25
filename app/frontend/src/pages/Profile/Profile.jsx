@@ -14,7 +14,7 @@ const Profile = () => {
     const [isBtnLoading, setIsBtnLoading] = useState(false);
     const [institutes, setInstitutes] = useState([]);
 
-    const {} = useAuth(setIsLoading, {
+    useAuth(setIsLoading, {
         protect: true
     });
 

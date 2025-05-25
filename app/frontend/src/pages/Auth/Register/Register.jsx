@@ -8,13 +8,15 @@ import RegisterForm from "./RegisterForm";
 import {useAuth} from "../../../hooks/useAuth";
 import {LoadingContext} from "../../../context/LoadingProvider";
 import {NotificationContext} from "../../../context/NotificationProvider";
+import {AuthContext} from "../../../context/AuthProvider";
 
 const Register = () => {
+    const {isAuthCompleted} = useContext(AuthContext);
     const {showNotification} = useContext(NotificationContext);
     const [isLoading, setIsLoading] = useState(true);
     const [institutes, setInstitutes] = useState([]);
 
-    const {isAuthCompleted} = useAuth(setIsLoading, {
+    useAuth(setIsLoading, {
         redirectAuthUser: true
     });
 

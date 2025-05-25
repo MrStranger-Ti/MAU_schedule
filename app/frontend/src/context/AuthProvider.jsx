@@ -8,6 +8,7 @@ export const AuthContext = createContext(null);
 const AuthProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
     const [userData, setUserData] = useState({});
+    const [isAuthCompleted, setIsAuthCompleted] = useState(false);
 
     const login = async () => {
         const userServ = new userService();
@@ -37,6 +38,8 @@ const AuthProvider = ({children}) => {
         <AuthContext.Provider value={{
             isAuth,
             setIsAuth,
+            isAuthCompleted,
+            setIsAuthCompleted,
             userData,
             setUserData,
             login,

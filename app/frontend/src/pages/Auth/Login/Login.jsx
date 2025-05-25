@@ -9,6 +9,7 @@ import {LoadingContext} from "../../../context/LoadingProvider";
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(true);
+
     useAuth(setIsLoading, {
         redirectAuthUser: true
     })

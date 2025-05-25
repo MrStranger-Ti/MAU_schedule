@@ -1,30 +1,28 @@
 import React, {useContext, useState} from "react";
 import BaseSchedule from "../BaseSchedule";
-import Schedule from "../Base/Schedule";
 import {useAuth} from "../../../hooks/useAuth";
 import {LoadingContext} from "../../../context/LoadingProvider";
+import ScheduleProvider from "../../../context/schedule/ScheduleProvider";
 import {AuthContext} from "../../../context/AuthProvider";
+import Schedule from "../../../components/Schedule/Schedule";
 
 const Group = () => {
     const {userData} = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(true);
-    const {isAuthCompleted} = useAuth(setIsLoading, {
+
+    useAuth(setIsLoading, {
         stopLoading: false,
         protect: true
     });
 
     return (
-        <LoadingContext value={{isLoading, setIsLoading}}>
+        <LoadingContext.Provider value={{isLoading, setIsLoading}}>
             <BaseSchedule>
-                <Schedule
-                    scheduleName="group"
-                    scheduleKey={userData.group}
-                    isLoading={isLoading}
-                    setIsLoading={setIsLoading}
-                    isAuthCompleted={isAuthCompleted}
-                />
+                <ScheduleProvider scheduleName="group" scheduleKey={userData.group}>
+                    <Schedule/>
+                </ScheduleProvider>
             </BaseSchedule>
-        </LoadingContext>
+        </LoadingContext.Provider>
     );
 };
 

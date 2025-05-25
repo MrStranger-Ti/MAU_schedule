@@ -1,16 +1,15 @@
 import React, {createContext, useContext, useState} from "react";
-import {NotificationContext} from "./NotificationProvider";
-import ScheduleService from "../services/schedule";
-import NoteService from "../services/note";
+import {NotificationContext} from "../NotificationProvider";
+import ScheduleService from "../../services/schedule";
+import NotesProvider from "./NotesProvider";
+import PeriodsProvider from "./PeriodsProvider";
 
 export const ScheduleContext = createContext(null);
 
 const ScheduleProvider = ({children, scheduleName, scheduleKey}) => {
-    const [isScheduleLoading, setIsScheduleLoading] = useState(false);
     const {showNotification} = useContext(NotificationContext);
-    const [periods, setPeriods] = useState([]);
     const [schedule, setSchedule] = useState({});
-    const [notes, setNotes] = useState([]);
+    const [isScheduleLoading, setIsScheduleLoading] = useState(false);
 
     const fetchSchedule = async (period) => {
         const service = new ScheduleService();
@@ -39,47 +38,21 @@ const ScheduleProvider = ({children, scheduleName, scheduleKey}) => {
         }
     }
 
-    const fetchNotes = async () => {
-        const service = new NoteService();
-        const {success, data} = await service.getAll();
-        if (success) {
-            setNotes(data.results);
-        } else {
-            showNotification(data.detail, {error: true});
-        }
-    }
-
-    const fetchPeriods = async () => {
-        const service = new ScheduleService();
-        const {success, data} = await service.getPeriods();
-        if (success) {
-            setPeriods(
-                data.map((period, index) =>
-                    ({name: period, value: index})
-                )
-            );
-        } else {
-            showNotification(data.detail, {error: true});
-        }
-    }
-
     return (
         <ScheduleContext.Provider value={{
             scheduleName,
             scheduleKey,
-            fetchPeriods,
             fetchSchedule,
-            fetchNotes,
-            periods,
-            setPeriods,
             schedule,
             setSchedule,
-            notes,
-            setNotes,
             isScheduleLoading,
             setIsScheduleLoading
         }}>
-            {children}
+            <PeriodsProvider>
+                <NotesProvider>
+                    {children}
+                </NotesProvider>
+            </PeriodsProvider>
         </ScheduleContext.Provider>
     );
 };

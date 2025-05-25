@@ -6,15 +6,17 @@ import {pagesPaths} from "../../../config";
 import {LoadingContext} from "../../../context/LoadingProvider";
 import {useAuth} from "../../../hooks/useAuth";
 import {NotificationContext} from "../../../context/NotificationProvider";
+import {AuthContext} from "../../../context/AuthProvider";
 
 const RegisterConfirm = () => {
     const {uidb64, token} = useParams();
 
+    const {isAuthCompleted} = useContext(AuthContext);
     const {showNotification} = useContext(NotificationContext);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
-    const {isAuthCompleted} = useAuth(setIsLoading, {
+    useAuth(setIsLoading, {
         redirectAuthUser: true
     })
 
@@ -32,7 +34,7 @@ const RegisterConfirm = () => {
             navigate(pagesPaths.accounts.login);
         }
 
-        confirm();
+        if (isAuthCompleted) confirm();
     }, [isAuthCompleted]);
 
     return (
