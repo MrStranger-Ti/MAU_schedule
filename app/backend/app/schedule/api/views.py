@@ -29,7 +29,7 @@ from utils.local import get_json
 
 @extend_schema_view(
     list=extend_schema(
-        tags=["Group"],
+        tags=["Schedule"],
         summary="Getting institutes list",
         responses={
             200: OpenApiResponse(
@@ -49,7 +49,7 @@ from utils.local import get_json
         },
     ),
     retrieve=extend_schema(
-        tags=["Group"],
+        tags=["Schedule"],
         summary="Getting institute details",
         responses={
             200: OpenApiResponse(
@@ -82,7 +82,7 @@ class GroupScheduleApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        tags=["Group"],
+        tags=["Schedule"],
         summary="Getting group schedule",
         description="User must have institute, course and group.",
         parameters=[
@@ -126,7 +126,7 @@ class TeachersKeysApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        tags=["Group"],
+        tags=["Schedule"],
         summary="Getting teachers keys for teacher schedule",
         description="Query param 'name' is required",
         parameters=[
@@ -164,7 +164,7 @@ class TeacherScheduleApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        tags=["Group"],
+        tags=["Schedule"],
         summary="Getting teacher schedule",
         description="Need to get teacher key",
         parameters=[
@@ -209,7 +209,7 @@ class SchedulePeriodsApiView(APIView, ParserResponseViewMixin):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        tags=["Group"],
+        tags=["Schedule"],
         summary="Getting schedule periods",
         responses={
             200: OpenApiResponse(

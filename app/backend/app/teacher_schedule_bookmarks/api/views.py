@@ -11,11 +11,11 @@ from teacher_schedule_bookmarks.models import TeacherScheduleBookmark
 
 @extend_schema_view(
     list=extend_schema(
-        tags=["Teacher Group Bookmarks"],
+        tags=["Teacher Bookmarks"],
         summary="Get list of own teacher schedule bookmarks",
     ),
     create=extend_schema(
-        tags=["Teacher Group Bookmarks"],
+        tags=["Teacher Bookmarks"],
         summary="Create and get new teacher schedule bookmark",
         responses={
             201: TeacherScheduleBookmarkSerializer,
@@ -23,7 +23,7 @@ from teacher_schedule_bookmarks.models import TeacherScheduleBookmark
         },
     ),
     retrieve=extend_schema(
-        tags=["Teacher Group Bookmarks"],
+        tags=["Teacher Bookmarks"],
         summary="Get teacher schedule bookmark by id",
         responses={
             200: TeacherScheduleBookmarkSerializer,
@@ -31,7 +31,7 @@ from teacher_schedule_bookmarks.models import TeacherScheduleBookmark
         },
     ),
     update=extend_schema(
-        tags=["Teacher Group Bookmarks"],
+        tags=["Teacher Bookmarks"],
         summary="Completely update teacher schedule bookmark by id",
         responses={
             200: TeacherScheduleBookmarkSerializer,
@@ -40,7 +40,7 @@ from teacher_schedule_bookmarks.models import TeacherScheduleBookmark
         },
     ),
     partial_update=extend_schema(
-        tags=["Teacher Group Bookmarks"],
+        tags=["Teacher Bookmarks"],
         summary="Partially update teacher schedule bookmark by id",
         responses={
             200: TeacherScheduleBookmarkSerializer,
@@ -49,7 +49,7 @@ from teacher_schedule_bookmarks.models import TeacherScheduleBookmark
         },
     ),
     destroy=extend_schema(
-        tags=["Teacher Group Bookmarks"],
+        tags=["Teacher Bookmarks"],
         summary="Delete teacher schedule bookmark by id",
         responses={
             204: OpenApiResponse(description="No content"),

@@ -147,15 +147,20 @@ class TeacherKeysParser(CacheParser):
         )
         return params
 
-    def _parse_data(self, soup: bs4.BeautifulSoup) -> dict[str, str]:
-        teacher_keys = {}
+    def _parse_data(self, soup: bs4.BeautifulSoup) -> list[dict[str, str]]:
+        teacher_keys = []
 
         links = soup.select("td b a")
         for link in links:
             parsed_url = urlparse(link.get("href"))
             query_params = parse_qs(parsed_url.query)
             key = query_params.get("key")
-            teacher_keys[link.text] = key[0]
+            teacher_keys.append(
+                {
+                    "name": link.text,
+                    "key": key[0],
+                }
+            )
 
         return teacher_keys
 
