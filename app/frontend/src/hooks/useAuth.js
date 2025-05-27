@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
-import {pagesPaths} from "../config";
 import {useNavigate} from "react-router-dom";
-import {AuthContext} from "../context/AuthProvider";
+import {AuthContext} from "../context/main/AuthProvider";
+import {pagesPaths} from "../AppRoutes";
 
 export const useAuth = (setIsLoading, {
     stopLoading = true,
@@ -9,7 +9,7 @@ export const useAuth = (setIsLoading, {
     redirectAuthUser = false
 }) => {
     const navigate = useNavigate();
-    const {isAuth, isAuthCompleted, setIsAuthCompleted, login} = useContext(AuthContext);
+    const {isAuth, setIsAuthCompleted, login} = useContext(AuthContext);
     const [isLogingCompleted, setIsLoginCompleted] = useState(false);
 
     useEffect(() => {

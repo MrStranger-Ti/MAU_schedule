@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import bearFace from "../assets/images/logo/bear_face.png";
 import "../styles/pages/index.css";
-import {pagesPaths} from "../config";
 import {useAuth} from "../hooks/useAuth";
 import Spinner from "../components/Spinner/Spinner";
-import {LoadingContext} from "../context/LoadingProvider";
+import {LoadingContext} from "../context/main/LoadingProvider";
+import {pagesPaths} from "../AppRoutes";
 
 const IndexPage = () => {
     const [isLoading, setIsLoading] = useState(true);

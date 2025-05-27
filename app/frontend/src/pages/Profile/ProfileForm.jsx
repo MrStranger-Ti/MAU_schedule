@@ -7,9 +7,9 @@ import userService from "../../services/user";
 import InstituteService from "../../services/institute";
 import {Helmet} from "react-helmet";
 import Select from "../../components/UI/Form/Select";
-import {AuthContext} from "../../context/AuthProvider";
+import {AuthContext} from "../../context/main/AuthProvider";
 import LoadingButton from "../../components/UI/Button/LoadingButton";
-import {NotificationContext} from "../../context/NotificationProvider";
+import {NotificationContext} from "../../context/main/NotificationProvider";
 
 const ProfileForm = ({
                          setUpdating,

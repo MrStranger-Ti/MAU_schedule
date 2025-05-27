@@ -1,10 +1,10 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import {ScheduleRowContext} from "./ScheduleRowProvider";
 import NoteService from "../../services/note";
-import {AuthContext} from "../AuthProvider";
+import {AuthContext} from "../main/AuthProvider";
 import {ScheduleContext} from "./ScheduleProvider";
 import {NotesContext} from "./NotesProvider";
-import {NotificationContext} from "../NotificationProvider";
+import {NotificationContext} from "../main/NotificationProvider";
 
 export const EditorContext = createContext(null);
 

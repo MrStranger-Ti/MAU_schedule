@@ -3,9 +3,10 @@ import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
-import {NotificationContext} from "../../../context/NotificationProvider";
+import {NotificationContext} from "../../../context/main/NotificationProvider";
 import {useNavigate} from "react-router-dom";
-import {pagesPaths} from "../../../config";
+
+import {pagesPaths} from "../../../AppRoutes";
 
 const RegisterForm = ({institutes}) => {
     const {showNotification} = useContext(NotificationContext);

@@ -3,12 +3,12 @@ import BaseAuth from "../BaseAuth";
 import {Helmet} from "react-helmet";
 import InstituteService from "../../../services/institute";
 import {Link} from "react-router-dom";
-import {pagesPaths} from "../../../config";
 import RegisterForm from "./RegisterForm";
 import {useAuth} from "../../../hooks/useAuth";
-import {LoadingContext} from "../../../context/LoadingProvider";
-import {NotificationContext} from "../../../context/NotificationProvider";
-import {AuthContext} from "../../../context/AuthProvider";
+import {LoadingContext} from "../../../context/main/LoadingProvider";
+import {NotificationContext} from "../../../context/main/NotificationProvider";
+import {AuthContext} from "../../../context/main/AuthProvider";
+import {pagesPaths} from "../../../AppRoutes";
 
 const Register = () => {
     const {isAuthCompleted} = useContext(AuthContext);

@@ -4,8 +4,8 @@ import ProfileForm from "./ProfileForm";
 import DisplayProfile from "./DisplayProfile";
 import InstituteService from "../../services/institute";
 import {useAuth} from "../../hooks/useAuth";
-import {LoadingContext} from "../../context/LoadingProvider";
-import {NotificationContext} from "../../context/NotificationProvider";
+import {LoadingContext} from "../../context/main/LoadingProvider";
+import {NotificationContext} from "../../context/main/NotificationProvider";
 
 const Profile = () => {
     const {showNotification} = useContext(NotificationContext);

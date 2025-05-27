@@ -1,7 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import BearBody from  "../../assets/images/logo/bear_body.png";
-import {config, pagesPaths} from "../../config";
+import {config} from "../../config";
+import {pagesPaths} from "../../AppRoutes";
 
 const Footer = () => {
     return (

@@ -2,11 +2,11 @@ import React, {useState} from "react";
 import BaseAuth from "../BaseAuth";
 import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
-import {pagesPaths} from "../../../config";
 import BearFace from "../../../assets/images/logo/bear_face.png";
 import PasswordResetForm from "./PasswordResetForm";
-import {LoadingContext} from "../../../context/LoadingProvider";
+import {LoadingContext} from "../../../context/main/LoadingProvider";
 import {useAuth} from "../../../hooks/useAuth";
+import {pagesPaths} from "../../../AppRoutes";
 
 const PasswordReset = () => {
     const [isLoading, setIsLoading] = useState(true);

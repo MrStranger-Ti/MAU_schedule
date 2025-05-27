@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import {FormContext} from "../../../context/FormProvider";
+import {FormContext} from "../../../context/UI/FormProvider";
 
 const InputErrors = ({inputName}) => {
     const {formErrors} = useContext(FormContext);

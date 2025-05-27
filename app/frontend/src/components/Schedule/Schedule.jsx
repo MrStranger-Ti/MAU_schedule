@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {ScheduleContext} from "../../context/schedule/ScheduleProvider";
-import {LoadingContext} from "../../context/LoadingProvider";
-import {AuthContext} from "../../context/AuthProvider";
+import {LoadingContext} from "../../context/main/LoadingProvider";
+import {AuthContext} from "../../context/main/AuthProvider";
 import {PeriodsContext} from "../../context/schedule/PeriodsProvider";
 import {NotesContext} from "../../context/schedule/NotesProvider";
 import {getFormattedDate} from "../../utils/date";

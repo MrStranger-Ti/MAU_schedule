@@ -1,5 +1,5 @@
 import React, {createContext, useState} from 'react';
-import NotificationsBlock from "../components/UI/Notification/NotificationsBlock";
+import NotificationsBlock from "../../components/UI/Notification/NotificationsBlock";
 import {v4 as getUniqueKey} from "uuid";
 
 export const NotificationContext = createContext(null);

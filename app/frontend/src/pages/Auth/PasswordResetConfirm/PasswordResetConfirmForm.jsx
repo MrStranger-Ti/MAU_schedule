@@ -6,8 +6,9 @@ import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
 import {useNavigate, useParams} from "react-router-dom";
 import LoadingButton from "../../../components/UI/Button/LoadingButton";
-import {NotificationContext} from "../../../context/NotificationProvider";
-import {pagesPaths} from "../../../config";
+import {NotificationContext} from "../../../context/main/NotificationProvider";
+
+import {pagesPaths} from "../../../AppRoutes";
 
 const PasswordResetConfirmForm = () => {
     const {showNotification} = useContext(NotificationContext);

@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {Helmet} from "react-helmet";
-import {AuthContext} from "../../context/AuthProvider";
+import {AuthContext} from "../../context/main/AuthProvider";
 import LoadingButton from "../../components/UI/Button/LoadingButton";
 
 const DisplayProfile = ({isBtnLoading, loadUpdate}) => {

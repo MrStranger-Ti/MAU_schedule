@@ -1,7 +1,7 @@
 import {createContext, useState} from "react";
-import userService from "../services/user";
-import InstituteService from "../services/institute";
-import AuthService from "../services/auth";
+import userService from "../../services/user";
+import InstituteService from "../../services/institute";
+import AuthService from "../../services/auth";
 
 export const AuthContext = createContext(null);
 

@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useState} from "react";
 import NoteService from "../../services/note";
-import {NotificationContext} from "../NotificationProvider";
+import {NotificationContext} from "../main/NotificationProvider";
 
 export const NotesContext = createContext(null);
 

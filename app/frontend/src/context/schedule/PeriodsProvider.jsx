@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useState} from "react";
 import ScheduleService from "../../services/schedule";
-import {NotificationContext} from "../NotificationProvider";
+import {NotificationContext} from "../main/NotificationProvider";
 
 export const PeriodsContext = createContext(null);
 

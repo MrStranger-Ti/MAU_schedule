@@ -1,15 +1,21 @@
-import React, {createContext, useContext, useState} from "react";
-import {NotificationContext} from "../NotificationProvider";
+import React, {createContext, useContext, useEffect, useState} from "react";
+import {NotificationContext} from "../main/NotificationProvider";
 import ScheduleService from "../../services/schedule";
 import NotesProvider from "./NotesProvider";
 import PeriodsProvider from "./PeriodsProvider";
 
 export const ScheduleContext = createContext(null);
 
+const scheduleNames = ["group", "teacher"]
+
 const ScheduleProvider = ({children, scheduleName, scheduleKey}) => {
     const {showNotification} = useContext(NotificationContext);
     const [schedule, setSchedule] = useState({});
     const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+
+    useEffect(() => {
+        if (!scheduleNames.includes(scheduleName)) scheduleName = "group";
+    }, []);
 
     const fetchSchedule = async (period) => {
         const service = new ScheduleService();
@@ -22,19 +28,15 @@ const ScheduleProvider = ({children, scheduleName, scheduleKey}) => {
                 getScheduleFunc = service.getTeacherSchedule.bind(service);
                 break;
             default:
-                break;
+                throw new Error(`Invalid scheduleName: ${scheduleName}`);
         }
 
-        if (typeof getScheduleFunc === "function") {
-            const {success, data} = await getScheduleFunc(period);
-            if (success) {
-                setSchedule(data);
-            } else {
-                setSchedule({});
-                showNotification(data.detail, {error: true});
-            }
+        const {success, data} = await getScheduleFunc(period);
+        if (success) {
+            setSchedule(data);
         } else {
-            throw new Error(`Invalid scheduleName: ${scheduleName}`);
+            setSchedule({});
+            showNotification(data.detail, {error: true});
         }
     }
 

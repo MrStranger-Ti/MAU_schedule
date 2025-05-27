@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import BaseAuth from "../BaseAuth";
 import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
-import {pagesPaths} from "../../../config";
 import PasswordResetConfirmForm from "./PasswordResetConfirmForm";
-import {LoadingContext} from "../../../context/LoadingProvider";
+import {LoadingContext} from "../../../context/main/LoadingProvider";
 import {useAuth} from "../../../hooks/useAuth";
+import {pagesPaths} from "../../../AppRoutes";
 
 const PasswordResetConfirm = () => {
     const [isLoading, setIsLoading] = useState(true);

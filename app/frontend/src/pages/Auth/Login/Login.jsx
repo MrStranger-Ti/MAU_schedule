@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import BaseAuth from "../BaseAuth";
-import {pagesPaths} from "../../../config";
 import LoginForm from "./LoginForm";
 import {useAuth} from "../../../hooks/useAuth";
-import {LoadingContext} from "../../../context/LoadingProvider";
+import {LoadingContext} from "../../../context/main/LoadingProvider";
+import {pagesPaths} from "../../../AppRoutes";
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(true);

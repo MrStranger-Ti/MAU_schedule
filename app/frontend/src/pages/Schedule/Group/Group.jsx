@@ -1,9 +1,9 @@
 import React, {useContext, useState} from "react";
 import BaseSchedule from "../BaseSchedule";
 import {useAuth} from "../../../hooks/useAuth";
-import {LoadingContext} from "../../../context/LoadingProvider";
+import {LoadingContext} from "../../../context/main/LoadingProvider";
 import ScheduleProvider from "../../../context/schedule/ScheduleProvider";
-import {AuthContext} from "../../../context/AuthProvider";
+import {AuthContext} from "../../../context/main/AuthProvider";
 import Schedule from "../../../components/Schedule/Schedule";
 
 const Group = () => {

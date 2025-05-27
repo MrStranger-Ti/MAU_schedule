@@ -2,11 +2,11 @@ import React, {useContext, useEffect, useState} from "react";
 import BaseAuth from "../BaseAuth";
 import {useNavigate, useParams} from "react-router-dom";
 import AuthService from "../../../services/auth";
-import {pagesPaths} from "../../../config";
-import {LoadingContext} from "../../../context/LoadingProvider";
+import {LoadingContext} from "../../../context/main/LoadingProvider";
 import {useAuth} from "../../../hooks/useAuth";
-import {NotificationContext} from "../../../context/NotificationProvider";
-import {AuthContext} from "../../../context/AuthProvider";
+import {NotificationContext} from "../../../context/main/NotificationProvider";
+import {AuthContext} from "../../../context/main/AuthProvider";
+import {pagesPaths} from "../../../AppRoutes";
 
 const RegisterConfirm = () => {
     const {uidb64, token} = useParams();

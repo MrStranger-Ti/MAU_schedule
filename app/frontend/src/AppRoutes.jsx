@@ -1,15 +1,33 @@
 import React from "react";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import IndexPage from "./pages/IndexPage";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import RegisterConfirm from "./pages/Auth/RegisterConfirm/RegisterConfirm";
 import PasswordReset from "./pages/Auth/PasswordReset/PasswordReset";
-import {pagesPaths} from "./config";
 import PasswordResetConfirm from "./pages/Auth/PasswordResetConfirm/PasswordResetConfirm";
 import Group from "./pages/Schedule/Group/Group";
 import TeacherSearch from "./pages/Schedule/TeacherSearch/TeacherSearch";
+
+export const pagesPaths = {
+    index: "/",
+    accounts: {
+        login: "/accounts/login/",
+        register: "/accounts/register/",
+        baseRegisterConfirm: "/accounts/register/confirm/",
+        registerConfirm: "/accounts/register/confirm/:uidb64/:token/",
+        passwordReset: "/accounts/password-reset/",
+        basePasswordResetConfirm: "/accounts/password-reset/confirm/",
+        passwordResetConfirm: "/accounts/password-reset/confirm/:uidb64/:token/",
+        profile: "/accounts/profile/",
+    },
+    schedule: {
+        group: "/schedule/group/",
+        teacherSearch: "/schedule/teacher-search/",
+        getTeacherURL: (key) => `/schedule/teacher/${key}/`
+    }
+}
 
 const AppRoutes = () => {
     return (

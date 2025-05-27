@@ -1,7 +1,8 @@
 import axios from "axios";
 import {config} from "../config"
 import BaseService from "./base";
-import {pagesPaths} from "../config";
+
+import {pagesPaths} from "../AppRoutes";
 
 export default class AuthService extends BaseService {
     async setToken({email, password}) {

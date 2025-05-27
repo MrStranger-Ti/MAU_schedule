@@ -5,8 +5,8 @@ import Input from "../../../components/UI/Form/Input";
 import Form from "../../../components/UI/Form/Form";
 import {useNavigate} from "react-router-dom";
 import AuthService from "../../../services/auth";
-import {pagesPaths} from "../../../config";
 import LoadingButton from "../../../components/UI/Button/LoadingButton";
+import {pagesPaths} from "../../../AppRoutes";
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({email: "", password: ""});

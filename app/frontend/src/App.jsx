@@ -1,7 +1,7 @@
 import React from 'react';
 import AppRoutes from "./AppRoutes";
-import AuthProvider from "./context/AuthProvider";
-import NotificationProvider from "./context/NotificationProvider";
+import AuthProvider from "./context/main/AuthProvider";
+import NotificationProvider from "./context/main/NotificationProvider";
 
 function App() {
     return (

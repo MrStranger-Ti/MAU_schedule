@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import "../../styles/pages/auth.css";
 import Spinner from "../../components/Spinner/Spinner";
-import {LoadingContext} from "../../context/LoadingProvider";
+import {LoadingContext} from "../../context/main/LoadingProvider";
 
 const BaseAuth = ({children}) => {
     const {isLoading} = useContext(LoadingContext);
