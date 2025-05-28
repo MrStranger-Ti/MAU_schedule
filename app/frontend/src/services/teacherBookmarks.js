@@ -13,6 +13,22 @@ export default class TeacherBookmarksService extends BaseService {
         );
     }
 
+    async create({teacherName, teacherKey, userId}) {
+        const data = JSON.stringify({
+            teacher_name: teacherName,
+            teacher_key: teacherKey,
+            user: userId
+        })
+        return await this.getResponse(() =>
+            axios.post(url, data, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                withCredentials: true
+            })
+        )
+    }
+
     async delete(id) {
         return await this.getResponse(() =>
             axios.delete(url + id + "/", {

@@ -9,6 +9,7 @@ import PasswordReset from "./pages/Auth/PasswordReset/PasswordReset";
 import PasswordResetConfirm from "./pages/Auth/PasswordResetConfirm/PasswordResetConfirm";
 import Group from "./pages/Schedule/Group/Group";
 import TeacherSearch from "./pages/Schedule/TeacherSearch/TeacherSearch";
+import Teacher from "./pages/Schedule/Teacher/Teacher";
 
 export const pagesPaths = {
     index: "/",
@@ -25,6 +26,7 @@ export const pagesPaths = {
     schedule: {
         group: "/schedule/group/",
         teacherSearch: "/schedule/teacher-search/",
+        teacher: `/schedule/teacher/:key/`,
         getTeacherURL: (key) => `/schedule/teacher/${key}/`
     }
 }
@@ -71,7 +73,7 @@ const AppRoutes = () => {
                 />
                 <Route
                     path={pagesPaths.schedule.teacher}
-                    element=""
+                    element={<Teacher/>}
                 />
             </Routes>
         </BrowserRouter>

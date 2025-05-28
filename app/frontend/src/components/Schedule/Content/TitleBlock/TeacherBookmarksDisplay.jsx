@@ -34,7 +34,7 @@ c-46 93 -112 158 -206 202 l-67 32 -945 2 c-882 2 -949 1 -1000 -16z m1838
                             <li className="bookmarks-item flex">
                                 <Link
                                     className="dropdown-item schedule__bookmark-link link"
-                                    to={pagesPaths.schedule.getTeacherURL(bookmark.key)}
+                                    to={pagesPaths.schedule.getTeacherURL(bookmark.teacher_key)}
                                 >
                                     {bookmark.teacher_name}
                                 </Link>

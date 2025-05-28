@@ -1,10 +1,12 @@
 import React, {createContext, useContext, useState} from "react";
 import TeacherBookmarksService from "../../services/teacherBookmarks";
 import {NotificationContext} from "../main/NotificationProvider";
+import {AuthContext} from "../main/AuthProvider";
 
 export const TeacherBookmarksContext = createContext(null);
 
 const TeacherBookmarksProvider = ({children}) => {
+    const {userData} = useContext(AuthContext);
     const {showNotification} = useContext(NotificationContext);
     const [teacherBookmarks, setTeacherBookmarks] = useState([]);
 
@@ -15,6 +17,21 @@ const TeacherBookmarksProvider = ({children}) => {
             setTeacherBookmarks(data.results);
         } else {
             setTeacherBookmarks([]);
+            showNotification(data.detail, {error: true});
+        }
+    }
+
+    const createTeacherBookmark = async (teacherName, teacherKey) => {
+        const service = new TeacherBookmarksService();
+        const {success, data} = await service.create({
+            teacherName,
+            teacherKey,
+            userData: userData.id
+        });
+        if (success) {
+            setTeacherBookmarks([...teacherBookmarks, data]);
+            showNotification("Закладка успешно создана");
+        } else {
             showNotification(data.detail, {error: true});
         }
     }
@@ -38,7 +55,7 @@ const TeacherBookmarksProvider = ({children}) => {
         <TeacherBookmarksContext.Provider value={{
             teacherBookmarks, setTeacherBookmarks,
             fetchTeacherBookmarks,
-            deleteTeacherBookmark
+            createTeacherBookmark ,deleteTeacherBookmark
         }}>
             {children}
         </TeacherBookmarksContext.Provider>

@@ -35,7 +35,7 @@ const PasswordResetConfirmForm = () => {
                 setIsBtnLoading(false);
             } else {
                 showNotification("Не удалось изменить пароль");
-                navigate(pagesPaths.accounts.login)
+                navigate(pagesPaths.accounts.login);
             }
         }
     }

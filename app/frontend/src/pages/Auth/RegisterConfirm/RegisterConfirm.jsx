@@ -26,9 +26,9 @@ const RegisterConfirm = () => {
             const {success} = await service.registerConfirm({uidb64, token});
 
             if (success) {
-                showNotification("Не удалось подтвердить почту");
-            } else {
                 showNotification("Почта успешно подтверждена");
+            } else {
+                showNotification("Не удалось подтвердить почту");
             }
 
             navigate(pagesPaths.accounts.login);
