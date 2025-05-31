@@ -1,9 +1,10 @@
 import React from "react";
-import ButtonSpinner from "../../Spinner/ButtonSpinner";
+import ButtonSpinner from "../../../Spinner/ButtonSpinner";
+import Button from "../Button/Button";
 
 const LoadingButton = ({children, isLoading, showChildrenOnLoad = true, ...props}) => {
     return (
-        <button disabled={isLoading && true} {...props}>
+        <Button disabled={isLoading && true} {...props}>
             {isLoading
                 ?
                 <React.Fragment>
@@ -15,7 +16,7 @@ const LoadingButton = ({children, isLoading, showChildrenOnLoad = true, ...props
                     {children}
                 </React.Fragment>
             }
-        </button>
+        </Button>
     );
 };
 

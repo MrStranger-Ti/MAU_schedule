@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import {Helmet} from "react-helmet";
 import {AuthContext} from "../../context/main/AuthProvider";
-import LoadingButton from "../../components/UI/Button/LoadingButton";
+import LoadingButton from "../../components/UI/Buttons/LoadingButton/LoadingButton";
 
 const DisplayProfile = ({isBtnLoading, loadUpdate}) => {
     const {userData} = useContext(AuthContext);

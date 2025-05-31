@@ -1,6 +1,6 @@
 import React from "react";
 import CollapseBtn from "./CollapseBtn";
-import LoadingButton from "../../../../UI/Button/LoadingButton";
+import LoadingButton from "../../../../UI/Buttons/LoadingButton/LoadingButton";
 import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
 
 const CreateBtns = ({isBtnLoading}) => {

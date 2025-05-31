@@ -7,9 +7,9 @@ import Register from "./pages/Auth/Register/Register";
 import RegisterConfirm from "./pages/Auth/RegisterConfirm/RegisterConfirm";
 import PasswordReset from "./pages/Auth/PasswordReset/PasswordReset";
 import PasswordResetConfirm from "./pages/Auth/PasswordResetConfirm/PasswordResetConfirm";
-import Group from "./pages/Schedule/Group/Group";
 import TeacherSearch from "./pages/Schedule/TeacherSearch/TeacherSearch";
-import Teacher from "./pages/Schedule/Teacher/Teacher";
+import GroupSchedulePage from "./pages/Schedule/Group/GroupSchedulePage/GroupSchedulePage";
+import TeacherSchedulePage from "./pages/Schedule/Teacher/TeacherSchedulePage/TeacherSchedulePage";
 
 export const pagesPaths = {
     index: "/",
@@ -26,8 +26,11 @@ export const pagesPaths = {
     schedule: {
         group: "/schedule/group/",
         teacherSearch: "/schedule/teacher-search/",
-        teacher: `/schedule/teacher/:key/`,
-        getTeacherURL: (key) => `/schedule/teacher/${key}/`
+        teacher: `/schedule/teacher/:keyName/`,
+        getTeacherURL: (key, name) => {
+            const encodedKeyName = encodeURIComponent(key + "~" + name);
+            return `/schedule/teacher/${encodedKeyName}/`;
+        }
     }
 }
 
@@ -65,7 +68,7 @@ const AppRoutes = () => {
                 />
                 <Route
                     path={pagesPaths.schedule.group}
-                    element={<Group/>}
+                    element={<GroupSchedulePage/>}
                 />
                 <Route
                     path={pagesPaths.schedule.teacherSearch}
@@ -73,7 +76,7 @@ const AppRoutes = () => {
                 />
                 <Route
                     path={pagesPaths.schedule.teacher}
-                    element={<Teacher/>}
+                    element={<TeacherSchedulePage/>}
                 />
             </Routes>
         </BrowserRouter>

@@ -9,10 +9,10 @@ const TeachersLinksList = ({teachersKeys}) => {
                 ?
                 <ul className="schedule__teacher-links">
                     {teachersKeys.map(item =>
-                        <li>
+                        <li key={item.teacherKey}>
                             <Link
                                 className="dark-link link"
-                                to={pagesPaths.schedule.getTeacherURL(item.key)}
+                                to={pagesPaths.schedule.getTeacherURL(item.key, item.name)}
                             >
                                 {item.name}
                             </Link>

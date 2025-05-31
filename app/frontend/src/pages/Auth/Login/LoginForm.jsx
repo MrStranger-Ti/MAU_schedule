@@ -5,7 +5,7 @@ import Input from "../../../components/UI/Form/Input";
 import Form from "../../../components/UI/Form/Form";
 import {useNavigate} from "react-router-dom";
 import AuthService from "../../../services/auth";
-import LoadingButton from "../../../components/UI/Button/LoadingButton";
+import LoadingButton from "../../../components/UI/Buttons/LoadingButton/LoadingButton";
 import {pagesPaths} from "../../../AppRoutes";
 
 const LoginForm = () => {

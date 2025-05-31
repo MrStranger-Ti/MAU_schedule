@@ -26,7 +26,7 @@ const TeacherBookmarksProvider = ({children}) => {
         const {success, data} = await service.create({
             teacherName,
             teacherKey,
-            userData: userData.id
+            userId: userData.id
         });
         if (success) {
             setTeacherBookmarks([...teacherBookmarks, data]);
@@ -45,17 +45,24 @@ const TeacherBookmarksProvider = ({children}) => {
                     bookmarkItem => bookmarkItem.id !== bookmark.id
                 )
             );
-            showNotification(`Закладка ${bookmark.teacher_name} успешно удалена`);
+            showNotification(`Закладка "${bookmark["teacher_name"]}" успешно удалена`);
         } else {
-            showNotification(`Не удалось удалить закладку ${bookmark.teacher_name}`);
+            showNotification(`Не удалось удалить закладку "${bookmark["teacher_key"]}"`);
         }
+    }
+
+    const existsTeacherBookmark = (teacherKey) => {
+        return teacherBookmarks.some(bookmark =>
+            bookmark["teacher_key"] === teacherKey
+        );
     }
 
     return (
         <TeacherBookmarksContext.Provider value={{
             teacherBookmarks, setTeacherBookmarks,
             fetchTeacherBookmarks,
-            createTeacherBookmark ,deleteTeacherBookmark
+            createTeacherBookmark, deleteTeacherBookmark,
+            existsTeacherBookmark
         }}>
             {children}
         </TeacherBookmarksContext.Provider>

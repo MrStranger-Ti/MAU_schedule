@@ -39,7 +39,7 @@ export default class NoteService extends BaseService {
         )
     }
 
-    async update(id, {text}) {
+    async update(id, text) {
         const data = JSON.stringify({text})
         return await this.getResponse(() =>
             axios.patch(url + id + "/", data, {

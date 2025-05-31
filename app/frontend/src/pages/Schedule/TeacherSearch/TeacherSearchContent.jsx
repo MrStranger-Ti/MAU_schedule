@@ -1,16 +1,14 @@
 import React, {useContext, useEffect, useState} from "react";
 import Form from "../../../components/UI/Form/Form";
 import Input from "../../../components/UI/Form/Input";
-import LoadingButton from "../../../components/UI/Button/LoadingButton";
+import LoadingButton from "../../../components/UI/Buttons/LoadingButton/LoadingButton";
 import {TeacherBookmarksContext} from "../../../context/schedule/TeacherBookmarksProvider";
 import {LoadingContext} from "../../../context/main/LoadingProvider";
 import {AuthContext} from "../../../context/main/AuthProvider";
 import Spinner from "../../../components/Spinner/Spinner";
-import TeacherBookmarksDisplay from "../../../components/Schedule/Content/TitleBlock/TeacherBookmarksDisplay";
+import TeacherBookmarksDisplay from "../../../components/Schedule/Content/TeacherBookmarks/TeacherBookmarksDisplay/TeacherBookmarksDisplay";
 import ScheduleService from "../../../services/schedule";
 import {NotificationContext} from "../../../context/main/NotificationProvider";
-import {Link} from "react-router-dom";
-import {pagesPaths} from "../../../AppRoutes";
 import TeachersLinksList from "./TeachersLinksList";
 
 const TeacherSearchContent = () => {

@@ -1,71 +1,75 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
+import {Link} from "react-router-dom";
 import {ScheduleContext} from "../../context/schedule/ScheduleProvider";
-import {LoadingContext} from "../../context/main/LoadingProvider";
-import {AuthContext} from "../../context/main/AuthProvider";
-import {PeriodsContext} from "../../context/schedule/PeriodsProvider";
 import {NotesContext} from "../../context/schedule/NotesProvider";
-import {getFormattedDate} from "../../utils/date";
+import {getFormattedDate, getWeekday} from "../../utils/date";
+import ScheduleRowProvider from "../../context/schedule/ScheduleRowProvider";
+import {config} from "../../config";
 import Spinner from "../Spinner/Spinner";
-import ScheduleTables from "./Tables/ScheduleTables";
-import TitleBlock from "./Content/TitleBlock/TitleBlock";
+import ScheduleRow from "./ScheduleRow/ScheduleRow";
 
 const Schedule = () => {
-    const {isLoading, setIsLoading} = useContext(LoadingContext);
-    const {isAuthCompleted} = useContext(AuthContext);
     const {
-        fetchPeriods,
-        periods,
-        currentPeriodValue,
-        setCurrentPeriodValue
-    } = useContext(PeriodsContext);
-    const {fetchSchedule, schedule, isScheduleLoading} = useContext(ScheduleContext);
-    const {fetchNotes} = useContext(NotesContext);
-    const [isLoadedData, setIsLoadedData] = useState(false);
+        scheduleName, scheduleKey,
+        schedule, isScheduleLoading
+    } = useContext(ScheduleContext);
+    const {notes} = useContext(NotesContext);
 
-    useEffect(() => {
-        const loadPage = async () => {
-            setIsLoading(true);
-
-            await fetchPeriods();
-            await fetchSchedule();
-            await fetchNotes();
-
-            setIsLoadedData(true);
-        }
-
-        if (isAuthCompleted) loadPage();
-    }, [isAuthCompleted]);
-
-    useEffect(() => {
-        if (isLoadedData) {
-            if (
-                currentPeriodValue === ""
-                && Object.keys(schedule).length > 0
-                && Object.keys(periods).length > 0
-            ) {
-                const isoWeekDay = getFormattedDate(Object.keys(schedule)[0]);
-                const currentPeriodIndex = periods.findIndex(period => period.name.startsWith(isoWeekDay));
-                setCurrentPeriodValue(periods[currentPeriodIndex].value);
-            }
-            setIsLoading(false);
-        }
-    }, [isLoadedData]);
+    const getRowNote = (day, lessonNumber) => {
+        return notes.find((note) =>
+            note.schedule_name === scheduleName
+            && note.schedule_key === scheduleKey
+            && note.day === day
+            && note.lesson_number === lessonNumber
+        );
+    }
 
     return (
         <React.Fragment>
-            {isLoading
+            {isScheduleLoading
                 ?
                 <Spinner/>
                 :
-                <div className="schedule__content">
-                    <TitleBlock/>
-                    {isScheduleLoading
+                <React.Fragment>
+                    {Object.keys(schedule).length !== 0
                         ?
-                        <Spinner/>
+                        <div className="schedule__list">
+                            {Object.entries(schedule).map(([day, dayTable], dayIndex) => (
+                                <React.Fragment key={dayIndex}>
+                                    <div className="schedule__table-block">
+                                        <div className="schedule__table-title-block flex">
+                                            <span className="schedule__table-descr">{getWeekday(day)}</span>
+                                            <span className="schedule__table-descr">{getFormattedDate(day)}</span>
+                                        </div>
+                                        <table className="schedule__table">
+                                            <thead></thead>
+                                            <tbody>
+                                            {dayTable.map((row, trIndex) => (
+                                                <ScheduleRowProvider
+                                                    row={row}
+                                                    day={day}
+                                                    lessonNumber={trIndex + 1}
+                                                    note={getRowNote(day, trIndex + 1)}
+                                                    key={trIndex}
+                                                >
+                                                    <ScheduleRow/>
+                                                </ScheduleRowProvider>
+                                            ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </React.Fragment>
+                            ))}
+                        </div>
                         :
-                        <ScheduleTables/>
+                        <div className="schedule__info-block">
+                            <p className="schedule__info">Расписание не найдено. Проверьте свои данные в профиле.</p>
+                            <p className="schedule__info">
+                                Также неполадки могут быть связаны с неработающим расписанием на <Link className="dark-link link" to={config.SCHEDULE_URL} target="_blank">сайте</Link> университета.
+                            </p>
+                        </div>
                     }
-                </div>
+                </React.Fragment>
             }
         </React.Fragment>
     );

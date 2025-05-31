@@ -32,9 +32,7 @@ const editorOptions = {
 };
 
 export const EditorProvider = ({children}) => {
-    const {userData} = useContext(AuthContext);
-    const {scheduleName, scheduleKey} = useContext(ScheduleContext);
-    const {notes, setNotes} = useContext(NotesContext);
+    const {createNote, updateNote, deleteNote} = useContext(NotesContext);
     const {
         day,
         lessonNumber,
@@ -53,21 +51,16 @@ export const EditorProvider = ({children}) => {
         editorRef.current = sunEditor;
     }
 
-    const createNote = async () => {
+    const createEditorNote = async () => {
         if (editorRef.current.getText() === "") return;
 
-        const service = new NoteService();
-        const {success, data} = await service.create({
-            schedule_name: scheduleName,
-            schedule_key: scheduleKey,
-            day: day,
-            lesson_number: lessonNumber,
-            text: editorRef.current.getContents(),
-            user: userData.id
-        })
+        const {success, data} = await createNote({
+            day,
+            lessonNumber,
+            text: editorRef.current.getContents()
+        });
 
         if (success) {
-            setNotes([...notes, data]);
             setRowNote(data);
             setEditorText(data.text);
             setEditorMode(editorModes.display);
@@ -80,18 +73,17 @@ export const EditorProvider = ({children}) => {
         }
     }
 
-    const updateNote = async () => {
+    const updateEditorNote = async () => {
         if (editorRef.current.getContents() === rowNote.text) {
             setEditorMode(editorModes.display);
             return;
         }
 
-        const service = new NoteService();
-        const {success, data} = await service.update(rowNote.id, {
-            text: editorRef.current.getContents(),
-        })
+        const {success, data} = await updateNote({
+            id: rowNote.id,
+            text: editorRef.current.getContents()
+        });
         if (success) {
-            setNotes([...notes, data]);
             setRowNote(data);
             setEditorText(data.text);
             setEditorMode(editorModes.display);
@@ -101,11 +93,9 @@ export const EditorProvider = ({children}) => {
         }
     }
 
-    const deleteNote = async () => {
-        const service = new NoteService();
-        const {success} = await service.delete(rowNote.id)
+    const deleteEditorNote = async () => {
+        const {success} = await deleteNote({id: rowNote.id});
         if (success) {
-            setNotes(notes.filter((iterNote) => iterNote.id !== rowNote.id));
             setRowNote(null);
             setEditorText("");
             setEditorMode(editorModes.create);
@@ -121,7 +111,7 @@ export const EditorProvider = ({children}) => {
             editorMode, setEditorMode,
             editorText, setEditorText,
             getSunEditorInstance,
-            createNote, updateNote, deleteNote
+            createEditorNote, updateEditorNote, deleteEditorNote
         }}>
             {children}
         </EditorContext.Provider>

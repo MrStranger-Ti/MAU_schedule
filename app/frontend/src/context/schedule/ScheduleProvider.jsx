@@ -1,54 +1,40 @@
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useState} from "react";
 import {NotificationContext} from "../main/NotificationProvider";
 import ScheduleService from "../../services/schedule";
 import NotesProvider from "./NotesProvider";
 import PeriodsProvider from "./PeriodsProvider";
+import {AuthContext} from "../main/AuthProvider";
+import {useParams} from "react-router-dom";
+import TeacherBookmarksProvider from "./TeacherBookmarksProvider";
 
 export const ScheduleContext = createContext(null);
 
-const scheduleNames = ["group", "teacher"]
-
-const ScheduleProvider = ({children, scheduleName, scheduleKey}) => {
+const GroupScheduleProvider = ({children}) => {
+    const {userData} = useContext(AuthContext);
     const {showNotification} = useContext(NotificationContext);
     const [schedule, setSchedule] = useState({});
     const [isScheduleLoading, setIsScheduleLoading] = useState(false);
-
-    useEffect(() => {
-        if (!scheduleNames.includes(scheduleName)) scheduleName = "group";
-    }, []);
+    const [isScheduleLoaded, setIsScheduleLoaded] = useState(false);
 
     const fetchSchedule = async (period) => {
         const service = new ScheduleService();
-        let getScheduleFunc = null;
-        switch (scheduleName) {
-            case "group":
-                getScheduleFunc = service.getGroupSchedule.bind(service);
-                break;
-            case "teacher":
-                getScheduleFunc = service.getTeacherSchedule.bind(service);
-                break;
-            default:
-                throw new Error(`Invalid scheduleName: ${scheduleName}`);
-        }
-
-        const {success, data} = await getScheduleFunc(period);
+        const {success, data} = await service.getGroupSchedule(period);
         if (success) {
             setSchedule(data);
         } else {
             setSchedule({});
             showNotification(data.detail, {error: true});
         }
+
+        setIsScheduleLoaded(true);
     }
 
     return (
         <ScheduleContext.Provider value={{
-            scheduleName,
-            scheduleKey,
-            fetchSchedule,
-            schedule,
-            setSchedule,
-            isScheduleLoading,
-            setIsScheduleLoading
+            scheduleName: "group", scheduleKey: userData.group,
+            fetchSchedule, isScheduleLoaded,
+            schedule, setSchedule,
+            isScheduleLoading, setIsScheduleLoading
         }}>
             <PeriodsProvider>
                 <NotesProvider>
@@ -59,4 +45,50 @@ const ScheduleProvider = ({children, scheduleName, scheduleKey}) => {
     );
 };
 
-export default ScheduleProvider;
+const TeacherScheduleProvider = ({children}) => {
+    const {keyName} = useParams();
+    const {showNotification} = useContext(NotificationContext);
+    const [schedule, setSchedule] = useState({});
+    const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+
+    const decodeKeyName = () => {
+        const [teacherKey, teacherName] = decodeURIComponent(keyName).split("~");
+        return {teacherKey, teacherName};
+    }
+
+    const fetchSchedule = async (period) => {
+        const service = new ScheduleService();
+        const {success, data} = await service.getTeacherSchedule(
+            period,
+            decodeKeyName().teacherKey
+        );
+        if (success) {
+            setSchedule(data);
+        } else {
+            setSchedule({});
+            showNotification(data.detail, {error: true});
+        }
+    }
+
+    return (
+        <ScheduleContext.Provider value={{
+            ...decodeKeyName(),
+            scheduleKey: decodeKeyName().teacherKey,
+            fetchSchedule,
+            schedule,
+            setSchedule,
+            isScheduleLoading,
+            setIsScheduleLoading
+        }}>
+            <PeriodsProvider>
+                <NotesProvider>
+                    <TeacherBookmarksProvider>
+                        {children}
+                    </TeacherBookmarksProvider>
+                </NotesProvider>
+            </PeriodsProvider>
+        </ScheduleContext.Provider>
+    );
+};
+
+export {GroupScheduleProvider, TeacherScheduleProvider};

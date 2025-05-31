@@ -357,11 +357,11 @@ main-select > .error-input,
 }
 
 .notification__icon-ok {
-    background-image: url("../../assets/svgs/icons/ok.svg");
+    background-image: url("../../assets/icons/ok.svg");
 }
 
 .notification__icon-error {
-    background-image: url("../../assets/svgs/icons/error.svg");
+    background-image: url("../../assets/icons/error.svg");
 }
 
 

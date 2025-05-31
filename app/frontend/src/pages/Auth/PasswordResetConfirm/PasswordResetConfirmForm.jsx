@@ -5,7 +5,7 @@ import Input from "../../../components/UI/Form/Input";
 import Form from "../../../components/UI/Form/Form";
 import AuthService from "../../../services/auth";
 import {useNavigate, useParams} from "react-router-dom";
-import LoadingButton from "../../../components/UI/Button/LoadingButton";
+import LoadingButton from "../../../components/UI/Buttons/LoadingButton/LoadingButton";
 import {NotificationContext} from "../../../context/main/NotificationProvider";
 
 import {pagesPaths} from "../../../AppRoutes";

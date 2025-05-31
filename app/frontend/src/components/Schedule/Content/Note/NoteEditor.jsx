@@ -12,7 +12,7 @@ const NoteEditor = () => {
         editorMode,
         editorText, setEditorText,
         getSunEditorInstance,
-        createNote, updateNote, deleteNote
+        createEditorNote, updateEditorNote, deleteEditorNote
     } = useContext(EditorContext);
     const [ButtonsComponent, setButtonsComponent] = useState(null);
     const [isBtnLoading, setIsBtnLoading] = useState(false);
@@ -27,22 +27,24 @@ const NoteEditor = () => {
         setButtonsComponent(ButtonsGroups[editorMode]);
     }, [editorMode, isBtnLoading]);
 
-    let onSubmitFunc = null;
-    if (editorMode === editorModes.display) {
-        onSubmitFunc = deleteNote;
-    } else if (editorMode === editorModes.create) {
-        onSubmitFunc = createNote;
-    } else {
-        onSubmitFunc = updateNote;
+    const getAction = () => {
+        const editorActions = {
+            [editorModes.display]: deleteEditorNote,
+            [editorModes.create]: createEditorNote,
+            [editorModes.update]: updateEditorNote
+        }
+        return editorActions[editorMode] || null;
     }
+
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        if (typeof onSubmitFunc === "function") {
+        const action = getAction();
+        if (typeof action === "function") {
             setIsBtnLoading(true);
 
-            await onSubmitFunc();
+            await action();
 
             setIsBtnLoading(false);
         }

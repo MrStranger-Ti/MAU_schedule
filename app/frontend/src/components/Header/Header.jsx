@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {ReactComponent as MenuSVG} from "../../assets/svgs/icons/menu.svg";
+import {ReactComponent as MenuSVG} from "../../assets/icons/menu.svg";
 import bearFace from "../../assets/images/logo/bear_face.png";
 import {Link, useNavigate} from "react-router-dom";
 import {LoadingContext} from "../../context/main/LoadingProvider";

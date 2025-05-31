@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {EditorContext} from "../../../../../context/schedule/EditorProvider";
 import CollapseBtn from "./CollapseBtn";
-import LoadingButton from "../../../../UI/Button/LoadingButton";
+import LoadingButton from "../../../../UI/Buttons/LoadingButton/LoadingButton";
 import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
 import {ScheduleRowContext} from "../../../../../context/schedule/ScheduleRowProvider";
 
