@@ -30,7 +30,6 @@ INTERNAL_IPS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
-    "http://147.45.103.191:1337",
 ]
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
@@ -40,6 +39,7 @@ SECURE_SSL_REDIRECT = True
 CORS_ALLOWED_ORIGINS = [
     "https://localhost:3000",
     "https://127.0.0.1:3000",
+    "https://0.0.0.0:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -82,7 +82,6 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -117,10 +116,10 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "MauSchedule"),
-        "USER": os.getenv("POSTGRES_USER", "MauUser"),
+        "NAME": os.getenv("POSTGRES_DB", "mau_schedule"),
+        "USER": os.getenv("POSTGRES_USER", "mau_user"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "12345"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+        "HOST": os.getenv("POSTGRES_HOST", "postgres_db"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
         "TEST": {
             "NAME": "test_mau",
@@ -244,7 +243,7 @@ DEVELOPER_URL = "https://t.me/MrStrangerTi"
 
 # Redis
 
-REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = os.getenv("REDIS_PORT", "6379")
 
 
