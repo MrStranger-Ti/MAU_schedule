@@ -1,4 +1,0 @@
-{% autoescape off %}
-  Для подтверждения почты перейдите по ссылке:
-  http://{{ domain }}:{% url 'mau_auth:registration_email_confirm' uidb64=uid token=token%}
-{% endautoescape %}

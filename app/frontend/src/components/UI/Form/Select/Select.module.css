@@ -1,0 +1,4 @@
+.Option:hover,
+.Option:checked {
+    background-color: var(--light-blue);
+}

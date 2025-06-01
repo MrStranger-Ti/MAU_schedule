@@ -1,0 +1,96 @@
+import React, {useContext} from "react";
+import {EditorContext} from "../../../../../context/schedule/EditorProvider";
+import CollapseBtn from "./CollapseBtn";
+import LoadingButton from "../../../../UI/Buttons/LoadingButton/LoadingButton";
+import AdaptiveCollapseBtn from "./AdaptiveCollapseBtn";
+
+const DisplayBtns = ({isBtnLoading}) => {
+    const {setEditorMode, editorModes} = useContext(EditorContext);
+
+    return (
+        <React.Fragment>
+            <div className="note-block__btns flex">
+                <div className="note-block__btns-block">
+                    <CollapseBtn/>
+                </div>
+                <div className="note-block__btns-block">
+                    <button
+                        className="btn"
+                        type="button"
+                        onClick={() => setEditorMode(editorModes.update)}
+                    >
+                        Редактировать
+                    </button>
+                    <LoadingButton
+                        isLoading={isBtnLoading}
+                        className="btn"
+                        type="submit"
+                    >
+                        Удалить
+                    </LoadingButton>
+                </div>
+            </div>
+            <div className="note-block__adaptive-btns flex">
+                <div className="note-block__btns-block">
+                    <AdaptiveCollapseBtn/>
+                </div>
+                <div className="note-block__btns-adaptive-block">
+                    <button
+                        className="btn"
+                        type="button"
+                        onClick={() => setEditorMode(editorModes.update)}
+                    >
+                        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="64.000000pt" height="64.000000pt" viewBox="0 0 64.000000 64.000000" preserveAspectRatio="xMidYMid meet">
+                            <g transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)">
+                                <path d="M525 630 c-11 -5 -86 -75 -167 -157 -146 -146 -148 -149 -167 -218
+          -11 -39 -16 -74 -12 -78 4 -4 41 1 82 12 l74 21 153 154 c167 169 174 182 125
+          235 -32 34 -59 43 -88 31z m75 -62 c13 -25 13 -29 -3 -45 -16 -17 -19 -16 -53
+          19 -41 41 -38 61 9 56 22 -2 36 -11 47 -30z m-80 -53 l34 -35 -114 -115 -114
+          -115 -38 37 -38 37 112 113 c62 62 115 113 118 113 4 0 21 -16 40 -35z m-242
+          -286 c-7 -3 -25 -9 -39 -13 -27 -6 -27 -6 -17 35 l11 40 29 -27 c20 -20 25
+          -30 16 -35z"/>
+                                <path d="M63 573 c-13 -2 -32 -16 -43 -30 -19 -24 -20 -40 -20 -249 0 -237 4
+          -264 47 -283 15 -7 109 -11 263 -11 238 0 239 0 267 24 26 23 28 30 32 111 2
+          57 -1 91 -8 98 -21 21 -31 -13 -31 -100 0 -71 -3 -84 -19 -93 -12 -6 -110 -10
+          -250 -10 -218 0 -232 1 -251 20 -19 19 -20 33 -20 236 0 129 4 223 10 235 9
+          16 22 19 90 19 93 0 116 6 99 26 -11 14 -111 18 -166 7z"/>
+                            </g>
+                        </svg>
+                    </button>
+                    <LoadingButton
+                        isLoading={isBtnLoading}
+                        showChildrenOnLoad={false}
+                        className="btn"
+                        type="submit"
+                    >
+                        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100.000000pt" height="100.000000pt" viewBox="0 0 100.000000 100.000000" preserveAspectRatio="xMidYMid meet">
+                            <g transform="translate(0.000000,100.000000) scale(0.100000,-0.100000)">
+                                <path d="M380 980 c-11 -11 -20 -29 -20 -40 0 -19 -7 -20 -95 -20 -84 0 -96
+          -2 -107 -20 -7 -11 -20 -20 -28 -20 -52 -1 -96 -105 -50 -117 25 -7 21 13 75
+          -363 54 -373 50 -355 75 -380 19 -19 34 -20 268 -20 236 0 249 1 270 20 27 25
+          23 4 77 380 54 376 50 356 75 363 46 12 2 116 -50 117 -8 0 -21 9 -28 20 -11
+          18 -23 20 -107 20 -88 0 -95 1 -95 20 0 11 -9 29 -20 40 -17 17 -33 20 -120
+          20 -87 0 -103 -3 -120 -20z m218 -42 c3 -16 -7 -18 -97 -18 -78 0 -101 3 -101
+          13 0 25 13 28 104 25 77 -3 91 -6 94 -20z m225 -78 c3 -13 14 -20 31 -20 15 0
+          30 -8 36 -20 11 -20 8 -20 -390 -20 -398 0 -401 0 -390 20 6 12 21 20 36 20
+          17 0 28 7 31 20 5 19 14 20 323 20 309 0 318 -1 323 -20z m-15 -437 c-27 -186
+          -53 -348 -58 -361 -10 -22 -10 -22 -250 -22 -240 0 -240 0 -250 22 -5 13 -31
+          175 -58 361 l-49 337 357 0 357 0 -49 -337z"/>
+                                <path d="M230 653 c0 -10 14 -126 31 -258 31 -232 47 -297 65 -250 7 17 -52
+          500 -63 518 -8 14 -33 7 -33 -10z"/>
+                                <path d="M404 479 c10 -287 15 -341 35 -337 17 4 18 79 2 393 -5 117 -8 130
+          -25 133 -18 4 -19 -3 -12 -189z"/>
+                                <path d="M565 658 c-6 -21 -24 -501 -19 -510 3 -4 11 -8 18 -8 16 0 23 71 32
+          338 6 176 5 192 -10 192 -9 0 -18 -6 -21 -12z"/>
+                                <path d="M737 663 c-11 -18 -70 -501 -63 -518 18 -47 34 18 65 250 17 132 31
+          248 31 258 0 17 -25 24 -33 10z"/>
+                            </g>
+                        </svg>
+                    </LoadingButton>
+                </div>
+            </div>
+        </React.Fragment>
+    );
+};
+
+export default DisplayBtns;

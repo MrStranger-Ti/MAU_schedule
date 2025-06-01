@@ -15,6 +15,7 @@
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 
 --------------------
 
@@ -50,140 +51,26 @@
 - [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [Bootstrap](https://getbootstrap.com/)
+- [React](https://react.dev/)
 - [SunEditor](https://github.com/JiHong88/suneditor)
 
 ## Запуск
 
 --------------------
 
-- Установите [Python 3.12](https://www.python.org/downloads/)
-- Создайте файл ```.env``` и укажите настройки, используя [шаблон](.env.template) и [описание настроек](#env-файл).
-- Откройте командную строку и перейдите в корень проекта:
-  ```
-  cd <путь до проекта>
-  ```
-
-### Настройка и запуск вручную
-
---------------------
-
-#### Настройка виртуального окружения
-
-- Создайте виртуальное окружение:
-  ```
-  python -m venv venv
-  ```
-- Активируйте виртуальное окружение:
-    - Linux/MacOS:
-      ```
-      source venv/bin/activate
-      ```
-    - Windows
-      ```
-      venv/Scripts/activate
-      ```
-
-#### Установка и настройка PostgreSQL
-
-- Установите [PostgreSQL](https://www.postgresql.org/download/)
-- Войдите в оболочку PostgreSQL:
-    - Linux/MacOS:
-      ```
-      sudo -U postgres psql
-      ```
-    - Windows:
-      ```
-      cd "C:\Program Files\PostgreSQL\<версия>\bin"
-      
-      psql -U postgres
-      ```
-- Создайте нового пользователя:
-  ```
-  CREATE USER <имя> WITH PASSWORD '<пароль>';
-  ```
-- Создайте новую базу данных:
-  ```
-  CREATE DATABASE <имя>;
-  ```
-- Дайте права только что созданному пользователю:
-  ```
-  GRANT ALL PRIVILEGES ON DATABASE <имя базы данных> TO <имя пользователя>;
-  ```
-- Укажите в ```.env``` все переменные, связанные с PostgreSQL.
-
-#### Установка Redis
-
-Redis не поддерживается на Windows, поэтому можно воспользоваться Docker образом [redis](https://hub.docker.com/_/redis) или установить подсистему Ubuntu на Windows с помощью [WSL](https://learn.microsoft.com/ru-ru/windows/wsl/install).
-
-- Установка Redis:
-  ```
-  sudo apt install redis-server
-  ```
-- Запуск сервера Redis:
-  ```
-  sudo service redis-server start
-  ```
-
-- Укажите в ```.env``` все переменные, связанных с Redis (если вы не меняли конфигурацию Redis, то можете оставить значения переменных по умолчанию).
-
-
-- Остановить Redis можно следующей командой:
-  ```
-  sudo service redis-server stop
-  ```
-
-#### Запуск Celery
-
-- Запустите worker:
-  ```
-  celery -A app worker -l info
-  ```
-- Запустите планировщик задач:
-  ```
-  celery -A app beat -l info
-  ```
-
-#### Запуск приложения
-
-- Установите миграции:
-  ```
-  python manage.py migrate
-  ```
-
-- Создайте суперпользователя (для входа в админ. панель):
-  ```
-  python manage.py createsuperuser
-  ```
-
-- Запуск приложения:
-  ```
-  python manage.py runserver
-  ```
-
-### Запуск с помощью Docker
-
-- Установите [Docker](https://www.docker.com/)
+- Создайте файл ```.env``` в корне проекта и укажите настройки, используя [шаблон](.env.template) и [описание настроек](#env-файл).
+- Создайте самоподписанный SSL сертификат для использования https. Поместите файлы `localhost.crt` и `localhost.key` в папку **secrets**.
+- Установите [Docker](https://www.docker.com/).
 - Сборка и запуск приложения:
 
-  ```
+  ```shell
   docker compose up --build -d
   ```
-- Остановка приложения
+- Остановка приложения:
 
-  ```
+  ```shell
   docker compose down
   ```
-
-### Использование
-
-Если запустили приложение локально, то можно перейти по следующему адресу в браузере:
-
-http://127.0.0.1:8000
-
-Войти в админ. панель можно по следующему адресу:
-
-http://127.0.0.1:8000/admin
-
 
 ## Env файл
 
@@ -191,7 +78,9 @@ http://127.0.0.1:8000/admin
 
 В этом разделе описаны подробности о переменных окружения проекта.
 
-### Django
+### Backend
+
+#### Django
 
 - <span style="color: pink;">DEBUG</span> - если 1, то запустить приложение в debug режиме, если 0, то запустить в производственном режиме
 
@@ -214,48 +103,33 @@ http://127.0.0.1:8000/admin
 
   **По умолчанию:** UTC
 
-### PostgreSQL
+#### PostgreSQL
 
 - <span style="color: pink;">POSTGRES_DB</span> - название базы данных
 
-  **По умолчанию:** MauSchedule
-
-
 - <span style="color: pink;">POSTGRES_USER</span> - имя пользователя для бызы данных
-
-  **По умолчанию:** MauUser
-
 
 - <span style="color: pink;">POSTGRES_PASSWORD</span> - пароль от базы данных
 
-  **По умолчанию:** 12345
-
-
 - <span style="color: pink;">POSTGRES_HOST</span> - хост базы данных
-
-  **По умолчанию:** localhost
-
 
 - <span style="color: pink;">POSTGRES_PORT</span> - порт для базы данных
 
-  **По умолчанию:** 5432
-
-### Redis
+#### Redis
 
 - <span style="color: pink;">REDIS_HOST</span> - хост для Redis, где хранится кэш
 
-  **По умолчанию:** localhost
-
-
 - <span style="color: pink;">REDIS_PORT</span> - порт для Redis
 
-  **По умолчанию:** 6379
-
-### MAU Schedule
+#### MAU Schedule
 
 - <span style="color: pink;">REQUESTS_TIMEOUT</span> - время ожидания ответа от сайта университета в секундах
 
   **По умолчанию:** 5
+
+### Frontend
+
+- <span style="color: pink;">HTTPS</span> - использовать ли https
 
 ## Функционал
 
