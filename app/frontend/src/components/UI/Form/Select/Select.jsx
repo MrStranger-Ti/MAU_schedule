@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import ErrorStyles from "./ErrorStyles";
+import ErrorStyles from "../ErrorStyles";
+import styles from "./Select.module.css";
 
 const Select = ({className, onChange, name, value, options, firstOption, ...props}) => {
     const [classes, setClasses] = useState(className ? className.split(" ") : []);
@@ -27,7 +28,11 @@ const Select = ({className, onChange, name, value, options, firstOption, ...prop
             >
                 <option value="">{firstOption || "Выберите"}</option>
                 {options.map((option, ind) =>
-                    <option value={option.value} key={ind}>{option.name}</option>
+                    <option
+                        className={styles.Option}
+                        value={option.value}
+                        key={ind}
+                    >{option.name}</option>
                 )}
             </select>
         </ErrorStyles>

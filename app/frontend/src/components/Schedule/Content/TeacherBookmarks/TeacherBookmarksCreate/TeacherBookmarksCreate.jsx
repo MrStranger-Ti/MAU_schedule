@@ -2,8 +2,8 @@ import React, {useContext} from "react";
 import {TeacherBookmarksContext} from "../../../../../context/schedule/TeacherBookmarksProvider";
 import {ScheduleContext} from "../../../../../context/schedule/ScheduleProvider";
 import Button from "../../../../UI/Buttons/Button/Button";
-import styles from "../TeacherBookmarks.module.css";
-import {ReactComponent as CreateBookmarkIcon} from "../../../../../assets/icons/add-bookmark.svg"
+import teacherBookmarksStyles from "../TeacherBookmarks.module.css";
+import {ReactComponent as CreateBookmarkIcon} from "../../../../../assets/icons/add-bookmark.svg";
 
 const TeacherBookmarksCreate = () => {
     const {teacherName, teacherKey} = useContext(ScheduleContext);
@@ -13,11 +13,12 @@ const TeacherBookmarksCreate = () => {
 
     return (
         <Button
-            className={styles.Button}
+            className={teacherBookmarksStyles.Button}
             type="button"
+            title="Сохранить расписание преподавателя"
             onClick={handleOnClick}
         >
-            <CreateBookmarkIcon className={styles.BookmarkIcon}/>
+            <CreateBookmarkIcon className={teacherBookmarksStyles.Icon}/>
         </Button>
     );
 };

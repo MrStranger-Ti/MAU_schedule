@@ -8,7 +8,7 @@ const PeriodsProvider = ({children}) => {
     const {showNotification} = useContext(NotificationContext);
     const [periods, setPeriods] = useState([]);
     const [currentPeriodValue, setCurrentPeriodValue] = useState("");
-    const [isPeriodsLoaded, setIsPeriodLoaded] = useState(false);
+    const [isPeriodsLoaded, setIsPeriodsLoaded] = useState(false);
 
     const fetchPeriods = async () => {
         const service = new ScheduleService();
@@ -23,16 +23,14 @@ const PeriodsProvider = ({children}) => {
             showNotification(data.detail, {error: true});
         }
 
-        setIsPeriodLoaded(true);
+        setIsPeriodsLoaded(true);
     }
 
     return (
         <PeriodsContext.Provider value={{
-            fetchPeriods, isPeriodsLoaded,
-            periods,
-            setPeriods,
-            currentPeriodValue,
-            setCurrentPeriodValue
+            fetchPeriods, isPeriodsLoaded, setIsPeriodsLoaded,
+            periods, setPeriods,
+            currentPeriodValue, setCurrentPeriodValue
         }}>
             {children}
         </PeriodsContext.Provider>

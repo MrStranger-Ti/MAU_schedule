@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {LoadingContext} from "../../../../context/main/LoadingProvider";
 import BaseSchedule from "../../BaseSchedule";
-import {useAuth} from "../../../../hooks/useAuth";
+import {useAuth} from "../../../../hooks/auth/useAuth";
 import {TeacherScheduleProvider} from "../../../../context/schedule/ScheduleProvider";
 import TeacherScheduleContent from "../TecherScheduleContent/TeacherScheduleContent";
 

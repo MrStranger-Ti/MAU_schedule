@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
-import {ScheduleRowContext} from "../../../../../context/schedule/ScheduleRowProvider";
+import {NoteCollapseContext} from "../../../../../context/schedule/NoteCollapseProvider";
 
 const CollapseBtn = () => {
-    const {handleCollapse} = useContext(ScheduleRowContext);
+    const {handleCollapse} = useContext(NoteCollapseContext);
 
     return (
         <button

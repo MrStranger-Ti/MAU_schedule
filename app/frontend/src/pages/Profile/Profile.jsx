@@ -3,7 +3,7 @@ import BaseProfile from "./BaseProfile";
 import ProfileForm from "./ProfileForm";
 import DisplayProfile from "./DisplayProfile";
 import InstituteService from "../../services/institute";
-import {useAuth} from "../../hooks/useAuth";
+import {useAuth} from "../../hooks/auth/useAuth";
 import {LoadingContext} from "../../context/main/LoadingProvider";
 import {NotificationContext} from "../../context/main/NotificationProvider";
 

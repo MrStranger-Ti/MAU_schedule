@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import BaseAuth from "../BaseAuth";
 import LoginForm from "./LoginForm";
-import {useAuth} from "../../../hooks/useAuth";
+import {useAuth} from "../../../hooks/auth/useAuth";
 import {LoadingContext} from "../../../context/main/LoadingProvider";
 import {pagesPaths} from "../../../AppRoutes";
 

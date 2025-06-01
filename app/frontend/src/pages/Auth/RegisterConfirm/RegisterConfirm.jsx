@@ -3,7 +3,7 @@ import BaseAuth from "../BaseAuth";
 import {useNavigate, useParams} from "react-router-dom";
 import AuthService from "../../../services/auth";
 import {LoadingContext} from "../../../context/main/LoadingProvider";
-import {useAuth} from "../../../hooks/useAuth";
+import {useAuth} from "../../../hooks/auth/useAuth";
 import {NotificationContext} from "../../../context/main/NotificationProvider";
 import {AuthContext} from "../../../context/main/AuthProvider";
 import {pagesPaths} from "../../../AppRoutes";

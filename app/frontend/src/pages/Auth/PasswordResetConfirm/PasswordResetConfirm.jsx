@@ -4,7 +4,7 @@ import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
 import PasswordResetConfirmForm from "./PasswordResetConfirmForm";
 import {LoadingContext} from "../../../context/main/LoadingProvider";
-import {useAuth} from "../../../hooks/useAuth";
+import {useAuth} from "../../../hooks/auth/useAuth";
 import {pagesPaths} from "../../../AppRoutes";
 
 const PasswordResetConfirm = () => {

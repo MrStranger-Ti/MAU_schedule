@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {AuthContext} from "../context/main/AuthProvider";
-import {pagesPaths} from "../AppRoutes";
+import {AuthContext} from "../../context/main/AuthProvider";
+import {pagesPaths} from "../../AppRoutes";
 
 export const useAuth = (setIsLoading, {
     stopLoading = true,

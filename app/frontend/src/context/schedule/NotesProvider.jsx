@@ -69,7 +69,7 @@ const NotesProvider = ({children}) => {
 
     return (
         <NotesContext.Provider value={{
-            fetchNotes, isNotesLoaded,
+            fetchNotes, isNotesLoaded, setIsNotesLoaded,
             notes, setNotes,
             createNote, updateNote, deleteNote
         }}>

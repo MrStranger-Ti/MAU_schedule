@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import Form from "../../../UI/Form/Form";
-import Select from "../../../UI/Form/Select";
+import Select from "../../../UI/Form/Select/Select";
 import LoadingButton from "../../../UI/Buttons/LoadingButton/LoadingButton";
 import {ScheduleContext} from "../../../../context/schedule/ScheduleProvider";
 import {PeriodsContext} from "../../../../context/schedule/PeriodsProvider";

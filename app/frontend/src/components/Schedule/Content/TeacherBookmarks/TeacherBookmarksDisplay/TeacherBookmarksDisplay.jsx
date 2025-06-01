@@ -13,10 +13,14 @@ const TeacherBookmarksDisplay = () => {
     const {teacherBookmarks, deleteTeacherBookmark} = useContext(TeacherBookmarksContext);
 
     return (
-        <div className={styles.TeacherDisplay}>
+        <div className={styles.Display}>
             <Dropdown className={styles.Dropdown}>
-                <Dropdown.Toggle className={teacherBookmarksStyles.Button} as="button">
-                    <DisplayBookmarksIcon className={teacherBookmarksStyles.BookmarkIcon}/>
+                <Dropdown.Toggle
+                    className={teacherBookmarksStyles.Button}
+                    as="button"
+                    title="Список закладок преподавателей"
+                >
+                    <DisplayBookmarksIcon className={teacherBookmarksStyles.Icon}/>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className={styles.DropdownMenu}>
                     {teacherBookmarks.length > 0
@@ -29,24 +33,25 @@ const TeacherBookmarksDisplay = () => {
                                     key={bookmark["id"]}
                                 >
                                     <RouterDarkLink
-                                        className={styles.BookmarkLink}
+                                        className={styles.Link}
                                         to={pagesPaths.schedule.getTeacherURL(bookmark["teacher_key"], bookmark["teacher_name"])}
                                     >
                                         {bookmark["teacher_name"]}
                                     </RouterDarkLink>
                                     <Button
-                                        className={`${teacherBookmarksStyles.Button} ${styles.TeacherBookmarkDeleteButton}`}
+                                        className={`${teacherBookmarksStyles.Button} ${styles.DeleteButton}`}
                                         type="button"
+                                        title="Удалить расписание преподавателя"
                                         onClick={() => deleteTeacherBookmark(bookmark)}
                                     >
-                                        <DeleteBookmarkIcon className={styles.BookmarkDeleteIcon}/>
+                                        <DeleteBookmarkIcon className={styles.DeleteIcon}/>
                                     </Button>
                                 </Dropdown.Item>
                             )}
                         </React.Fragment>
                         :
                         <Dropdown.Item className={styles.DropdownItem} as="div">
-                            <p className="schedule__bookmarks-empty">Здесь будут отображаться сохраненные расписания</p>
+                            <p className={styles.EmptyDescr}>Здесь будут отображаться сохраненные расписания</p>
                         </Dropdown.Item>
                     }
                 </Dropdown.Menu>

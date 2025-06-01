@@ -6,7 +6,7 @@ import {getFormattedDate, getWeekday} from "../../utils/date";
 import ScheduleRowProvider from "../../context/schedule/ScheduleRowProvider";
 import {config} from "../../config";
 import Spinner from "../Spinner/Spinner";
-import ScheduleRow from "./ScheduleRow/ScheduleRow";
+import ScheduleLesson from "./Content/ScheduleLesson/ScheduleLesson";
 
 const Schedule = () => {
     const {
@@ -52,7 +52,7 @@ const Schedule = () => {
                                                     note={getRowNote(day, trIndex + 1)}
                                                     key={trIndex}
                                                 >
-                                                    <ScheduleRow/>
+                                                    <ScheduleLesson/>
                                                 </ScheduleRowProvider>
                                             ))}
                                             </tbody>

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import BaseSchedule from "../../BaseSchedule";
-import {useAuth} from "../../../../hooks/useAuth";
+import {useAuth} from "../../../../hooks/auth/useAuth";
 import {LoadingContext} from "../../../../context/main/LoadingProvider";
 import {GroupScheduleProvider} from "../../../../context/schedule/ScheduleProvider";
 import GroupScheduleContent from "../GroupScheduleContent/GroupScheduleContent";

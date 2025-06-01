@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import BearFace from "../../../assets/images/logo/bear_face.png";
 import PasswordResetForm from "./PasswordResetForm";
 import {LoadingContext} from "../../../context/main/LoadingProvider";
-import {useAuth} from "../../../hooks/useAuth";
+import {useAuth} from "../../../hooks/auth/useAuth";
 import {pagesPaths} from "../../../AppRoutes";
 
 const PasswordReset = () => {

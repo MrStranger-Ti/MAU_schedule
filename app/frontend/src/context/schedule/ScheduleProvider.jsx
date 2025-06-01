@@ -6,6 +6,7 @@ import PeriodsProvider from "./PeriodsProvider";
 import {AuthContext} from "../main/AuthProvider";
 import {useParams} from "react-router-dom";
 import TeacherBookmarksProvider from "./TeacherBookmarksProvider";
+import {config} from "../../config";
 
 export const ScheduleContext = createContext(null);
 
@@ -31,8 +32,9 @@ const GroupScheduleProvider = ({children}) => {
 
     return (
         <ScheduleContext.Provider value={{
-            scheduleName: "group", scheduleKey: userData.group,
-            fetchSchedule, isScheduleLoaded,
+            scheduleName: config.SCHEDULES_NAMES.GROUP,
+            scheduleKey: userData.group,
+            fetchSchedule, isScheduleLoaded, setIsScheduleLoaded,
             schedule, setSchedule,
             isScheduleLoading, setIsScheduleLoading
         }}>
@@ -50,6 +52,7 @@ const TeacherScheduleProvider = ({children}) => {
     const {showNotification} = useContext(NotificationContext);
     const [schedule, setSchedule] = useState({});
     const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+    const [isScheduleLoaded, setIsScheduleLoaded] = useState(false);
 
     const decodeKeyName = () => {
         const [teacherKey, teacherName] = decodeURIComponent(keyName).split("~");
@@ -68,17 +71,18 @@ const TeacherScheduleProvider = ({children}) => {
             setSchedule({});
             showNotification(data.detail, {error: true});
         }
+
+        setIsScheduleLoaded(true);
     }
 
     return (
         <ScheduleContext.Provider value={{
             ...decodeKeyName(),
+            scheduleName: config.SCHEDULES_NAMES.TEACHER,
             scheduleKey: decodeKeyName().teacherKey,
-            fetchSchedule,
-            schedule,
-            setSchedule,
-            isScheduleLoading,
-            setIsScheduleLoading
+            fetchSchedule, isScheduleLoaded, setIsScheduleLoaded,
+            schedule, setSchedule,
+            isScheduleLoading, setIsScheduleLoading
         }}>
             <PeriodsProvider>
                 <NotesProvider>

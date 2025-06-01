@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import bearFace from "../assets/images/logo/bear_face.png";
 import "../styles/pages/index.css";
-import {useAuth} from "../hooks/useAuth";
+import {useAuth} from "../hooks/auth/useAuth";
 import Spinner from "../components/Spinner/Spinner";
 import {LoadingContext} from "../context/main/LoadingProvider";
 import {pagesPaths} from "../AppRoutes";

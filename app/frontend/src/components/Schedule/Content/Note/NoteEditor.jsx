@@ -36,7 +36,6 @@ const NoteEditor = () => {
         return editorActions[editorMode] || null;
     }
 
-
     const onSubmit = async (e) => {
         e.preventDefault();
 

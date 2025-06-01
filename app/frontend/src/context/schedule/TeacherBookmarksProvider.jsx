@@ -9,6 +9,7 @@ const TeacherBookmarksProvider = ({children}) => {
     const {userData} = useContext(AuthContext);
     const {showNotification} = useContext(NotificationContext);
     const [teacherBookmarks, setTeacherBookmarks] = useState([]);
+    const [isTeacherBookmarksLoaded, setIsTeacherBookmarksLoaded] = useState(false);
 
     const fetchTeacherBookmarks = async () => {
         const service = new TeacherBookmarksService();
@@ -19,6 +20,8 @@ const TeacherBookmarksProvider = ({children}) => {
             setTeacherBookmarks([]);
             showNotification(data.detail, {error: true});
         }
+
+        setIsTeacherBookmarksLoaded(true);
     }
 
     const createTeacherBookmark = async (teacherName, teacherKey) => {
@@ -61,6 +64,7 @@ const TeacherBookmarksProvider = ({children}) => {
         <TeacherBookmarksContext.Provider value={{
             teacherBookmarks, setTeacherBookmarks,
             fetchTeacherBookmarks,
+            isTeacherBookmarksLoaded, setIsTeacherBookmarksLoaded,
             createTeacherBookmark, deleteTeacherBookmark,
             existsTeacherBookmark
         }}>

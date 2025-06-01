@@ -2,7 +2,7 @@ import React from "react";
 import FormErrors from "../../../components/UI/Form/FormErrors";
 import InputErrors from "../../../components/UI/Form/InputErrors";
 import Input from "../../../components/UI/Form/Input";
-import Select from "../../../components/UI/Form/Select";
+import Select from "../../../components/UI/Form/Select/Select";
 import LoadingButton from "../../../components/UI/Buttons/LoadingButton/LoadingButton";
 
 const SecondStep = ({setStep, formData, setFormData, institutes, isBtnLoading}) => {

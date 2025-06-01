@@ -4,7 +4,7 @@ import {Helmet} from "react-helmet";
 import InstituteService from "../../../services/institute";
 import {Link} from "react-router-dom";
 import RegisterForm from "./RegisterForm";
-import {useAuth} from "../../../hooks/useAuth";
+import {useAuth} from "../../../hooks/auth/useAuth";
 import {LoadingContext} from "../../../context/main/LoadingProvider";
 import {NotificationContext} from "../../../context/main/NotificationProvider";
 import {AuthContext} from "../../../context/main/AuthProvider";
