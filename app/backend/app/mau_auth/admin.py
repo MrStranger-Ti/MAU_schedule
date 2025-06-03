@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from mau_auth.models import MauUser
-from mau_auth.html.forms import UserRegistrationForm
 
 
 @admin.register(MauUser)
@@ -32,4 +31,3 @@ class MauUserAdmin(UserAdmin):
             },
         ),
     )
-    add_form = UserRegistrationForm

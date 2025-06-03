@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from schedule.api.mixins import ParserResponseViewMixin
+from schedule.mixins import ParserResponseViewMixin
 from schedule.parser import ParserResponse
 from tests.test_api.test_mau_auth.factories import UserFactory
 
@@ -11,7 +11,7 @@ from tests.test_api.test_mau_auth.factories import UserFactory
 @pytest.fixture
 def mock_get_response(mocker):
     mocker.patch(
-        "schedule.api.views.ParserResponseViewMixin.get_response",
+        "schedule.views.ParserResponseViewMixin.get_response",
         return_value=Response(data="test data"),
     )
 
@@ -57,7 +57,7 @@ class TestParserResponseViewMixin:
 
 @pytest.mark.django_db
 def test_group_schedule_api_view(mock_get_response, mocker, get_user_client):
-    mock = mocker.patch("schedule.api.views.get_group_schedule")
+    mock = mocker.patch("schedule.views.get_group_schedule")
     user = UserFactory().make()
     client = get_user_client(user)
 
@@ -77,7 +77,7 @@ def test_group_schedule_api_view(mock_get_response, mocker, get_user_client):
 
 @pytest.mark.django_db
 def test_teacher_links_api_view(mock_get_response, mocker, get_user_client):
-    mock = mocker.patch("schedule.api.views.get_teachers_keys")
+    mock = mocker.patch("schedule.views.get_teachers_keys")
     user = UserFactory().make()
     client = get_user_client(user)
 
@@ -92,7 +92,7 @@ def test_teacher_links_api_view(mock_get_response, mocker, get_user_client):
 
 @pytest.mark.django_db
 def test_teacher_schedule_api_view(mock_get_response, mocker, get_user_client):
-    mock = mocker.patch("schedule.api.views.get_teacher_schedule")
+    mock = mocker.patch("schedule.views.get_teacher_schedule")
     user = UserFactory().make()
     client = get_user_client(user)
 
@@ -108,7 +108,7 @@ def test_teacher_schedule_api_view(mock_get_response, mocker, get_user_client):
 
 @pytest.mark.django_db
 def test_schedule_periods_api_view(mock_get_response, mocker, get_user_client):
-    mock = mocker.patch("schedule.api.views.get_periods")
+    mock = mocker.patch("schedule.views.get_periods")
     user = UserFactory().make()
     client = get_user_client(user)
 

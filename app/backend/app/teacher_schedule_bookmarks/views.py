@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from mau_auth.auth_class import CookieTokenAuthentication
-from teacher_schedule_bookmarks.api.serializers import TeacherScheduleBookmarkSerializer
+from teacher_schedule_bookmarks.serializers import TeacherScheduleBookmarkSerializer
 from teacher_schedule_bookmarks.models import TeacherScheduleBookmark
 
 

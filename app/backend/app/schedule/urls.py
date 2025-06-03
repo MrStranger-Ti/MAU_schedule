@@ -1,32 +1,36 @@
 from django.urls import path
 
 from schedule.views import (
-    GroupScheduleView,
-    SearchTeacherView,
-    TeacherScheduleView,
+    GroupScheduleApiView,
+    TeachersKeysApiView,
+    TeacherScheduleApiView,
+    SchedulePeriodsApiView,
+    InstituteViewSet,
 )
 
-app_name = "schedule"
+app_name = "api_schedule"
 
 urlpatterns = [
-    path("group/", GroupScheduleView.as_view(), name="group_schedule"),
-    path("teacher-search/", SearchTeacherView.as_view(), name="teacher_search"),
     path(
-        "teacher-search/teacher/",
-        TeacherScheduleView.as_view(),
-        name="teacher_schedule",
+        "schedule/institutes/",
+        InstituteViewSet.as_view({"get": "list"}),
+        name="institute-list",
     ),
-    # path(
-    #     "get-group-schedule/",
-    #     AjaxGetGroupScheduleView.as_view(),
-    #     name="get_group_schedule",
-    # ),
-    # path(
-    #     "get-teacher-schedule/",
-    #     AjaxGetTeacherScheduleView.as_view(),
-    #     name="get_teacher_schedule",
-    # ),
-    # path(
-    #     "get-teachers-links/", AjaxTeachersListView.as_view(), name="get_teachers_links"
-    # ),
+    path(
+        "schedule/institutes/<int:pk>/",
+        InstituteViewSet.as_view({"get": "retrieve"}),
+        name="institute-detail",
+    ),
+    path("schedule/group/", GroupScheduleApiView.as_view(), name="group-schedule"),
+    path(
+        "schedule/teachers-keys/",
+        TeachersKeysApiView.as_view(),
+        name="teachers-keys",
+    ),
+    path(
+        "schedule/teacher/<str:teacher_key>/",
+        TeacherScheduleApiView.as_view(),
+        name="teacher-schedule",
+    ),
+    path("schedule/periods/", SchedulePeriodsApiView.as_view(), name="periods"),
 ]

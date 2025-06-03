@@ -1,13 +1,21 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from mau_auth.api import views
+from mau_auth import views
 
 app_name = "api_mau_auth"
 
 router = DefaultRouter()
-router.register(prefix="users", viewset=views.AdminViewSet, basename="user")
-router.register(prefix="groups", viewset=views.GroupViewSet, basename="group")
+router.register(
+    prefix="users",
+    viewset=views.AdminViewSet,
+    basename="user",
+)
+router.register(
+    prefix="groups",
+    viewset=views.GroupViewSet,
+    basename="group",
+)
 router.register(
     prefix="permissions",
     viewset=views.PermissionViewSet,

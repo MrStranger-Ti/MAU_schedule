@@ -20,7 +20,7 @@ from rest_framework import mixins
 
 from mau_auth.auth_class import CookieTokenAuthentication
 from mau_auth.models import MauUser
-from mau_auth.api.serializers import (
+from mau_auth.serializers import (
     AuthTokenSerializer,
     AdminUserSerializer,
     PasswordResetSerializer,

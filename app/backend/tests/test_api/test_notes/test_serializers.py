@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 import pytest
 
-from notes.api.serializers import NoteSerializer
+from notes.serializers import NoteSerializer
 from tests.test_api.test_mau_auth.factories import UserFactory
 from tests.test_api.test_notes.factories import NoteFactory
 

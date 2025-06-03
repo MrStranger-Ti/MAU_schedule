@@ -11,8 +11,8 @@ class TestGroupScheduleParser:
 
     def test_parse_data_success(self, disable_cache, mock_scraper):
         expected_data = {
-            "01-02-2025": [["Занятий нет"]],
-            "27-01-2025": [
+            "2025-02-01": [["Занятий нет"]],
+            "2025-01-27": [
                 ["1", "", "", "", ""],
                 ["2", "", "", "", ""],
                 ["3", "", "", "", ""],
@@ -28,7 +28,7 @@ class TestGroupScheduleParser:
                 ["6", "", "", "", ""],
                 ["7", "", "", "", ""],
             ],
-            "28-01-2025": [
+            "2025-01-28": [
                 [
                     "1",
                     "09:00 - 10:35",
@@ -44,8 +44,8 @@ class TestGroupScheduleParser:
                 ["6", "", "", "", ""],
                 ["7", "", "", "", ""],
             ],
-            "29-01-2025": [["Занятий нет"]],
-            "30-01-2025": [
+            "2025-01-29": [["Занятий нет"]],
+            "2025-01-30": [
                 ["1", "", "", "", ""],
                 ["2", "", "", "", ""],
                 [
@@ -61,7 +61,7 @@ class TestGroupScheduleParser:
                 ["6", "", "", "", ""],
                 ["7", "", "", "", ""],
             ],
-            "31-01-2025": [
+            "2025-01-31": [
                 [
                     "1",
                     "09:00 - 10:35",
@@ -85,7 +85,7 @@ class TestGroupScheduleParser:
             period=self.period,
         ).get_data()
         assert parser_response.success
-        assert parser_response.data == expected_data
+        assert parser_response.data == expected_data, parser_response.data
 
     def test_parse_data_fail(self, disable_cache, mock_scraper):
         mock_scraper(self.html, valid=False)

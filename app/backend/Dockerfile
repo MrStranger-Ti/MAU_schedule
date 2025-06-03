@@ -7,6 +7,6 @@ WORKDIR /usr/src/app
 RUN pip install --upgrade pip poetry
 RUN poetry config virtualenvs.create false --local
 COPY ./pyproject.toml ./pyproject.toml
-RUN poetry install
+RUN poetry install --without test,dev
 
 COPY app/ .

@@ -1,17 +1,18 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from notes.views import (
-    AjaxNoteDisplayView,
-    AjaxNoteCreateView,
-    AjaxNoteDeleteView,
-    AjaxNoteUpdateView,
+from notes.views import NoteViewSet
+
+app_name = "api_notes"
+
+notes_router = DefaultRouter()
+notes_router.register(
+    prefix="notes",
+    viewset=NoteViewSet,
+    basename="note",
 )
 
-app_name = "notes"
 
 urlpatterns = [
-    path("display/", AjaxNoteDisplayView.as_view(), name="note_display"),
-    path("create/", AjaxNoteCreateView.as_view(), name="note_create"),
-    path("delete/", AjaxNoteDeleteView.as_view(), name="note_delete"),
-    path("update/", AjaxNoteUpdateView.as_view(), name="note_update"),
+    path("", include(notes_router.urls)),
 ]

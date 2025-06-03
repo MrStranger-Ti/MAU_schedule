@@ -24,13 +24,6 @@ from rest_framework.permissions import AllowAny
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("core.urls")),
-    path("accounts/", include("mau_auth.html.urls")),
-    path("schedule/", include("schedule.urls")),
-    path("profile/", include("profiles.urls")),
-    path("notes/", include("notes.urls")),
-    # path("bookmarks/", include("bookmarks.urls")),
-    # RestAPI paths
     path(
         "api/schema/",
         SpectacularAPIView.as_view(),
@@ -41,15 +34,8 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema", authentication_classes=[]),
         name="swagger",
     ),
-    path("api/", include("mau_auth.api.urls")),
-    path("api/", include("notes.api.urls")),
-    path("api/", include("teacher_schedule_bookmarks.api.urls")),
-    path("api/", include("schedule.api.urls")),
+    path("api/", include("mau_auth.urls")),
+    path("api/", include("notes.urls")),
+    path("api/", include("teacher_schedule_bookmarks.urls")),
+    path("api/", include("schedule.urls")),
 ]
-
-if settings.DEBUG:
-    urlpatterns.extend(
-        [
-            path("__debug__/", include("debug_toolbar.urls")),
-        ]
-    )

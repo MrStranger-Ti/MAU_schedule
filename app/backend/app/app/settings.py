@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "debug_toolbar",
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
@@ -71,9 +70,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "mau_auth.apps.MauAuthConfig",
     "schedule.apps.ScheduleConfig",
-    "profiles.apps.ProfilesConfig",
     "notes.apps.NotesConfig",
-    "core.apps.CoreConfig",
     "teacher_schedule_bookmarks.apps.BookmarksConfig",
 ]
 

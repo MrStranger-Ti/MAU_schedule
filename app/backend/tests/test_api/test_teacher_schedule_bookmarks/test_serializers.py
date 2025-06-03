@@ -1,6 +1,6 @@
 import pytest
 
-from teacher_schedule_bookmarks.api.serializers import TeacherScheduleBookmarkSerializer
+from teacher_schedule_bookmarks.serializers import TeacherScheduleBookmarkSerializer
 from tests.test_api.test_teacher_schedule_bookmarks.factories import (
     TeacherScheduleBookmarkFactory,
 )

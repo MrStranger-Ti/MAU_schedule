@@ -2,13 +2,11 @@ from collections.abc import Callable
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.core import mail
 from rest_framework.serializers import Serializer
 
-from mau_auth.api.serializers import (
+from mau_auth.serializers import (
     AdminUserSerializer,
     AuthenticatedUserSerializer,
-    EmailConfirmationSerializer,
     RegisterConfirmationSerializer,
     AuthTokenSerializer,
     PasswordResetConfirmationSerializer,
