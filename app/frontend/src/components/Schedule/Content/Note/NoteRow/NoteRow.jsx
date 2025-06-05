@@ -1,8 +1,9 @@
 import React, {useContext} from "react";
 import {Collapse} from "react-bootstrap";
-import NoteEditor from "./NoteEditor";
-import {NoteCollapseContext} from "../../../../context/schedule/NoteCollapseProvider";
-import EditorProvider from "../../../../context/schedule/EditorProvider";
+import NoteEditor from "../NoteEditor/NoteEditor";
+import {NoteCollapseContext} from "../../../../../context/schedule/NoteCollapseProvider";
+import EditorProvider from "../../../../../context/schedule/EditorProvider";
+import styles from "./NoteRow.module.css";
 
 const NoteRow = () => {
     const {
@@ -15,7 +16,7 @@ const NoteRow = () => {
         <EditorProvider>
             {showNoteBlock &&
                 <tr>
-                    <td className="note-block" colSpan="5">
+                    <td className={styles.noteBlock} colSpan="5">
                         <Collapse
                             in={isOpenCollapse}
                             onEnter={handleOnEnter}
@@ -24,7 +25,7 @@ const NoteRow = () => {
                             onExited={handleOnExited}
                         >
                             <div>
-                                <div className="card card-body note-block__card">
+                                <div className={styles.editorBlock}>
                                     <NoteEditor/>
                                 </div>
                             </div>

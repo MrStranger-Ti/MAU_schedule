@@ -1,16 +1,20 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import Form from "../../../UI/Form/Form";
 import Select from "../../../UI/Form/Select/Select";
 import LoadingButton from "../../../UI/Buttons/LoadingButton/LoadingButton";
 import {ScheduleContext} from "../../../../context/schedule/ScheduleProvider";
 import {PeriodsContext} from "../../../../context/schedule/PeriodsProvider";
+import styles from "../../../../styles/pages/Schedule.module.css";
 
 const PeriodForm = () => {
     const {fetchSchedule, isScheduleLoading, setIsScheduleLoading} = useContext(ScheduleContext);
     const {periods, currentPeriodValue, setCurrentPeriodValue} = useContext(PeriodsContext);
+    const [isCurrentPeriodsChanged, setIsCurrentPeriodChanged] = useState(false);
 
     const handleOnSubmit = async (e) => {
         e.preventDefault();
+
+        if (!isCurrentPeriodsChanged) return;
 
         setIsScheduleLoading(true);
 
@@ -18,17 +22,22 @@ const PeriodForm = () => {
             currentPeriodValue ? periods[currentPeriodValue].name : null
         );
 
+        setIsCurrentPeriodChanged(false);
         setIsScheduleLoading(false);
+    }
+
+    const handleOnChange = (e) => {
+        setCurrentPeriodValue(e.target.value);
+        setIsCurrentPeriodChanged(true);
     }
 
     return (
         <Form
-            className="schedule__form schedule__period-form flex"
+            className={styles.form}
             onSubmit={handleOnSubmit}
         >
             <Select
-                className="form-select"
-                onChange={(e) => setCurrentPeriodValue(e.target.value)}
+                onChange={handleOnChange}
                 name="period"
                 value={currentPeriodValue}
                 options={periods}
@@ -36,8 +45,8 @@ const PeriodForm = () => {
                 required
             />
             <LoadingButton
+                className={styles.button}
                 isLoading={isScheduleLoading}
-                className="btn"
                 type="submit"
             >
                 Найти

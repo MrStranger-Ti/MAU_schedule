@@ -194,7 +194,7 @@
 }
 
 .note-block__btns-block:nth-child(2),
-.note-block__btns-adaptive-block:nth-child(2){
+.note-block__btns-adaptive-block:nth-child(2) {
     display: flex;
     gap: 5px;
 }
@@ -526,10 +526,6 @@
         right: 0;
         width: 30px;
         height: 30px;
-    }
-
-    td {
-        display: block;
     }
 
     .cells-tr td {

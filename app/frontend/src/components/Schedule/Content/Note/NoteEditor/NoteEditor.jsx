@@ -1,10 +1,11 @@
 import React, {useContext, useEffect, useState} from "react";
 import SunEditor from "suneditor-react";
-import {EditorContext} from "../../../../context/schedule/EditorProvider";
-import DisplayBtns from "./Buttons/DisplayBtns";
-import CreateBtns from "./Buttons/CreateBtns";
-import UpdateBtns from "./Buttons/UpdateBtns";
-import Form from "../../../UI/Form/Form";
+import {EditorContext} from "../../../../../context/schedule/EditorProvider";
+import DisplayBtns from "../ButtonsBlock/DisplayBtns/DisplayBtns";
+import CreateBtns from "../ButtonsBlock/CreateBtns/CreateBtns";
+import UpdateBtns from "../ButtonsBlock/UpdateBtns/UpdateBtns";
+import Form from "../../../../UI/Form/Form";
+import styles from "./NoteEditor.module.css";
 
 const NoteEditor = () => {
     const {
@@ -50,7 +51,7 @@ const NoteEditor = () => {
     }
 
     return (
-        <Form className="note-block__form flex" onSubmit={onSubmit}>
+        <Form className={styles.form} onSubmit={onSubmit}>
             <SunEditor
                 getSunEditorInstance={getSunEditorInstance}
                 lang="ru"

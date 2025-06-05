@@ -1,13 +1,13 @@
-.Display .Dropdown {
+.display .dropdown {
     height: 100%;
     font-size: 0;
 }
 
-.Display .DropdownMenu {
+.display .dropdownMenu {
     padding: 5px 10px;
 }
 
-.Display .DropdownItem {
+.display .dropdownItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15,11 +15,11 @@
     gap: 5px;
 }
 
-.Display .DropdownItem:active {
+.display .dropdownItem:active {
     background-color: transparent;
 }
 
-.Display .DeleteButton .DeleteIcon {
+.display .deleteButton .deleteIcon {
     width: 30px;
     stroke: var(--dark-blue);
     stroke-linecap: round;
@@ -28,25 +28,25 @@
     transition: stroke ease-in-out 0.3s;
 }
 
-.Display .DeleteButton:hover .DeleteIcon {
+.display .deleteButton:hover .deleteIcon {
     stroke: var(--light-blue)
 }
 
-.Link {
+.link {
     font-size: 16px;
     color: var(--dark-blue);
 }
 
-.Link:hover {
+.link:hover {
     background-color: transparent;
     color: var(--light-blue);
 }
 
-.Link:focus::after {
+.link:focus::after {
     opacity: 0;
 }
 
-.EmptyDescr {
+.emptyDescr {
     margin: 0;
     text-align: center;
     line-height: normal;

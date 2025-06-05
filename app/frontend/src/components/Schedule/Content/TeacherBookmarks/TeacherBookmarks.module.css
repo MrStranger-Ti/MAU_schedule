@@ -1,31 +1,31 @@
-.Button {
+.button {
     padding: 0;
     border: none;
     background-color: transparent;
 }
 
-.Button:focus {
+.button:focus {
     background-color: transparent;
     border: none;
     outline: none;
     box-shadow: none;
 }
 
-.Button:active:focus {
+.button:active:focus {
     box-shadow: none;
 }
 
-.Button:hover {
+.button:hover {
     background-color: transparent;
 }
 
-.Icon {
+.icon {
     width: 40px;
     height: 40px;
     fill: var(--dark-blue);
     transition: fill ease-in-out 0.3s;
 }
 
-.Button:hover > .Icon {
+.button:hover > .icon {
     fill: var(--light);
 }

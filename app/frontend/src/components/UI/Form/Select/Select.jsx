@@ -3,7 +3,9 @@ import ErrorStyles from "../ErrorStyles";
 import styles from "./Select.module.css";
 
 const Select = ({className, onChange, name, value, options, firstOption, ...props}) => {
-    const [classes, setClasses] = useState(className ? className.split(" ") : []);
+    const [classes, setClasses] = useState(
+        ["form-select"].concat(className ? className.split(" ") : [])
+    );
     const [hasInputErrors, setHasInputErrors] = useState(false);
 
     const handleOnchange = (e) => {
@@ -26,10 +28,12 @@ const Select = ({className, onChange, name, value, options, firstOption, ...prop
                 value={value}
                 {...props}
             >
-                <option value="">{firstOption || "Выберите"}</option>
+                <option className={styles.option} value="">
+                    {firstOption || "Выберите"}
+                </option>
                 {options.map((option, ind) =>
                     <option
-                        className={styles.Option}
+                        className={styles.option}
                         value={option.value}
                         key={ind}
                     >{option.name}</option>

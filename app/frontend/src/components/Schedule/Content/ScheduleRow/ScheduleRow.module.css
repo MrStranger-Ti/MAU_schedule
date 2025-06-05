@@ -1,0 +1,110 @@
+.cellsRow:hover {
+    cursor: pointer;
+}
+
+.cellsRow td {
+    text-align: center;
+    padding: 10px;
+    line-height: 150%;
+    border-top: 1px solid rgba(26, 69, 104, 50%);
+    font-size: 18px;
+    transition: color ease-in-out 0.3s;
+}
+
+.cellsRow td:nth-child(1) {
+    width: 2%;
+}
+
+.cellsRow td:nth-child(2) {
+    width: 12%;
+}
+
+.cellsRow td:nth-child(3) {
+    width: 56%;
+}
+
+.cellsRow td:nth-child(4) {
+    width: 15%;
+}
+
+.cellsRow td:nth-child(5) {
+    width: 15%;
+}
+
+.cellsRow:hover td {
+    color: var(--light-blue);
+}
+
+.cellsRow td:nth-child(1) {
+    padding-right: 0;
+    font-weight: 900;
+}
+
+.cellsRow td:not(:first-child) {
+    font-weight: 600;
+    line-height: 150%;
+}
+
+.cellsRow td:nth-child(3) {
+    font-weight: 800;
+}
+
+.existingNoteTr > td:first-child {
+    position: relative;
+}
+
+.existingNoteTr > td:first-child::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    margin-left: -18px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("../../../../assets/icons/note.svg");
+}
+
+@media (max-width: 1024px) {
+    .cellsRow td {
+        text-align: left;
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    .cellsRow td:nth-child(n) {
+        width: 100%;
+    }
+
+    .cellsRow td:nth-child(1) {
+        padding-right: 10px;
+    }
+
+    .cellsRow:hover td {
+        color: var(--dark-blue);
+    }
+
+    .cellsRow td:empty {
+        display: none;
+    }
+
+    .cellsRow td:not(:first-child) {
+        border-top: none;
+    }
+
+    .existingNoteTr > td:first-child::before {
+        left: auto;
+        right: 0;
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cellsRow td {
+        padding: 6px;
+        font-size: 14px;
+    }
+}

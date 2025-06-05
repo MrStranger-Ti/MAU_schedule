@@ -1,0 +1,17 @@
+.noteBlock {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+.editorBlock {
+    padding: 30px;
+    border: none;
+    background-color: transparent;
+}
+
+@media (max-width: 768px) {
+    .editorBlock {
+        padding: 5px 0;
+    }
+}

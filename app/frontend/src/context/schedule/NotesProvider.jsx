@@ -18,11 +18,10 @@ const NotesProvider = ({children}) => {
         const {success, data} = await service.getAll();
         if (success) {
             setNotes(data.results);
+            setIsNotesLoaded(true);
         } else {
             showNotification(data.detail, {error: true});
         }
-
-        setIsNotesLoaded(true);
     }
 
     const createNote = async ({day, lessonNumber, text}) => {

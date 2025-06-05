@@ -19,11 +19,10 @@ const PeriodsProvider = ({children}) => {
                     ({name: period, value: index})
                 )
             );
+            setIsPeriodsLoaded(true);
         } else {
             showNotification(data.detail, {error: true});
         }
-
-        setIsPeriodsLoaded(true);
     }
 
     return (

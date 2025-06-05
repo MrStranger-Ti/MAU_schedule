@@ -13,12 +13,12 @@ const TeacherBookmarksCreate = () => {
 
     return (
         <Button
-            className={teacherBookmarksStyles.Button}
+            className={teacherBookmarksStyles.button}
             type="button"
             title="Сохранить расписание преподавателя"
             onClick={handleOnClick}
         >
-            <CreateBookmarkIcon className={teacherBookmarksStyles.Icon}/>
+            <CreateBookmarkIcon className={teacherBookmarksStyles.icon}/>
         </Button>
     );
 };

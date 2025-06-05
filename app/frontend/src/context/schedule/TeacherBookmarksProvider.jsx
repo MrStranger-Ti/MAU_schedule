@@ -16,12 +16,11 @@ const TeacherBookmarksProvider = ({children}) => {
         const {success, data} = await service.getAll();
         if (success) {
             setTeacherBookmarks(data.results);
+            setIsTeacherBookmarksLoaded(true);
         } else {
             setTeacherBookmarks([]);
             showNotification(data.detail, {error: true});
         }
-
-        setIsTeacherBookmarksLoaded(true);
     }
 
     const createTeacherBookmark = async (teacherName, teacherKey) => {

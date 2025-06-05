@@ -1,0 +1,12 @@
+.button > .buttonSpinner {
+    width: 20px;
+    height: 20px;
+}
+
+.withChildren {
+    margin-right: 5px;
+}
+
+.darkSpinnerButton {
+    color: var(--dark-blue);
+}

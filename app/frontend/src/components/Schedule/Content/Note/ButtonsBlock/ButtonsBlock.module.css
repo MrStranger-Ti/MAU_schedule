@@ -1,0 +1,87 @@
+.buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buttonsBlock:nth-child(2),
+.buttonsAdaptiveBlock:nth-child(2) {
+    display: flex;
+    gap: 5px;
+}
+
+.adaptiveButtons {
+    display: none;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.adaptiveButton {
+    width: 49px;
+    height: 49px;
+    padding: 0;
+    background-color: transparent;
+    transition: background-color ease-in-out 0.3s,
+                border-color ease-in-out 0.3s;
+}
+
+.adaptiveButton:hover {
+    border-color: var(--blue);
+    background-color: var(--light-blue);
+}
+
+.adaptiveButton:active {
+    border-color: var(--light);
+    background-color: var(--dark-blue);
+}
+
+.adaptiveButton:active .adaptiveIcon {
+    fill: var(--light);
+}
+
+.adaptiveButton:disabled {
+    border: 2px solid var(--dark-blue);
+    background-color: transparent;
+}
+
+.adaptiveButton > .buttonSpinner {
+    width: 32px;
+    height: 32px;
+}
+
+.adaptiveIcon {
+    width: 45px;
+    height: 45px;
+    fill: var(--dark-blue);
+    transition: fill ease-in-out 0.3s;
+}
+
+.saveIcon,
+.backIcon {
+    padding: 4px;
+}
+
+.editIcon {
+    padding: 5px;
+}
+
+.deleteIcon {
+    padding: 2px;
+}
+
+@media (max-width: 768px) {
+    .buttons {
+        display: none;
+    }
+
+    .adaptiveButtons {
+        display: flex;
+    }
+
+    .adaptiveButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

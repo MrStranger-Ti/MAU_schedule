@@ -1,13 +1,14 @@
 import React from "react";
+import {Spinner} from "react-bootstrap";
 
-const ButtonSpinner = () => {
+const ButtonSpinner = ({...props}) => {
     return (
-        <span
-            className="spinner-border spinner-border-sm btn-spinner"
+        <Spinner
             role="status"
             aria-hidden="true"
+            {...props}
         >
-        </span>
+        </Spinner>
     );
 };
 

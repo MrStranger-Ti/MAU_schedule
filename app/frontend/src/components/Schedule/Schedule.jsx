@@ -65,7 +65,7 @@ const Schedule = () => {
                         <div className="schedule__info-block">
                             <p className="schedule__info">Расписание не найдено. Проверьте свои данные в профиле.</p>
                             <p className="schedule__info">
-                                Также неполадки могут быть связаны с неработающим расписанием на <Link className="dark-link link" to={config.SCHEDULE_URL} target="_blank">сайте</Link> университета.
+                                Неполадки могут быть связаны с неработающим расписанием на <Link className="dark-link link" to={config.SCHEDULE_URL} target="_blank">сайте&nbsp;университета</Link>.
                             </p>
                         </div>
                     }

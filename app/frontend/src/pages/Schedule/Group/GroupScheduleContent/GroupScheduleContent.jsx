@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../../context/main/AuthProvider";
 import {LoadingContext} from "../../../../context/main/LoadingProvider";
 import {useSchedule} from "../../../../hooks/schedule/useSchedule";
@@ -11,14 +11,21 @@ import {useChangeLocation} from "../../../../hooks/general/useChangeLocation";
 const GroupScheduleContent = () => {
     const {isAuthCompleted} = useContext(AuthContext);
     const {isLoading, setIsLoading} = useContext(LoadingContext);
+    const [loadSchedule, setLoadSchedule] = useState(true);
 
-    const {isScheduleDataLoaded} = useSchedule([isAuthCompleted, isLoading]);
+    const {isScheduleDataLoaded} = useSchedule([isAuthCompleted, loadSchedule]);
 
     useEffect(() => {
-        if (isScheduleDataLoaded) setIsLoading(false);
+        if (isScheduleDataLoaded) {
+            setIsLoading(false);
+            setLoadSchedule(false);
+        }
     }, [isScheduleDataLoaded]);
 
-    useChangeLocation(() => setIsLoading(true));
+    useChangeLocation(() => {
+        setIsLoading(true);
+        setLoadSchedule(true);
+    });
 
     return (
         <React.Fragment>

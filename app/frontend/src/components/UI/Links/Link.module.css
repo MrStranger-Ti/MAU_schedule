@@ -1,4 +1,4 @@
-.Link {
+.link {
     text-decoration: none;
     position: relative;
     font-size: 20px;
@@ -9,7 +9,7 @@
     transition: color 0.3s ease-in-out;
 }
 
-.Link::after {
+.link::after {
     content: "";
     position: absolute;
     border-bottom: 2px solid var(--light);
@@ -21,36 +21,36 @@
     transition: opacity 0.3s ease-in-out;
 }
 
-.Link:focus::after {
+.link:focus::after {
     opacity: 1;
 }
 
-.Link:hover {
+.link:hover {
     color: var(--light-blue);
 }
 
-.Link:hover::after {
+.link:hover::after {
     opacity: 0;
 }
 
-.Link:active {
+.link:active {
     color: var(--light-blue);
 }
 
-.DarkLink {
+.darkLink {
     color: var(--dark);
 }
 
-.DarkLink::after {
+.darkLink::after {
     border-bottom: 2px solid var(--dark-blue);
 }
 
-.DarkLink:active {
+.darkLink:active {
     color: var(--dark-blue);
 }
 
 @media (max-width: 1024px) {
-    .Link {
+    .link {
         font-size: 18px;
     }
 }

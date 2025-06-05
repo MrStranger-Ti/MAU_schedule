@@ -1,0 +1,11 @@
+.form {
+    display: flex;
+    min-width: 300px;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+}

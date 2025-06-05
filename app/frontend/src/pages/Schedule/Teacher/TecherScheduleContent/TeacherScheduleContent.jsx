@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {LoadingContext} from "../../../../context/main/LoadingProvider";
 import {useSchedule} from "../../../../hooks/schedule/useSchedule";
 import {AuthContext} from "../../../../context/main/AuthProvider";
@@ -12,19 +12,24 @@ const TeacherScheduleContent = () => {
     const {isAuthCompleted} = useContext(AuthContext);
     const {isLoading, setIsLoading} = useContext(LoadingContext);
     const {fetchTeacherBookmarks} = useContext(TeacherBookmarksContext);
+    const [isLoadSchedule, setIsLoadSchedule] = useState(true);
 
-    const {isScheduleDataLoaded} = useSchedule([isAuthCompleted, isLoading]);
+    const {isScheduleDataLoaded} = useSchedule([isAuthCompleted, isLoadSchedule]);
 
     useEffect(() => {
         const loadBookmarks = async () => {
             await fetchTeacherBookmarks();
+            setIsLoadSchedule(false);
             setIsLoading(false);
         }
 
         if (isScheduleDataLoaded) loadBookmarks();
     }, [isScheduleDataLoaded]);
 
-    useChangeLocation(() => setIsLoading(true));
+    useChangeLocation(() => {
+        setIsLoading(true);
+        setIsLoadSchedule(true);
+    });
 
     return (
         <React.Fragment>
