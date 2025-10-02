@@ -1,0 +1,17 @@
+.container {
+    margin: 0 auto;
+    max-width: 1400px;
+    padding: var(--container-padding-top-bottom) 30px;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: var(--container-padding-top-bottom) 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: var(--container-padding-top-bottom) 5px;
+    }
+}

@@ -1,0 +1,96 @@
+.header {
+    background-color: var(--dark-blue);
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--header-height);
+    gap: 50px;
+}
+
+.logo {
+    width: 60px;
+}
+
+.navList {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.menu {
+    display: none;
+}
+
+.form {
+    padding-right: 0;
+    text-align: right;
+}
+
+.formLink {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}
+
+@media (max-width: 1024px) {
+    .container,
+    .navList {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --header-height: 60px;
+    }
+
+    .logo {
+        width: 40px;
+    }
+
+    .menu {
+        display: block;
+    }
+
+    .nav,
+    .form,
+    .logoutButton {
+        display: none;
+    }
+
+    .menu button {
+        padding: 0;
+        border: none;
+        background-color: transparent;
+    }
+
+    .menu svg {
+        width: 40px;
+        height: 40px;
+        fill: var(--light);
+    }
+
+    .menu button::after {
+        display: none;
+    }
+
+    .menu button:focus,
+    .menu button:hover,
+    .menu button:active,
+    .menu button:focus:active {
+        border: none;
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    .menu button svg {
+        transition: fill ease-in-out 0.3s;
+    }
+
+    .menu button:hover svg {
+        fill: var(--light-blue);
+    }
+}

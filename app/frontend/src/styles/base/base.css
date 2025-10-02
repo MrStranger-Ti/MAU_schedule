@@ -420,7 +420,6 @@ main-select > .error-input,
 @media (max-width: 768px) {
     :root {
         --header-height: 60px;
-
     }
 
     .header__logo {

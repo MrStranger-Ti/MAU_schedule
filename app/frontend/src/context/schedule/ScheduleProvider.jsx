@@ -22,11 +22,12 @@ const GroupScheduleProvider = ({children}) => {
         const {success, data} = await service.getGroupSchedule(period);
         if (success) {
             setSchedule(data);
-            setIsScheduleLoaded(true);
         } else {
             setSchedule({});
             showNotification(data.detail, {error: true});
         }
+
+        setIsScheduleLoaded(true);
     }
 
     return (

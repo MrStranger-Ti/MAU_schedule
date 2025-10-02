@@ -29,9 +29,11 @@ const useSchedule = (dependenceArray) => {
 
     useEffect(() => {
         if (isPeriodsLoaded && isScheduleLoaded && isNotesLoaded) {
-            const isoWeekDay = getFormattedDate(Object.keys(schedule)[0]);
-            const currentPeriodIndex = periods.findIndex(period => period.name.startsWith(isoWeekDay));
-            setCurrentPeriodValue(periods[currentPeriodIndex].value);
+            if (Object.keys(schedule).length > 0) {
+                const isoWeekDay = getFormattedDate(Object.keys(schedule)[0]);
+                const currentPeriodIndex = periods.findIndex(period => period.name.startsWith(isoWeekDay));
+                setCurrentPeriodValue(periods[currentPeriodIndex].value);
+            }
             setIsScheduleDataLoaded(true);
         }
     }, [isPeriodsLoaded, isScheduleLoaded, isNotesLoaded]);

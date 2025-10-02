@@ -9,3 +9,37 @@
     display: flex;
     align-items: center;
 }
+
+.infoBlock {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+}
+
+.info {
+    font-size: 24px;
+}
+
+.info > a {
+    font-size: 24px;
+}
+
+.info > a::after {
+    opacity: 1;
+}
+
+@media (width: 1024px) {
+    .info,
+    .info > a {
+        font-size: 22px;
+    }
+}
+
+@media (width: 768px) {
+    .info,
+    .info > a {
+        font-size: 18px;
+    }
+}
